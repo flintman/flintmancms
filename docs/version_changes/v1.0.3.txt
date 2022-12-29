@@ -1,0 +1,4 @@
+V1.0.3
+    --Updated site version
+    --Limit new errors on admin.php page to last 10
+    --Repaired menu link not adding when activating plugins

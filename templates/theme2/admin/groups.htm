@@ -1,0 +1,47 @@
+<form action="{$form_action}" method="post" >
+    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td><div id="admin_title">{$head}</div></td>
+        </tr>
+        <tr>
+            <td valign="top" >
+                <table width="100%" border="0" cellspacing="1" cellpadding="3" >
+                    <tr>
+                        <td width="200" ><strong><span >{$group_name_text}</span></strong></td>
+                        <td >{$name}</td>
+                    </tr>
+                </table>
+            </td></tr>
+    </table>
+
+    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td><div id="admin_title">{$group_select_rights_text}</div></td>
+        </tr>
+        <tr>
+            <td valign="top" >
+                <table width="100%" border="0" cellspacing="1" cellpadding="3" >
+                    <tr>
+                        <td width="200" ><strong><span ><b>{$page_text}</b></span></strong></td>
+                    </tr>
+                    <tr>
+                        <td >{$pages}</td>
+                    </tr>
+
+                    <tr>
+                        <td ><strong><span><b>{$plugin_text}</b></span></strong></td>
+                    </tr>
+                    <tr>
+                        <td >{$plugins}</td>
+                    </tr>
+                </table>
+            </td></tr>
+    </table>
+    {$content}<br><br>
+
+    {$group_back}&nbsp;&nbsp;&nbsp;&nbsp; {$button}
+</form>
+
+
+
+

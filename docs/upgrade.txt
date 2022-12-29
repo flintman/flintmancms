@@ -1,0 +1,8 @@
+Thank you for choosing FlintmanCMS.
+
+
+Upgrade:
+    Upload All files excluding '/admin/config.php'.  Once files have been
+uploaded go to the root directory (http://yoursite.com).  This will start the
+upgrade process.  Follow the directions and once complete delete the install
+folder and click the link.  If no error messages then you are all upgraded.

@@ -1,0 +1,32 @@
+How to Create a new template
+
+In this directory you will find a file called 'used_in_code.css'.  These
+are the id's that are used with in the code of flintmanCMS.  The structure of
+the themes are as shown below
+
+-nameoftheme
+    -admin
+        -admin.htm
+        -config.htm
+        -email.htm
+        -group.htm
+        -help.htm
+        -link.htm
+        -logs.htm
+        -page.htm
+        -plugins.htm
+        -user.htm
+        -user_add.htm
+    -plugins
+        -plugins.htm
+-delete.htm
+-error.htm
+-footer.htm
+-header.htm
+-maintain.htm
+-page.htm
+-register.htm
+
+
+These are the needed files you can set the rest of the structure up how ever
+you want to.

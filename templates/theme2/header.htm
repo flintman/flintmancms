@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        {$javascript}
+        <script type="text/javascript" src="templates/theme2/scripts/theme.js"></script>
+        <meta name="keywords" content="{$meta_tags}">
+        <meta name="description" content="{$home_page}">
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+        <title>{$title_text}</title>
+        <link rel="stylesheet" type="text/css" href="templates/theme2/style/style.css">
+	{menu_init css="templates/theme2/style/menu.css"}
+    </head>
+
+
+    <body>
+        <div id="dhtmltooltip"></div>
+        {$tooltips}
+        <!-- END TOOLTIP CODE -->
+        <div id='header'><!--Start Header-->
+            <h1><a href='' title='home page' accesskey='0'>{$title_text}</a></h1>
+
+            <div id='navigation'>
+                <h3 class='hidden'>Navigation</h3>
+                {menu data=$menu}
+            </div>
+
+        </div><!-- Close Header-->
+
+        <div id='wrapper'><!--Start Wrapper-->
+            <div id='container'><!--Start Container-->
+                <div id='content'><!--Start Content-->
+                    <div class='contentdiv'><!--Start Contentdiv-->
+                        <div class='contentbody'>
+                            <div id='logcontrol'>
+                                <!-- login -->
+                                {$login}<br>
+                                {$register}
+                            </div>
+

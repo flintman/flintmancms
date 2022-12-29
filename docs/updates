@@ -1,0 +1,63 @@
+--------------------------------------------------------------------------------
+V1.0.3
+    ----Files added----
+
+
+    ----Files Edited----
+/common.php
+/admin/admin.php
+/includes/functions_plugins.php
+
+
+
+--------------------------------------------------------------------------------
+V1.0.2
+    ----Files added----
+
+
+    ----Files Edited----
+/admin/links.php
+/languages/english/lang_admin.php
+/languages/english/lang_components.php
+/includes/menu/menu.php
+/includes/functions.php
+/admin/groups.php
+/admin/config
+/templates/ALL
+/admin/page.php
+/footer.php
+/components/register.php
+/header.php
+
+
+--------------------------------------------------------------------------------
+V1.0.1
+
+    ----Files added----
+/admin/help/*.*
+/templates/ALL/admin/help.htm
+/docs/*.*
+/install/sql/1.0.0.sql
+/includes/menu/*.*
+
+
+    ----Files Edited----
+/components/profile/profile.php
+/common.php
+/admin/user/user.php
+/languages/english/lang_admin.php
+/templates/ALL/admin/user_add.htm
+/menu_admin.php
+/templates/theme6/style/menu.css
+/admin/admin.php
+/templates/ALL/admin/admin.htm
+/index.php
+/templares/ALL/plugins/plugins/htm
+/plugins/portfolio/portfolio.php
+/header.php
+/ALL files
+
+
+    ----Files Removed----
+/menu.php
+/menu_admin.php

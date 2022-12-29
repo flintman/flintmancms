@@ -1,0 +1,69 @@
+<form action="admin.php?n=config" method="post">
+  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr> 
+    <td><div id ="admin_title">{$head}</div></td>
+  </tr>
+  <tr> 
+    <td valign="top" > 
+      <table width="100%" border="0" cellspacing="1" cellpadding="3" >
+        <tr> 
+          <td width="200" ><strong><span >{$admin_title_text}</span></strong></td>
+          <td >{$title}</td>
+        </tr>
+        <tr>
+          <td width="200" ><strong><span >{$admin_add_link_text}</span></strong></td>
+          <td >{$add_to_link}</td>
+        </tr>
+        <tr> 
+          <td ><strong><span >{$admin_template_text}</span></strong></td>
+          <td >{$template_type}</td>
+        </tr>
+        <tr>
+          <td ><strong><span >{$admin_language_text}</span></strong></td>
+          <td >{$language_type}</td>
+        </tr>
+        <tr> 
+          <td ><strong><span >{$admin_debug_text}</span></strong></td>
+          <td >{$debug_mode}</td>
+        </tr>
+        <tr> 
+          <td ><strong><span>{$admin_maintance_text}</span></strong></td>
+          <td >{$maintain_mode}</td>
+        </tr>
+        <tr>
+          <td ><strong><span>{$admin_allow_log_text}</span></strong></td>
+          <td >{$allow_login}</td>
+        </tr>
+        <tr>
+          <td ><strong><span >{$admin_default_text}</span></strong></td>
+          <td >{$groups}</td>
+        </tr>
+        <tr>
+          <td ><strong><span >{$admin_frt_page_text}</span></strong></td>
+          <td >{$frt_page}</td>
+        </tr>
+      </table>
+    </td></tr>
+</table>
+<br>
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+
+  <tr> 
+    <td valign="top" > 
+	<table width="100%" border="0" cellspacing="1" cellpadding="3" >
+	{$admin_disclaimer_text} <br>
+	{$disclaimer}<br>
+	{$admin_meta_text}<br>
+	{$meta_tag}<br>
+        {$admin_main_message_text}
+        {$maintain_message}
+      </table>
+  </td>
+  </tr>
+</table>
+<br>
+<div align="center"><br>
+  {$buttons} <br>
+</div>
+</form><br>
+
