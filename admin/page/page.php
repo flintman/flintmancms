@@ -35,8 +35,8 @@ if ($_GET['action'] == 'edit') {
         $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_pages WHERE id =%s",
                         quote_smart($page_id));
         $result = $db->sql_query($sql);
-        $data = $db->sql_fetchrow($result) or
-                $errorMsg = "ERROR: " . mysql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
+    $data = $db->sql_fetchrow($result) or
+        $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;
         $form_action = "admin.php?n=page&action=edit&page_id=" . $page_id . "";
 
         if ($data['active'] == '0')
@@ -89,7 +89,7 @@ if ($_GET['action'] == 'edit') {
                             quote_smart($page_text), quote_smart($title), quote_smart($display),
                             quote_smart($active), quote_smart($page_id));
             $db->sql_query($sql) or
-                    $errorMsg = "ERROR: " . mysql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
+                    $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;
         }
         if (!isset($errorMsg))
             header("Location: admin.php?n=page");
@@ -138,16 +138,17 @@ elseif ($_GET['action'] == 'add') {
             $sql = sprintf("INSERT INTO " . DB_PREFIX . "_pages VALUES('0',%s,%s,%s,%s)",
                             quote_smart($title), quote_smart($content), quote_smart($active), quote_smart($display));
             $db->sql_query($sql)
-                    or $errorMsg = "ERROR: " . mysql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
+                    or $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;
 
             //Adding in Menu Items
-            $url = mysql_insert_id();
+        $url = $db->sql_nextid();
+    $url = $db->sql_nextid();
             $url = 'index.php?n=page&page_id=' . $url;
             $count = count_links('0');
             $sql = sprintf("INSERT INTO " . DB_PREFIX . "_links VALUES('0',%s,%s,%s,'0',%s,'0')",
                             quote_smart($title), quote_smart($url), quote_smart($active), quote_smart($count));
             $db->sql_query($sql)
-                    or $errorMsg = "ERROR: " . mysql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
+                    or $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;
         }
         if (!isset($errorMsg))
             header("Location: admin.php?n=page");
@@ -176,12 +177,12 @@ elseif ($_GET['action'] == 'delete') {
             $sql = sprintf("DELETE FROM " . DB_PREFIX . "_pages WHERE id=%s",
                             quote_smart($page_id));
             $db->sql_query($sql)
-                    or $errorMsg = "ERROR: " . mysql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
+                    or $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;
             $url = 'index.php?n=page&page_id=' . $page_id;
             $sql = sprintf("DELETE FROM " . DB_PREFIX . "_links WHERE link=%s",
                             quote_smart($url));
             $db->sql_query($sql)
-                    or $errorMsg = "ERROR: " . mysql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
+                    or $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;
         }
         if (!isset($errorMsg))
             header("Location: admin.php?n=page");
