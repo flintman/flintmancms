@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        {$javascript}
+        <link href="templates/theme5/style/style.css" rel="stylesheet" type="text/css">
+        <meta name="keywords" content="{$meta_tags}">
+        <meta name="description" content="c">
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>{$title_text}</title>
+
+    </head>
+    <body>
+        <div id="dhtmltooltip"></div>
+        {$tooltips}
+        <!-- END TOOLTIP CODE -->
+        <div id='page'><!-- Start Page -->
+
+            <div id='headerwrapper'><!-- Start HeaderWrap -->
+
+                <div id='navbartop'></div><!-- NavBarTop -->
+
+                <div id='navbar'><!-- Start NavBar -->
+
+                </div><!-- End NavBar -->
+
+                <div id='header'><!-- Start Header -->
+
+                    <div id='logo_left'><!-- Start LogoLeft -->
+
+                        <div id='clockbox'><!-- Start ClockBox -->
+
+                            Current Time : {$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'}
+
+                        </div><!-- End ClockBox -->
+
+
+
+                    </div><!-- End LogoLeft -->
+
+                    <div id='logo'><br><br><font face="Miriam" color="#C3C3C3" size="+3">{$title_text}</font>	</div><!-- Logo -->
+
+                                </div><!-- End Header -->
+
+                                </div><!-- End HeaderWrap -->
+
+                                <div id='contentwrapper'><!-- Start ContentWrap -->
+
+                                    <div id='sidebar'><!-- Start SideBar -->
+
+                                        <div id='menubg'><!-- Start MenuBg -->
+
+                                            <div id='menutop'></div><!-- MenuTop -->
+
+                                            <div id='menuwrapper'><!-- Start MenuWrap -->
+
+                    <!-- Menu items -->
+                    <ul class="mainmenu">
+                    {foreach from=$menu item=menuitem}
+                        <li>
+                            <a href="{$menuitem.link}"{if $menuitem.new_window} target="_blank"{/if}>{$menuitem.text}</a>
+                            {if isset($menuitem.submenu) && $menuitem.submenu|@count > 0}
+                                <ul class="submenu">
+                                {foreach from=$menuitem.submenu item=subitem}
+                                    <li><a href="{$subitem.link}"{if $subitem.new_window} target="_blank"{/if}>{$subitem.text}</a></li>
+                                {/foreach}
+                                </ul>
+                            {/if}
+                        </li>
+                    {/foreach}
+                    </ul>
+
+
+
+                                            </div><!-- End MenuWrap -->
+
+                                            <div id='menubottom'></div><!-- MenuBottom -->
+                                        </div><!-- End MenuBg -->
+                                        <br><br>
+                                                <!-- login -->
+                                                {$login}<br>
+                                                    {$register}
+
+
+
+                                                    </div><!-- End Sidebar -->
+
+                                                    <div id='maincontent'><!-- Start MainContent -->
+
+                                                        <div id='contentbg'><!-- Start ContentBG -->
+
+                                                            <div id='contenttop'><!-- Start ContentTop -->
+
+                                                                <div id='maincontentwrapper'><!-- Start MainContentWrap -->
+

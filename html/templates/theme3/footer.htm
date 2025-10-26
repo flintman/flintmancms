@@ -1,0 +1,42 @@
+</div>
+<div id='menu'>
+
+<td id='menuarea'>
+    <table class='menutable' cellpadding='0' cellspacing='0'>
+        <tr>
+            <td class='menutop'></td>
+        </tr>
+        <tr>
+            <td class='menubody'>
+                <div class='menuwrapper'>
+                    <!-- Menu items -->
+                    {foreach from=$menu item=menuitem}
+                            <li>
+                                <a href="{$menuitem.link}"{if $menuitem.new_window} target="_blank"{/if}>{$menuitem.text}</a>
+                                {if isset($menuitem.submenu) && $menuitem.submenu|@count > 0}
+                                    <ul>
+                                    {foreach from=$menuitem.submenu item=subitem}
+                                        <li><a href="{$subitem.link}"{if $subitem.new_window} target="_blank"{/if}>{$subitem.text}</a></li>
+                                    {/foreach}
+                                    </ul>
+                                {/if}
+                            </li>
+                    {/foreach}
+                        </ul>
+                </div>
+            </td>
+        </tr>
+
+            <td class='menubottom'></td>
+        </tr>
+    </table>
+</td>
+<br /><hr />
+<div> <!-- login -->
+                    {$login}<br>
+                    {$register}</div>
+<div class='smalltext'>{$disclamer}<br /><a href='admin.php'>Admin</a></div>
+</div>
+</div>
+
+</body>

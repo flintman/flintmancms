@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        {$javascript}
+        <script type="text/javascript" src="templates/theme2/scripts/theme.js"></script>
+        <meta name="keywords" content="{$meta_tags}">
+        <meta name="description" content="{$home_page}">
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+        <title>{$title_text}</title>
+        <link rel="stylesheet" type="text/css" href="templates/theme2/style/style.css">
+	    <link rel="stylesheet" type="text/css" href="templates/theme2/style/menu.css">
+    </head>
+
+
+    <body>
+        <div id="dhtmltooltip"></div>
+        {$tooltips}
+        <!-- END TOOLTIP CODE -->
+        <div id='header'><!--Start Header-->
+            <h1><a href='' title='home page' accesskey='0'>{$title_text}</a></h1>
+
+            <div id='navigation'>
+                <h3 class='hidden'>Navigation</h3>
+                    <!-- Menu items -->
+                    <ul class="mainmenu">
+                    {foreach from=$menu item=menuitem}
+                        <li>
+                            <a href="{$menuitem.link}"{if $menuitem.new_window} target="_blank"{/if}>{$menuitem.text}</a>
+                            {if isset($menuitem.submenu) && $menuitem.submenu|@count > 0}
+                                <ul class="submenu">
+                                {foreach from=$menuitem.submenu item=subitem}
+                                    <li><a href="{$subitem.link}"{if $subitem.new_window} target="_blank"{/if}>{$subitem.text}</a></li>
+                                {/foreach}
+                                </ul>
+                            {/if}
+                        </li>
+                    {/foreach}
+                    </ul>
+            </div>
+        </div><!-- Close Header-->
+
+        <div id='wrapper'><!--Start Wrapper-->
+            <div id='container'><!--Start Container-->
+                <div id='content'><!--Start Content-->
+                    <div class='contentdiv'><!--Start Contentdiv-->
+                        <div class='contentbody'>
+                            <div id='logcontrol'>
+                                <!-- login -->
+                                {$login}<br>
+                                {$register}
+                            </div>
+

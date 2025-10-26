@@ -1,0 +1,43 @@
+services:
+  apache-php:
+    build: .
+    container_name: apache-php-flintmancms
+    environment:
+      MYSQL_DATABASE: flintmancms
+      MYSQL_USER: flintmancms
+      MYSQL_PASSWORD: rs*HL7&2XQdML$5N5kgs
+    volumes:
+      - ./html/:/var/www/html
+    ports:
+      - "3000:80"
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db-flintmancms
+    environment:
+      MYSQL_ROOT_PASSWORD: 8WoZrdILiqkJD5@5Gob$
+      MYSQL_DATABASE: flintmancms
+      MYSQL_USER: flintmancms
+      MYSQL_PASSWORD: rs*HL7&2XQdML$5N5kgs
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./db_init/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    restart: always
+
+  phpmyadmin:
+     image: phpmyadmin/phpmyadmin
+     container_name: phpmyadmin-flintmancms
+     environment:
+       PMA_HOST: db
+       PMA_USER: root
+       PMA_PASSWORD: 8WoZrdILiqkJD5@5Gob$
+     ports:
+       - "8081:80"
+     depends_on:
+       - db
+     restart: always
+
+
