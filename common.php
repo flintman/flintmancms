@@ -31,12 +31,17 @@ define('SITE_VERSION','1.0.3');
 
 // Class includes
 require_once(ADMIN_PATH . 'config.php');
-require_once(INCLUDES_PATH . 'smarty/Smarty.class.php');
 require_once(INCLUDES_PATH . 'mysql.php');
 require_once(FUNCTIONS_PATH . 'functions.php');
 require_once(FUNCTIONS_PATH . 'functions_plugins.php');
 require_once(INCLUDES_PATH . 'report.php');
-require_once(INCLUDES_PATH . 'smarty/SmartyMenu.class.php');
+require_once(INCLUDES_PATH . 'smarty-5.6.0/libs/Smarty.class.php');
+
+// Initialize Smarty
+use Smarty\Smarty;
+$smarty = new Smarty();
+$smarty->setTemplateDir(__DIR__ . '/../templates/');
+$smarty->setCompileDir(__DIR__ . '/../templates_c/');
 
 // reports for all data listing
 $report = new ReportList;

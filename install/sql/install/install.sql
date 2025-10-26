@@ -21,8 +21,8 @@ INSERT INTO `prefix_config` (`name`, `value`) VALUES
 ('SMTP_hostport', ''),
 ('SMTP_user',''),
 ('SMTP_pass',''),
-('maintain_message', 'This Site is under Construction');
-('frt_page', 'index.php?n=page&page_id=1');
+('maintain_message', 'This Site is under Construction'),
+('frt_page', 'index.php?n=page&page_id=1'),
 ('add_link', '#scroll');
 
 
