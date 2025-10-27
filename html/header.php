@@ -77,15 +77,7 @@ $smarty->assign(
 // display any errors if they exist
 if (isset($errorMsg) || isset($errormsg)) {
     if ($config['email_errors'] == 1 && isset($errorMsg)) {
-        if ($config['sendviaSTMP']) {
-            require_once (INCLUDES_PATH . 'scripts/email.php');
-            $smtp = new Mail($config['SMTP_host'], $config['SMTP_hostport'], $config['SMTP_user'],
-                            $config['SMTP_pass'], $config['SMTP_user']);
-            $smtp->mailit($config['email_admin'], $config['site_name'], $message);
-        } else {
-            mail($config['email_admin'], $config['site_name'], $message);
-            $content = ADMIN_SEND_MESSAGE_TEXT;
-        }
+        email($config['email_admin'], $errorMsg);
     }
     if (isset($errorMsg)) {
         $sql = sprintf("INSERT INTO " . DB_PREFIX . "_logs VALUES('0',%s,'" . time() . "')",

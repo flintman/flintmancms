@@ -18,156 +18,287 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * ************************************************************************* */
 
-class Mail {
-    private $smtpServer = 'you.smtp_server.com';
-    private $port = '25';
-    private $timeout = '45';
-    private $username = 'address@you_domain.com';
-    private $password = 'YouPassword';
-    private $newline = "\r\n";
-    private $localdomain = 'you_domain.com';
-    private $charset = 'windows-1251';
-    private $contentTransferEncoding = false;
-    private $fromuser = '';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
-    // Do not change anything below
-    private $smtpConnect = false;
-    private $to = false;
-    private $subject = false;
-    private $message = false;
-    private $headers = false;
-    private $logArray = array();
+/**$mail = new PHPMailer(true);
+ * PHPMailer-based Mail Class for FlintmanCMS
+ * Provides easy-to-use email functionality with full SMTP support
+ */
+class Mail {
+    private $phpmailer;
+    private $smtpServer;
+    private $port;
+    private $username;
+    private $password;
+    private $fromEmail;
+    private $fromName;
+    private $encryption;
+    private $debug;
     private $Error = '';
 
-    // Fix deprecated parameter order: required before optional
-    public function __construct($server, $server_username, $server_password, $from_user, $server_port = 25) {
+    /**
+     * Constructor - Initialize the Mail class
+     * 
+     * @param string $server SMTP server hostname
+     * @param string $username SMTP username
+     * @param string $password SMTP password
+     * @param string $fromEmail From email address
+     * @param int $port SMTP port (default: 25)
+     * @param string $encryption Encryption type: 'none', 'ssl', 'tls' (default: 'none')
+     * @param string $fromName From name (default: same as email)
+     * @param bool $debug Enable debug output (default: false)
+     */
+    public function __construct($server, $username, $password, $fromEmail, $port = 465, $encryption = 'tls', $fromName = '', $debug = false) {
         $this->smtpServer = $server;
-        $this->port = (int)$server_port;
-        $this->username = $server_username;
-        $this->password = $server_password;
-        $this->fromuser = $from_user;
+        $this->username = $username;
+        $this->password = $password;
+        $this->fromEmail = $fromEmail;
+        $this->fromName = $fromName ?: $fromEmail;
+        $this->port = (int)$port;
+        $this->encryption = strtolower($encryption);
+        $this->debug = $debug;
+        
+        // Create new PHPMailer instance
+        $this->phpmailer = new PHPMailer(true);
+        $this->configureSMTP();
     }
 
-    public function printError() {
-        return $this->Error ;
-    }
-
-    public function mailit($to, $subject, $message) {
-        $this->to = &$to;
-        $this->subject = &$subject;
-        $this->message = &$message;
-        // Connect to server
-        if (!$this->Connect2Server()) {
-            return false;
-        }
-        return true;
-    }
-
-    private function Connect2Server() {
-        // Connect to server
-        $this->smtpConnect = @fsockopen($this->smtpServer, $this->port, $errno, $error, $this->timeout);
-        if (!$this->smtpConnect || !is_resource($this->smtpConnect)) {
-            $this->Error .= "Unable to connect to SMTP server: $error ($errno)\n";
-            return false;
-        }
-        $this->logArray['CONNECT_RESPONSE'] = $this->readResponse();
-        $this->logArray['connection'] = "Connection accepted.";
-        // Hi, server!
-        $this->sendCommand("EHLO $this->localdomain");
-        $this->logArray['EHLO'] = $this->readResponse();
-        // Let's know each other
-        $this->sendCommand('AUTH LOGIN');
-        $this->logArray['AUTH_REQUEST'] = $this->readResponse();
-        // My name...
-        $this->sendCommand(base64_encode($this->username));
-        $this->logArray['REQUEST_USER'] = $this->readResponse();
-        // My password..
-        $this->sendCommand(base64_encode($this->password));
-        $this->logArray['REQUEST_PASSWD'] = $this->readResponse();
-        // If error in response auth...
-        if (substr($this->logArray['REQUEST_PASSWD'],0,3)!='235') {
-            $this->Error .= 'Authorization error! '.$this->logArray['REQUEST_PASSWD'].$this->newline;
-            return false;
-        }
-        // "From" mail...
-        $this->sendCommand("MAIL FROM: $this->username");
-        $this->logArray['MAIL_FROM_RESPONSE'] = $this->readResponse();
-        if (substr($this->logArray['MAIL_FROM_RESPONSE'],0,3)!='250') {
-            $this->Error .= 'Mistake in sender\'s address! '.$this->logArray['MAIL_FROM_RESPONSE'].$this->newline;
-            return false;
-        }
-        // "To" address
-        $this->sendCommand("RCPT TO: $this->to");
-        $this->logArray['RCPT_TO_RESPONCE'] = $this->readResponse();
-        if (substr($this->logArray['RCPT_TO_RESPONCE'],0,3)!='250') {
-            $this->Error .= 'Mistake in reciepent address! '.$this->logArray['RCPT_TO_RESPONCE'].$this->newline;
-        }
-        // Send data to server
-        $this->sendCommand('DATA');
-        $this->logArray['DATA_RESPONSE'] = $this->readResponse();
-        // Send mail message
-        if (!$this->sendMail()) return false;
-        // Good bye server! =)
-        $this->sendCommand('QUIT');
-        $this->logArray['QUIT_RESPONSE'] = $this->readResponse();
-        // Close smtp connect
-        fclose($this->smtpConnect);
-        return true;
-    }
-
-    // Function send mail
-    private function sendMail() {
-        $this->sendHeaders();
-        $this->sendCommand($this->message);
-        $this->sendCommand('.');
-        $this->logArray['SEND_DATA_RESPONSE'] = $this->readResponse();
-        if (substr($this->logArray['SEND_DATA_RESPONSE'], 0, 3) != '250') {
-            $this->Error .= 'Mistake in sending data! ' . $this->logArray['SEND_DATA_RESPONSE'] . $this->newline;
-            return false;
-        }
-        return true;
-    }
-
-    // Function read response
-    private function readResponse() {
-        $data = "";
-        if (!$this->smtpConnect || !is_resource($this->smtpConnect)) {
-            return $data;
-        }
-        while ($str = fgets($this->smtpConnect, 4096)) {
-            $data .= $str;
-            if (substr($str, 3, 1) == " ") {
-                break;
+    /**
+     * Configure SMTP settings
+     */
+    private function configureSMTP() {
+        try {
+            // Server settings
+            $this->phpmailer->isSMTP();
+            $this->phpmailer->Host = $this->smtpServer;
+            $this->phpmailer->SMTPAuth = true;
+            $this->phpmailer->Username = $this->username;
+            $this->phpmailer->Password = $this->password;
+            $this->phpmailer->Port = $this->port;
+            $this->phpmailer->CharSet = 'UTF-8';
+            
+            // Debug settings
+            if ($this->debug) {
+                $this->phpmailer->SMTPDebug = SMTP::DEBUG_SERVER;
+            } else {
+                $this->phpmailer->SMTPDebug = 0;
             }
+            
+            // Set encryption
+            switch ($this->encryption) {
+                case 'ssl':
+                    $this->phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                    break;
+                case 'tls':
+                case 'starttls':
+                    $this->phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                    break;
+                default:
+                    $this->phpmailer->SMTPSecure = false;
+                    $this->phpmailer->SMTPAutoTLS = false;
+                    break;
+            }
+            
+            // Set default from address
+            $this->phpmailer->setFrom($this->fromEmail, $this->fromName);
+            
+        } catch (Exception $e) {
+            $this->Error = "SMTP Configuration Error: " . $e->getMessage();
         }
-        return $data;
     }
 
-    // function send command to server
-    private function sendCommand($string) {
-        fputs($this->smtpConnect, $string . $this->newline);
-        return;
+    /**
+     * Send an email
+     * 
+     * @param string|array $to Recipient email address(es)
+     * @param string $subject Email subject
+     * @param string $message Email body (HTML or plain text)
+     * @param bool $isHTML Whether the message is HTML (default: true)
+     * @param string|array $cc CC email address(es) (optional)
+     * @param string|array $bcc BCC email address(es) (optional)
+     * @param string $replyTo Reply-to email address (optional)
+     * @param array $attachments Array of file paths to attach (optional)
+     * @return bool True on success, false on failure
+     */
+    public function sendEmail($to, $subject, $message, $isHTML = true, $cc = null, $bcc = null, $replyTo = null, $attachments = []) {
+        try {
+            // Clear previous recipients and attachments
+            $this->phpmailer->clearAddresses();
+            $this->phpmailer->clearCCs();
+            $this->phpmailer->clearBCCs();
+            $this->phpmailer->clearAttachments();
+            $this->phpmailer->clearReplyTos();
+            
+            // Add recipients
+            if (is_array($to)) {
+                foreach ($to as $email => $name) {
+                    if (is_numeric($email)) {
+                        $this->phpmailer->addAddress($name);
+                    } else {
+                        $this->phpmailer->addAddress($email, $name);
+                    }
+                }
+            } else {
+                $this->phpmailer->addAddress($to);
+            }
+            
+            // Add CC recipients
+            if ($cc) {
+                if (is_array($cc)) {
+                    foreach ($cc as $email => $name) {
+                        if (is_numeric($email)) {
+                            $this->phpmailer->addCC($name);
+                        } else {
+                            $this->phpmailer->addCC($email, $name);
+                        }
+                    }
+                } else {
+                    $this->phpmailer->addCC($cc);
+                }
+            }
+            
+            // Add BCC recipients
+            if ($bcc) {
+                if (is_array($bcc)) {
+                    foreach ($bcc as $email => $name) {
+                        if (is_numeric($email)) {
+                            $this->phpmailer->addBCC($name);
+                        } else {
+                            $this->phpmailer->addBCC($email, $name);
+                        }
+                    }
+                } else {
+                    $this->phpmailer->addBCC($bcc);
+                }
+            }
+            
+            // Set reply-to
+            if ($replyTo) {
+                $this->phpmailer->addReplyTo($replyTo);
+            }
+            
+            // Add attachments
+            if (!empty($attachments)) {
+                foreach ($attachments as $file) {
+                    if (is_array($file)) {
+                        // Array format: ['path' => '/path/to/file', 'name' => 'filename.ext']
+                        $this->phpmailer->addAttachment($file['path'], $file['name'] ?? '');
+                    } else {
+                        // Simple string path
+                        $this->phpmailer->addAttachment($file);
+                    }
+                }
+            }
+            
+            // Content
+            $this->phpmailer->isHTML($isHTML);
+            $this->phpmailer->Subject = $subject;
+            $this->phpmailer->Body = $message;
+            
+            // If HTML, create plain text version
+            if ($isHTML) {
+                $this->phpmailer->AltBody = strip_tags($message);
+            }
+            
+            $this->phpmailer->send();
+            return true;
+            
+        } catch (Exception $e) {
+            $this->Error = "Message could not be sent. Mailer Error: {$this->phpmailer->ErrorInfo}";
+            return false;
+        }
     }
 
-    // function send headers
-    private function sendHeaders() {
-        $this->sendCommand("Date: ".date("D, j M Y G:i:s")." +0700");
-        $this->sendCommand("From: <$this->fromuser>");
-        $this->sendCommand("Reply-To: <$this->fromuser>");
-        $this->sendCommand("To: <$this->to>");
-        $this->sendCommand("Subject: $this->subject");
-        $this->sendCommand("MIME-Version: 1.0");
-        $this->sendCommand("Content-Type: text/html; charset=$this->charset");
-        if ($this->contentTransferEncoding) $this->sendCommand("Content-Transfer-Encoding: $this->contentTransferEncoding");
-        $this->sendCommand($this->newline);
-        return ;
+    /**
+     * Simple email sending method (backward compatibility)
+     * 
+     * @param string $to Recipient email address
+     * @param string $subject Email subject
+     * @param string $message Email body
+     * @return bool True on success, false on failure
+     */
+    public function mailit($to, $subject, $message) {
+        return $this->sendEmail($to, $subject, $message, true);
     }
 
+    /**
+     * Test SMTP connection
+     * 
+     * @return array Array with 'success' (bool) and 'message' (string)
+     */
+    public function testConnection() {
+        try {
+            $this->phpmailer->SMTPDebug = 0; // Disable debug for testing
+            $result = $this->phpmailer->smtpConnect();
+            if ($result) {
+                $this->phpmailer->smtpClose();
+                return ['success' => true, 'message' => 'SMTP connection successful'];
+            } else {
+                return ['success' => false, 'message' => 'SMTP connection failed'];
+            }
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Connection error: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Get the last error message
+     * 
+     * @return string Error message
+     */
+    public function printError() {
+        return $this->Error;
+    }
+
+    /**
+     * Set debug mode
+     * 
+     * @param bool $debug Enable/disable debug mode
+     */
+    public function setDebug($debug = true) {
+        $this->debug = $debug;
+        $this->phpmailer->SMTPDebug = $debug ? SMTP::DEBUG_SERVER : 0;
+    }
+
+    /**
+     * Set character encoding
+     * 
+     * @param string $charset Character encoding (default: UTF-8)
+     */
+    public function setCharset($charset = 'UTF-8') {
+        $this->phpmailer->CharSet = $charset;
+    }
+
+    /**
+     * Override the default from address for this instance
+     * 
+     * @param string $email From email address
+     * @param string $name From name (optional)
+     */
+    public function setFrom($email, $name = '') {
+        try {
+            $this->phpmailer->setFrom($email, $name ?: $email);
+            $this->fromEmail = $email;
+            $this->fromName = $name ?: $email;
+        } catch (Exception $e) {
+            $this->Error = "Error setting from address: " . $e->getMessage();
+        }
+    }
+
+    /**
+     * Destructor - Clean up PHPMailer instance
+     */
     public function __destruct() {
-        if (is_resource($this->smtpConnect))
-            fclose($this->smtpConnect);
+        if ($this->phpmailer) {
+            $this->phpmailer->clearAddresses();
+            $this->phpmailer->clearAttachments();
+            $this->phpmailer->clearCCs();
+            $this->phpmailer->clearBCCs();
+            $this->phpmailer->clearReplyTos();
+        }
     }
-
 }
 
 ?>

@@ -189,7 +189,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     }
 } elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
     $id = scrub_input($_GET['id']);
-    if (!$_POST['submit']) {
+    if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=user&action=delete&id=" . $id . "";
         $user_back = '<a href="admin.php?n=user" class="button">' . BACK_TEXT . '</a>';
         $button = '<input type="submit" id="button" name="submit" value="'.DELETE_TEXT.'">';

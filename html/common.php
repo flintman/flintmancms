@@ -39,6 +39,10 @@ require_once(INCLUDES_PATH . 'smarty-5.6.0/libs/Smarty.class.php');
 require_once(INCLUDES_PATH . 'SmartyMenu-1.1/libs/SmartyMenu.class.php');
 require_once(INCLUDES_PATH . 'SmartyMenu-1.1/plugins/function.menu_init.php');
 require_once(INCLUDES_PATH . 'SmartyMenu-1.1/plugins/function.menu.php');
+require_once(INCLUDES_PATH . 'PHPMailer/src/Exception.php');
+require_once(INCLUDES_PATH . 'PHPMailer/src/PHPMailer.php');
+require_once(INCLUDES_PATH . 'PHPMailer/src/SMTP.php');
+require_once(INCLUDES_PATH . 'scripts/email.php');
 
 // reports for all data listing
 $report = new ReportList;
@@ -67,8 +71,6 @@ foreach (glob($language_directory) as $filename)
 {
     include $filename;
 }
-
-
 
 $sql = "SELECT * FROM " .DB_PREFIX. "_version ORDER BY version_number DESC";
 $result = $db->sql_query($sql);

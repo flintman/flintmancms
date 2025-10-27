@@ -83,7 +83,7 @@ if (isset($_GET['active'])) {
                         Please click the link to active your account. <br>
                         <a href=\"" . $_SERVER['HTTP_HOST'] . "/index.php?n=register&id=$username&active=$hash_code\"><b>Activate</b></a> ";
 
-            email($_POST['email'], $config['site_name'], $message);
+            email($email, $message);
 
             $body = COMP_ACTIVE_LINK_TEXT;
         } else {

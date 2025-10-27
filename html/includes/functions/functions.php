@@ -23,22 +23,28 @@ if (!defined('IN_CMS')) {
     die("ERROR - Hacking attempt");
 }
 
+// Include Mail class for email functionality
+
 if (!defined('HEADER_SEPARATOR')) {
     define('HEADER_SEPARATOR', ' | ');
 }
 
-function email($to, $subject, $message) {
+function email($to, $message) {
     global $config;
-
-    // Use email_admin as the correct config key, with fallback if not set
-    $admin_email = isset($config['email_admin']) ? $config['email_admin'] : 'noreply@localhost';
-
-    $mheaders = 'From: ' . $config['site_name'] . '<' . $admin_email . '>' . "\r\n" .
-            'Reply-To: ' . $admin_email . "\r\n" .
-            'Return-Path: <' . $admin_email . '>' . "\r\n" .
-            'X-Mailer: PHP/' . phpversion();
-
-    mail($to, $subject, $message, $mheaders);
+    $mail = new Mail(
+                $config['SMTP_host'],        // SMTP server
+                $config['SMTP_user'],     // Username
+                $config['SMTP_pass'],                   // Password (replace with real password)
+                $config['SMTP_user'],     // From email
+                $config['SMTP_hostport'],                         // Port
+                $config['SMTP_encryption'],                       // Encryption (SSL for port 465, not STARTTLS)
+                'Website Admin',        // From name
+            );
+        if ($mail->mailit($to, $config['site_name'], $message)) {
+            $content = 'Email Was sent';
+        } else {
+            $content = $mail->printError();
+        }
 }
 
 function dsSlash($string) {

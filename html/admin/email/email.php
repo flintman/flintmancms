@@ -23,7 +23,6 @@ if (!defined('IN_CMS')) {
     die("ERROR - Hacking attempt");
 }
 
-
 // page authentication
 array_push($page_lvl, "Admin");
 include(INCLUDES_PATH . 'authentication.php');
@@ -31,28 +30,13 @@ include(INCLUDES_PATH . 'authentication.php');
 $form_action = '';
 $button = '';
 $save = '';
+$content = '';
+$page_back = '';
 
 if (isset($_POST['submit'])) {
     $message = scrub_input($_POST['message']);
-    if ($config['sendviaSTMP']) {
-        require_once (INCLUDES_PATH . 'scripts/email.php');
-        $smtp = new Mail(
-            $config['SMTP_host'],         // server
-            $config['SMTP_user'],         // username
-            $config['SMTP_pass'],         // password
-            $config['email_admin'],       // from_user
-            $config['SMTP_hostport']      // port (optional)
-        );
-
-        if ($smtp->mailit($config['email_admin'], $config['site_name'], $message)) {
-            $content = 'Email Was sent';
-        } else {
-            $content = $smtp->printError();
-        }
-    } else {
-        mail($config['email_admin'], $config['site_name'], $message);
-        $content = ADMIN_SEND_MESSAGE_TEXT;
-    }
+    email($config['email_admin'], $message);
+    $content = 'Email has been sent successfully.';
     $page_back = '<a href="admin.php" class="button">' . BACK_TEXT . '</a>';
 } elseif (isset($_POST['save'])) {
     if (isset($_POST['email_type']))
@@ -69,6 +53,7 @@ if (isset($_POST['submit'])) {
     $email_port = scrub_input($_POST['email_port']);
     $email_user = scrub_input($_POST['email_user']);
     $email_pass = scrub_input($_POST['email_pass']);
+    $email_encryption = scrub_input($_POST['email_encryption']);
     $admin_email = scrub_input($_POST['admin_email']);
 
     update_config($email_type, "sendviaSTMP");
@@ -76,6 +61,7 @@ if (isset($_POST['submit'])) {
     update_config($email_port, "SMTP_hostport");
     update_config($email_user, "SMTP_user");
     update_config($email_pass, "SMTP_pass");
+    update_config($email_encryption, "SMTP_encryption");
     update_config($email, "email_errors");
     update_config($admin_email, "email_admin");
     header("Location: admin.php?n=email");
@@ -93,7 +79,16 @@ if (isset($_POST['submit'])) {
     $email_host = '<input type="text" name="email_host" value="' . $config['SMTP_host'] . '">';
     $email_port = '<input type="text" name="email_port" value="' . $config['SMTP_hostport'] . '">';
     $email_user = '<input type="text" name="email_user" value="' . $config['SMTP_user'] . '">';
-    $email_pass = '<input type="text" name="email_pass" value="' . $config['SMTP_pass'] . '">';
+    $email_pass = '<input type="password" name="email_pass" value="' . $config['SMTP_pass'] . '">';
+
+    // SMTP Encryption dropdown
+    $current_encryption = isset($config['SMTP_encryption']) ? $config['SMTP_encryption'] : 'none';
+    $email_encryption = '<select name="email_encryption">';
+    $email_encryption .= '<option value="none"' . ($current_encryption == 'none' ? ' selected' : '') . '>None</option>';
+    $email_encryption .= '<option value="ssl"' . ($current_encryption == 'ssl' ? ' selected' : '') . '>SSL</option>';
+    $email_encryption .= '<option value="tls"' . ($current_encryption == 'tls' ? ' selected' : '') . '>TLS/STARTTLS</option>';
+    $email_encryption .= '</select>';
+
     $admin_email = '<input name="admin_email" type="text" value="' . $config['email_admin'] . '">';
     $save = '<input type="submit" value="' . SAVE_TEXT . '" name="save" class="button">';
     $content = '<textarea name="message" cols="40" rows="3"></textarea>';
@@ -107,6 +102,7 @@ if (isset($_POST['submit'])) {
                 'email_port' => $email_port,
                 'email_user' => $email_user,
                 'email_pass' => $email_pass,
+                'email_encryption' => $email_encryption,
                 'admin_email' => $admin_email,
                 'email_mode' => $email_mode,
                 'admin_type_message_text' => ADMIN_TYPE_MESSAGE_TEXT,
@@ -115,6 +111,7 @@ if (isset($_POST['submit'])) {
                 'email_port_text' => ADMIN_SMTP_PORT_TEXT,
                 'email_user_text' => ADMIN_SMTP_USER_TEXT,
                 'email_pass_text' => ADMIN_SMTP_PASS_TEXT,
+                'email_encryption_text' => 'SMTP Encryption',
                 'admin_email_text' => ADMIN_EMAIL_TEXT,
                 'admin_email_errors_text' => ADMIN_EMAIL_ERRORS_TEXT,
             )
