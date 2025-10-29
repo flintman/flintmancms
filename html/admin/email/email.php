@@ -31,13 +31,12 @@ $form_action = '';
 $button = '';
 $save = '';
 $content = '';
-$page_back = '';
+$page_back = BACK_TEXT ;
 
 if (isset($_POST['submit'])) {
     $message = scrub_input($_POST['message']);
     email($config['email_admin'], $message);
-    $content = 'Email has been sent successfully.';
-    $page_back = '<a href="admin.php" class="button">' . BACK_TEXT . '</a>';
+    $content = ADMIN_SEND_MESSAGE_TEXT;
 } elseif (isset($_POST['save'])) {
     if (isset($_POST['email_type']))
         $email_type = 1;
@@ -67,64 +66,48 @@ if (isset($_POST['submit'])) {
     header("Location: admin.php?n=email");
 }else {
     $form_action = "admin.php?n=email";
-    if ($config['email_errors'] == '0')
-        $email_mode = '<input type="checkbox" name="email_mode" value="1">';
-    else
-        $email_mode = '<input type="checkbox" name="email_mode" value="1" checked>';
-
-    if ($config['sendviaSTMP'])
-        $email_send_type = '<input type="checkbox" name="email_type" value="1" checked>';
-    else
-        $email_send_type = '<input type="checkbox" name="email_type" value="1">';
-    $email_host = '<input type="text" name="email_host" value="' . $config['SMTP_host'] . '">';
-    $email_port = '<input type="text" name="email_port" value="' . $config['SMTP_hostport'] . '">';
-    $email_user = '<input type="text" name="email_user" value="' . $config['SMTP_user'] . '">';
-    $email_pass = '<input type="password" name="email_pass" value="' . $config['SMTP_pass'] . '">';
-
-    // SMTP Encryption dropdown
+    // Assign raw values and checked/selected states for template rendering
+    $email_mode_checked = ($config['email_errors'] == '1');
+    $email_send_type_checked = ($config['sendviaSTMP'] == '1');
+    $email_host_value = $config['SMTP_host'];
+    $email_port_value = $config['SMTP_hostport'];
+    $email_user_value = $config['SMTP_user'];
+    $email_pass_value = $config['SMTP_pass'];
+    $admin_email_value = $config['email_admin'];
     $current_encryption = isset($config['SMTP_encryption']) ? $config['SMTP_encryption'] : 'none';
-    $email_encryption = '<select name="email_encryption">';
-    $email_encryption .= '<option value="none"' . ($current_encryption == 'none' ? ' selected' : '') . '>None</option>';
-    $email_encryption .= '<option value="ssl"' . ($current_encryption == 'ssl' ? ' selected' : '') . '>SSL</option>';
-    $email_encryption .= '<option value="tls"' . ($current_encryption == 'tls' ? ' selected' : '') . '>TLS/STARTTLS</option>';
-    $email_encryption .= '</select>';
-
-    $admin_email = '<input name="admin_email" type="text" value="' . $config['email_admin'] . '">';
-    $save = '<input type="submit" value="' . SAVE_TEXT . '" name="save" class="button">';
-    $content = '<textarea name="message" cols="40" rows="3"></textarea>';
-    $page_back = '<a href="admin.php" class="button">' . BACK_TEXT . '</a>';
-    $button = '<input type="submit" value="' . SEND_TEXT . '" name="submit" class="button">';
+    $save_text = SAVE_TEXT;
+    $send_text = SEND_TEXT;
 
     $smarty->assign(
-            array(
-                'email_send_type' => $email_send_type,
-                'email_host' => $email_host,
-                'email_port' => $email_port,
-                'email_user' => $email_user,
-                'email_pass' => $email_pass,
-                'email_encryption' => $email_encryption,
-                'admin_email' => $admin_email,
-                'email_mode' => $email_mode,
-                'admin_type_message_text' => ADMIN_TYPE_MESSAGE_TEXT,
-                'email_type_text' => ADMIN_USE_SMTP_TEXT,
-                'email_host_text' => ADMIN_SMTP_HOST_TEXT,
-                'email_port_text' => ADMIN_SMTP_PORT_TEXT,
-                'email_user_text' => ADMIN_SMTP_USER_TEXT,
-                'email_pass_text' => ADMIN_SMTP_PASS_TEXT,
-                'email_encryption_text' => 'SMTP Encryption',
-                'admin_email_text' => ADMIN_EMAIL_TEXT,
-                'admin_email_errors_text' => ADMIN_EMAIL_ERRORS_TEXT,
-            )
+        array(
+            'email_mode_checked' => $email_mode_checked,
+            'email_send_type_checked' => $email_send_type_checked,
+            'email_host_value' => $email_host_value,
+            'email_port_value' => $email_port_value,
+            'email_user_value' => $email_user_value,
+            'email_pass_value' => $email_pass_value,
+            'admin_email_value' => $admin_email_value,
+            'current_encryption' => $current_encryption,
+            'save_text' => $save_text,
+            'send_text' => $send_text,
+            'admin_type_message_text' => ADMIN_TYPE_MESSAGE_TEXT,
+            'email_type_text' => ADMIN_USE_SMTP_TEXT,
+            'email_host_text' => ADMIN_SMTP_HOST_TEXT,
+            'email_port_text' => ADMIN_SMTP_PORT_TEXT,
+            'email_user_text' => ADMIN_SMTP_USER_TEXT,
+            'email_pass_text' => ADMIN_SMTP_PASS_TEXT,
+            'email_encryption_text' => 'SMTP Encryption',
+            'admin_email_text' => ADMIN_EMAIL_TEXT,
+            'admin_email_errors_text' => ADMIN_EMAIL_ERRORS_TEXT,
+        )
     );
 }
 
 $smarty->assign(
         array(
             'form_action' => $form_action,
-            'content' => $content,
-            'button' => $button,
-            'save' => $save,
             'page_back' => $page_back,
+            'content' => $content
         )
 );
 

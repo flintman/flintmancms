@@ -19,7 +19,6 @@ the themes are as shown below
         -user_add.htm
     -plugins
         -plugins.htm
--delete.htm
 -error.htm
 -footer.htm
 -header.htm

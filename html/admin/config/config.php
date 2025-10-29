@@ -26,144 +26,93 @@ if (!defined('IN_ADMIN_CMS')) {
 array_push($page_lvl, "Admin");
 include(INCLUDES_PATH . 'authentication.php');
 
-
 // show the form
 if (!isset($_POST['submit'])) {
     // get initial values from database
-    $title = '<input name="title" type="text" value="'
-            . $config['site_name'] . '" maxlength="255" >';
-
+    $title = $config['site_name'];
 
 // Pulls the templates
     $dir = TEMPLATES_PATH;
     $dh = opendir($dir);
     while (false != ($filename = readdir($dh))) {
-        $files[] = $filename;
+        $templates[] = $filename;
     }
 
-    sort($files);
-    array_shift($files);
-    array_shift($files);
-
-    $template_type = '<select name="template">';
-
-    foreach ($files as $key => $value) {
-        if ($config['template'] == $value)
-            $template_type .= "<option value=\"$value\" selected>$value</option>";
-        else
-            $template_type .= "<option value=\"$value\">$value</option>";
-    }
-
-    $template_type .= '</select>';
-    $files = null;
+    sort($templates);
+    array_shift($templates);
+    array_shift($templates);
 
     // Pulls the language
     $dir = LANGUAGES_PATH;
     $dh = opendir($dir);
     while (false != ($filename = readdir($dh))) {
-        $files[] = $filename;
+        $languages[] = $filename;
     }
 
-    sort($files);
-    array_shift($files);
-    array_shift($files);
+    sort($languages);
+    array_shift($languages);
+    array_shift($languages);
 
-    $language_type = '<select name="language">';
-
-    foreach ($files as $key => $value) {
-        if ($config['language'] == $value)
-            $language_type .= "<option value=\"$value\" selected>$value</option>";
-        else
-            $language_type .= "<option value=\"$value\">$value</option>";
-    }
-
-    $language_type .= '</select>';
-
-    //Setups groups
-    $groups = '<select name="groups">';
+    // Setups groups as array for template
+    $groups_options = array();
     $sql = "SELECT * FROM " . DB_PREFIX . "_groups";
     $result = $db->sql_query($sql);
-    While ($data = $db->sql_fetchrow($result)) {
-        $priv_id = $data['id'];
-        $priv_name = $data['name'];
-        if ($config['default_priv'] == $priv_id)
-            $groups .= "<option value=\"$priv_id\" selected>$priv_name</option>";
-        else
-            $groups .= "<option value=\"$priv_id\">$priv_name</option>";
+    while ($data = $db->sql_fetchrow($result)) {
+        $groups_options[] = array('id' => $data['id'], 'name' => $data['name']);
     }
-    $groups .= '</select>';
 
-    //Gets all the different pages and plugins
-    $frt_page = '<select name="frt_page">';
+    // Gets all the different pages and plugins as array for template
+    $frt_page_options = array();
     $sql = "SELECT * FROM " . DB_PREFIX . "_pages WHERE active='1'";
     $result = $db->sql_query($sql);
-    While ($data = $db->sql_fetchrow($result)) {
-        $link = 'index.php?n=page&page_id='.$data['id'];
+    while ($data = $db->sql_fetchrow($result)) {
+        $link = 'index.php?n=page&page_id=' . $data['id'];
         $name = ucfirst($data['title']);
-        if ($config['frt_page'] == $link)
-            $frt_page .= "<option value=\"$link\" selected>$name</option>";
-        else
-            $frt_page .= "<option value=\"$link\">$name</option>";
+        $frt_page_options[] = array('value' => $link, 'label' => $name);
     }
     $sql = "SELECT * FROM " . DB_PREFIX . "_plugins WHERE active='1'";
     $result = $db->sql_query($sql);
-    While ($data = $db->sql_fetchrow($result)) {
-        $link = 'index.php?n=plugins&p='.$data['name'];
+    while ($data = $db->sql_fetchrow($result)) {
+        $link = 'index.php?n=plugins&p=' . $data['name'];
         $name = ucfirst($data['name']);
-        if ($config['frt_page'] == $link)
-            $frt_page .= "<option value=\"$link\" selected>$name</option>";
-        else
-            $frt_page .= "<option value=\"$link\">$name</option>";
+        $frt_page_options[] = array('value' => $link, 'label' => $name);
     }
-    $frt_page .= '</select>';
 
+    // Assign raw values for checkboxes and fields, let Smarty template render HTML
+    $debug_checked = ($config['debug'] == '1');
+    $maintain_checked = ($config['maintain'] == '1');
+    $allow_login_checked = ($config['allow_login'] == '1');
+    $add_to_link_value = $config['add_link'];
+    $disclaimer_value = $config['disclamer'];
+    $meta_tags_value = $config['meta_tags'];
+    $maintain_message_value = $config['maintain_message'];
 
-    if ($config['debug'] == '0')
-        $debug_mode = '<input type="checkbox" name="debug" value="1">';
-    else
-        $debug_mode = '<input type="checkbox" name="debug" value="1" checked>';
+    // Button labels
+    $submit_text = SUBMIT_TEXT;
+    $reset_text = RESET_TEXT;
 
-
-    if ($config['maintain'] == '0')
-        $maintain_mode = '<input type="checkbox" name="maintain" value="1">';
-    else
-        $maintain_mode = '<input type="checkbox" name="maintain" value="1" checked>';
-
-    if ($config['allow_login'] == '0')
-        $allow_login = '<input type="checkbox" name="allow_login" value="1">';
-    else
-        $allow_login = '<input type="checkbox" name="allow_login" value="1" checked>';
-
-    $add_to_link ='<input name="add_to_link" type="text" value="'
-            . $config['add_link'] . '" maxlength="255" >';;
-
-    $disclaimer = '<textarea name="disclaimer" cols="30" rows="2" >' . $config['disclamer'] . '</textarea>';
-
-    $meta_tags = '<textarea name="meta" cols="30" rows="2" >' . $config['meta_tags'] . '</textarea>';
-
-    $maintain_message = '<textarea name="maintain_message" cols="30" rows="2" >' . $config['maintain_message'] . '</textarea>';
-
-    $buttons = '<input type="submit" name="submit" value="' . SUBMIT_TEXT . '" class="button">
-        <input type="reset" name="' . RESET_TEXT . '" value="Reset" class="button">';
-
-
-// put the variables into the template
+    // put the variables into the template
     $smarty->assign(
-            array(
-                'title' => $title,
-                'template_type' => $template_type,
-                'language_type' => $language_type,
-                'debug_mode' => $debug_mode,
-                'maintain_mode' => $maintain_mode,
-                'disclaimer' => $disclaimer,
-                'meta_tag' => $meta_tags,
-                'buttons' => $buttons,
-                'allow_login' => $allow_login,
-                'groups' => $groups,
-                'frt_page' => $frt_page,
-                'maintain_message' => $maintain_message,
-                'add_to_link' => $add_to_link
-            )
+        array(
+            'title' => $title,
+            'debug_checked' => $debug_checked,
+            'maintain_checked' => $maintain_checked,
+            'allow_login_checked' => $allow_login_checked,
+            'add_to_link_value' => $add_to_link_value,
+            'disclaimer_value' => $disclaimer_value,
+            'meta_tags_value' => $meta_tags_value,
+            'maintain_message_value' => $maintain_message_value,
+            'submit_text' => $submit_text,
+            'reset_text' => $reset_text,
+            'groups_options' => $groups_options,
+            'selected_group' => $config['default_priv'],
+            'frt_page_options' => $frt_page_options,
+            'selected_frt_page' => $config['frt_page'],
+            'template_options' => $templates,
+            "selected_template" => $config['template'],
+            'language_options' => $languages,
+            "selected_language" => $config['language']
+        )
     );
 
     // put the variables into the template
