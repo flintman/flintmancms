@@ -42,7 +42,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     if (extension_loaded('zip')) {
         $pZipSupport = True;
 
-
         if (!$_POST['submit']) {
 
         } elseif ($_POST['submit'] == 'Save') {
@@ -132,7 +131,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     $report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
     $report->addOutputColumn('name', '', 'left');
     $report->addOutputColumn('config', '', 'left');
-    $report->addOutputColumn('descrption', '', 'left1');
+    $report->addOutputColumn('descrption', '', 'left');
     $report->addOutputColumn('deactive', '', 'left');
     $active_plugins = $report->getListFromArray($active_plugins);
 
@@ -176,10 +175,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
             )
     );
 }
-
-
-
-
 
 $smarty->assign(
         array(

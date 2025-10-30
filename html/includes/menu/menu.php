@@ -26,14 +26,14 @@ $sm->initMenu($menu);
 //Gets all pages names and puts in menu
 
 $sm->initItem($item);
-$sm->setItemText($item, "Home");
+$sm->setItemText($item, HOME_TEXT);
 $sm->setItemLink($item, "index.php");
 $item['new_window'] = 0;
 $sm->addMenuItem($menu, $item);
 
 if ($_SESSION['user_logged_in']) {
     $sm->initItem($item);
-    $sm->setItemText($item, "Profile");
+    $sm->setItemText($item, PROFILE_TEXT);
     $sm->setItemLink($item, "index.php?n=profile" . $config['add_link']);
     $item['new_window'] = 0;
     $sm->addMenuItem($menu, $item);
@@ -88,7 +88,7 @@ while ($data = $db->sql_fetchrow($result)) {
 }
 if ($_SESSION['priv'] == "1") {
     $sm->initItem($item);
-    $sm->setItemText($item, "Admin");
+    $sm->setItemText($item, ADMIN_TEXT);
     $sm->setItemLink($item, "admin.php");
     $item['new_window'] = 0;
     $sm->addMenuItem($menu, $item);

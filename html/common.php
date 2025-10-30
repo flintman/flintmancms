@@ -96,18 +96,14 @@ $smarty->setCompileDir('templates_c/');
 // get auth type
 require_once(INCLUDES_PATH . '/auth.php');
 
-If ($config['allow_login'] || $admin_pages == 1) {
-    if ($_SESSION['user_logged_in']) {
-        $login_data = "Welcome " . $_SESSION['username'];
-        $register_link = '<a href="index.php?n=logout">Logout</a>';
-    } else {
-        $login_data = '<form action="index.php" method="POST">
-		  <input name="username" type="text" value="username" size="15" maxlength="45" onFocus="if(this.value==\'username\')this.value=\'\';">
-                  <input name="password" type="password" value="password" size="15" onFocus="if(this.value==\'password\')this.value=\'\';"><br>
-		  <input type="submit" name="login" value="Login" style="font-size:10px" class="button">
-		  <input type="checkbox" checked="checked" name="autologin"> Remember Me!
-                  </form>';
-        $register_link = '<a href="index.php?n=register" class="button">Register</a> ';
-    }
+global $admin_pages;
+if ($config['allow_login'] || $admin_pages == 1) {
+    $is_logged_in = isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'];
+    $username = $is_logged_in ? $_SESSION['username'] : '';
+    $smarty->assign([
+        'is_logged_in' => $is_logged_in,
+        'allow_login' => $admin_pages == 1 ? true : $config['allow_login'],
+        'username' => $username,
+    ]);
 }
 ?>

@@ -101,7 +101,21 @@ define('ADMIN_USER_PASSWORD_TEXT', "Password: ");
 define('ADMIN_USER_PASSWORD_TWO_TEXT', "Retype Password: ");
 define('ADMIN_USER_ONLY_CHANGE_TEXT', "Only enter password if you want to change");
 define('ADMIN_USER_GROUPS_TEXT', "User Permissions: ");
+define("ADMIN_USER_ADD_ERROR_TEXT", "There was an error either Passwords don't match or something was blank see error:");
 
 //admin/faq.php
 define('ADMIN_HELP_TEXT', "Help");
+
+// ADMIN MENU
+define('ADMIN_MENU_USERS_CONFIGURE', 'Users Configure');
+define('ADMIN_MENU_GROUPS_CONFIGURE', 'Groups Configure');
+define('ADMIN_MENU_EMAIL_CONFIGURE', 'Email Configure');
+define('ADMIN_MENU_LINKS', 'Menu Links');
+define('ADMIN_MENU_EXIT_ADMIN', 'Exit Admin');
+define('ADMIN_MENU_ADMIN_HOME', 'Admin Home');
+define('ADMIN_MENU_CONFIGURE', 'Configure');
+define('ADMIN_MENU_LOGS', 'Logs');
+define('ADMIN_MENU_PAGES_ADMIN', 'Pages Admin');
+define('ADMIN_MENU_PLUGINS_ADMIN', 'Plugins Admin');
+define('ADMIN_MENU_HELP', 'Help');
 ?>

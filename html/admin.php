@@ -26,7 +26,7 @@ extract($_GET);
 $p = isset($_GET['p']) ? scrub_input($_GET['p']) : '';
 //Checks is logged in
 if ($_SESSION['user_logged_in'] != 1) {
-    $errormsg = "Please Log in";
+    $errorMsg = LOGIN_TEXT;
     include(BASE_PATH . 'header.php');
 } else {
 //If nothing goes to frontpage

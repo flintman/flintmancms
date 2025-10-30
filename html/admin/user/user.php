@@ -23,12 +23,12 @@ if (!defined('IN_CMS')) {
     die("ERROR - Hacking attempt");
 }
 
-
 // page authentication
 array_push($page_lvl, "Admin");
 include(INCLUDES_PATH . 'authentication.php');
 $user_array = array();
 $content = '';
+$form_action = "";
 
 if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     $id = scrub_input($_GET['id']);
@@ -62,7 +62,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         if ($data['id'] == '1')
             $groups = '';
 
-        $send = '<input type="submit" id="button" name="submit" value="Send">';
+        $send = '<input type="submit" id="button" class="button" name="submit" value="Send">';
     } else {
         If (isset($_POST['submit'])) {
             $password = scrub_input($_POST['password']);
@@ -135,7 +135,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             if (!isset($errorMsg))
                 header("Location: admin.php?n=user");
         } else {
-            $body = "There was an error either Passwords don't match or something was blank";
+            $body = ADMIN_USER_ADD_ERROR_TEXT ." ". $db->sql_error();
         }
 
         $smarty->assign(
@@ -164,7 +164,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         $groups .= '</select>';
 
         $email = '<input name="email" type="text" size="15" maxlength="45"  onkeyup="check_email(this.value)">';
-        $send = '<input type="submit" id="button" name="submit" value="Send">';
+        $send = '<input type="submit" id="button" class="button" name="submit" value="Send">';
         $smarty->assign(
                 array(
                     'form_action' => $form_action,
@@ -192,7 +192,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=user&action=delete&id=" . $id . "";
         $user_back = '<a href="admin.php?n=user" class="button">' . BACK_TEXT . '</a>';
-        $button = '<input type="submit" id="button" name="submit" value="'.DELETE_TEXT.'">';
+        $button = '<input type="submit" class="button" id="button" name="submit" value="'.DELETE_TEXT.'">';
         $content = QUESTION_DELETE_TEXT;
     } else {
         If ($_POST['submit'] == "Delete") {
@@ -254,32 +254,27 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     $report->setMainAttributes('width="100%" cellpadding="0" cellspacing="0" border="0"');
     $report->setFieldHeadingAttributes('class="header"');
     $report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-    $report->addOutputColumn('name', 'Name', 'left');
-    $report->addOutputColumn('edit', '', 'left');
-    $report->addOutputColumn('del', '', 'left');
-    $report->addOutputColumn('state', '', 'left');
+    $report->addOutputColumn('name', USERNAME_TEXT, 'left');
+    $report->addOutputColumn('edit', EDIT_TEXT, 'left');
+    $report->addOutputColumn('del', DELETE_TEXT, 'left');
+    $report->addOutputColumn('state', STATE_TEXT, 'left');
     $content = $report->getListFromArray($user_array);
     $user_back = '<a href="admin.php" class="button">' . BACK_TEXT . '</a>';
     $button = '<a href="admin.php?n=user&action=add" class="button">' . ADMIN_USER_ADD_TEXT . '</a>';
-    if(!isset($form_action)){
-        $form_action = "";
-    }
+
     $smarty->assign(
             array(
-                'form_action' => $form_action,
                 'user_back' => $user_back,
                 'button' => $button
             )
     );
 }
 
-
 $smarty->assign(
         array(
             'content' => $content,
         )
 );
-
 
 // Use isset() to avoid undefined array key 'action' warning
 $action = isset($_GET['action']) ? $_GET['action'] : '';

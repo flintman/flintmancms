@@ -32,9 +32,20 @@
         <tr>
             <td class='menubody'>
                 <div class='loginwrapper'>
-                    <!-- login -->
-                    {$login}<br>
-                    {$register}
+                    {if $allow_login}
+                        {if $is_logged_in}
+                            {WELCOME_TEXT} {$username} <br>
+                            <a href="index.php?n=logout">{LOGOUT_TEXT}</a>
+                        {else}
+                            <form action="index.php" method="POST">
+                                <input name="username" type="text" value="username" size="15" maxlength="45" onFocus="if(this.value=='username')this.value='';">
+                                <input name="password" type="password" value="password" size="15" onFocus="if(this.value=='password')this.value='';"><br>
+                                <input type="submit" name="login" value="Login" style="font-size:10px" class="button">
+                                <input type="checkbox" checked="checked" name="autologin"> {REMEMBER_ME_TEXT}
+                            </form>
+                            <a href="index.php?n=register" class="button">{REGISTER_TEXT}</a>
+                        {/if}
+                    {/if}
                 </div>
             </td>
         </tr>
@@ -57,5 +68,5 @@
     </tr>
 </table>
 
-<div class='smalltext' style='text-align: center;'><center><a href='admin.php'>Admin</a></center><br>{$disclamer}</div>
+<div class='smalltext' style='text-align: center;'><center><a href='admin.php'>{ADMIN_TEXT}</a></center><br>{$disclamer}</div>
 </body>

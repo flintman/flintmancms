@@ -43,7 +43,8 @@ if (isset($_GET['active'])) {
                 or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
         $body = "<a href=\"index.php\">" . COMP_NOW_ACTIVE_TEXT . "</a> ";
     } else {
-        $body = "Hack Attempt Contact the Admin";
+        $body = HACK_ATTEMPT_TEXT;
+        $errorMsg = "Hacking attempt during activation for user: " . $username;
     }
     $smarty->assign(
             array(
@@ -79,8 +80,8 @@ if (isset($_GET['active'])) {
             $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
 
-            $message = "Welcome to " . $config['site_name'] . ". <br>
-                        Please click the link to active your account. <br>
+            $message = WELCOME_TO_TEXT . " " . $config['site_name'] . ". <br>
+                       " . COMP_CLICK_ACTIVATE_TEXT . " <br>
                         <a href=\"" . $_SERVER['HTTP_HOST'] . "/index.php?n=register&id=$username&active=$hash_code\"><b>Activate</b></a> ";
 
             email($email, $message);
@@ -99,29 +100,11 @@ if (isset($_GET['active'])) {
         include (BASE_PATH . 'header.php');
         $smarty->display(TEMPLATES_PATH . $config['template'] . '/page.htm');
     } else {
-        $form_action = "index.php?n=register";
-        $username = '<input name="username" type="text" size="15" maxlength="45" onkeyup="check_username(this.value)">';
-        $password = '<input name="password" type="password"  size="15">';
-        $password2 = '<input name="password2" type="password"  size="15" onkeyup="check_password(this.value)">';
-        $email = '<input name="email" type="text" size="15" maxlength="45" onkeyup="check_email(this.value)">';
-        $code = '<input type="text" name="vercode" />';
-        $send = '<input type="submit" id="button" name="submit" value="Send">';
         $smarty->assign(
                 array(
-                    'form_action' => $form_action,
-                    'form_name' => "register",
                     'username' => $username,
-                    'password' => $password,
-                    'password2' => $password2,
-                    'email' => $email,
-                    'send' => $send,
                     'on_submit' => 'onsubmit="return validate_reg();"',
-                    'username_text' => ADMIN_USER_USERNAME_TEXT,
-                    'email_text' => ADMIN_USER_EMAIL_TEXT,
-                    'password_text' => ADMIN_USER_PASSWORD_TEXT,
-                    'passwordtwo_text' => ADMIN_USER_PASSWORD_TWO_TEXT,
-                    'code_text' => REG_CODE_TEXT. ' <img src="includes/createimg.php">',
-                    'code' => $code
+                    'code_text' => REG_CODE_TEXT. ' <img src="includes/createimg.php">'
                 )
         );
 

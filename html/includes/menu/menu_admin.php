@@ -23,69 +23,69 @@ $sm->initMenu($menu);
 $sm->initMenu($config_sub);
 
 $sm->initItem($item);
-$sm->setItemText($item, "Users Configure");
+$sm->setItemText($item, ADMIN_MENU_USERS_CONFIGURE);
 $sm->setItemLink($item, "admin.php?n=user", 0);
 $item['new_window'] = 0;
 $sm->addMenuItem($config_sub, $item);
 
 $sm->initItem($item);
-$sm->setItemText($item, "Groups Configure");
+$sm->setItemText($item, ADMIN_MENU_GROUPS_CONFIGURE);
 $sm->setItemLink($item, "admin.php?n=groups", 0);
 $item['new_window'] = 0;
 $sm->addMenuItem($config_sub, $item);
 
 $sm->initItem($item);
-$sm->setItemText($item, "Email Configure");
+$sm->setItemText($item, ADMIN_MENU_EMAIL_CONFIGURE);
 $sm->setItemLink($item, "admin.php?n=email", 0);
 $item['new_window'] = 0;
 $sm->addMenuItem($config_sub, $item);
 
 $sm->initItem($item);
-$sm->setItemText($item, "Menu Links");
+$sm->setItemText($item, ADMIN_MENU_LINKS);
 $sm->setItemLink($item, "admin.php?n=links", 0);
 $item['new_window'] = 0;
 $sm->addMenuItem($config_sub, $item);
 
 $sm->initItem($item);
-$sm->setItemText($item, "Exit Admin");
+$sm->setItemText($item, ADMIN_MENU_EXIT_ADMIN);
 $sm->setItemLink($item, "index.php", 0);
 $item['new_window'] = 0;
 $sm->addMenuItem($menu, $item);
 
 if ($_SESSION['priv'] == "1") {
     $sm->initItem($item);
-    $sm->setItemText($item, "Admin Home");
+    $sm->setItemText($item, ADMIN_MENU_ADMIN_HOME);
     $sm->setItemLink($item, "admin.php", 0);
     $item['new_window'] = 0;
     $sm->addMenuItem($menu, $item);
 
     $sm->initItem($item);
-    $sm->setItemText($item, "Configure");
+    $sm->setItemText($item, ADMIN_MENU_CONFIGURE);
     $sm->setItemLink($item, "admin.php?n=config", 0);
     $item['new_window'] = 0;
     $sm->setItemSubmenu($item, $config_sub);
     $sm->addMenuItem($menu, $item);
 
     $sm->initItem($item);
-    $sm->setItemText($item, "Logs");
+    $sm->setItemText($item, ADMIN_MENU_LOGS);
     $sm->setItemLink($item, "admin.php?n=logs", 0);
     $item['new_window'] = 0;
     $sm->addMenuItem($menu, $item);
 
     $sm->initItem($item);
-    $sm->setItemText($item, "Pages Admin");
+    $sm->setItemText($item, ADMIN_MENU_PAGES_ADMIN);
     $sm->setItemLink($item, "admin.php?n=page", 0);
     $item['new_window'] = 0;
     $sm->addMenuItem($menu, $item);
 
     $sm->initItem($item);
-    $sm->setItemText($item, "Plugins Admin");
+    $sm->setItemText($item, ADMIN_MENU_PLUGINS_ADMIN);
     $sm->setItemLink($item, "admin.php?n=plugin", 0);
     $item['new_window'] = 0;
     $sm->addMenuItem($menu, $item);
 
     $sm->initItem($item);
-    $sm->setItemText($item, "Help");
+    $sm->setItemText($item, ADMIN_MENU_HELP);
     $sm->setItemLink($item, "admin.php?n=help", 0);
     $item['new_window'] = 0;
     $sm->addMenuItem($menu, $item);

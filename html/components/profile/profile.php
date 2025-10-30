@@ -29,11 +29,8 @@ if (!isset($_POST['submit']) || !$_POST['submit']) {
     $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result)
             or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
-    $form_action = "index.php?n=profile";
-    $password = '<input name="password" type="password"  size="15" >';
-    $password2 = '<input name="password2" type="password"  size="15" >';
-    $email = '<input name="email" type="text" size="25" value="' . $data['email'] . '" maxlength="45">';
-    $send = '<input type="submit" id="button" name="submit" value="Send">';
+    $email = $data['email'];
+    $username = $data['username'];
 } else {
     if (isset($_POST['submit'])) {
         $password = scrub_input($_POST['password']);
@@ -56,19 +53,11 @@ if (!isset($_POST['submit']) || !$_POST['submit']) {
 }
 $smarty->assign(
         array(
-            'form_action' => $form_action,
-            'form_name' => "user",
-            'password' => $password,
-            'password2' => $password2,
-            'email' => $email,
-            'send' => $send,
-            'change_password' => ADMIN_USER_ONLY_CHANGE_TEXT,
-            'email_text' => ADMIN_USER_EMAIL_TEXT,
-            'password_text' => ADMIN_USER_PASSWORD_TEXT,
-            'passwordtwo_text' => ADMIN_USER_PASSWORD_TWO_TEXT
+            'username' => $username,
+            'email' => $email
         )
 );
 
 include (BASE_PATH . 'header.php');
-$smarty->display(TEMPLATES_PATH . $config['template'] . '/register.htm');
+$smarty->display(TEMPLATES_PATH . $config['template'] . '/profile.htm');
 ?>

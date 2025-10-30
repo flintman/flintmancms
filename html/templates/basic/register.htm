@@ -1,33 +1,33 @@
 
 <div class='padder'>
-    <form action="{$form_action}" name="{$form_name}" method="POST" {$on_submit}>
+    <form action="index.php?n=register" name="register" method="POST" {$on_submit}>
 
         <table width="100%">
             <tr>
-                <td>{$username_text}</td>
-                <td>{$username}<b id="user"></b></td>
+                <td>{ADMIN_USER_USERNAME_TEXT}</td>
+                <td><input name="username" type="text" size="15" maxlength="45" onkeyup="check_username(this.value)"><b id="user"></b></td>
             </tr>
             <tr>
-                <td>{$email_text}</td>
-                <td>{$email}<b id="email"></b></td>
+                <td>{ADMIN_USER_EMAIL_TEXT}</td>
+                <td><input name="email" type="text" size="15" maxlength="45" onkeyup="check_email(this.value)"><b id="email"></b></td>
             </tr>
             <tr>
                 <b>{$change_password}</b>
             </tr>
             <tr>
-                <td>{$password_text}</td>
-                <td>{$password}</td>
+                <td>{ADMIN_USER_PASSWORD_TEXT}</td>
+                <td><input name="password" type="password"  size="15"></td>
             </tr>
             <tr>
-                <td>{$passwordtwo_text}</td>
-                <td>{$password2}<b id="pass"></b></td>
+                <td>{ADMIN_USER_PASSWORD_TWO_TEXT}</td>
+                <td><input name="password2" type="password"  size="15" onkeyup="check_password(this.value)"><b id="pass"></b></td>
             </tr>
             <tr>
                 <td>{$code_text}</td>
-                <td>{$code}</td>
+                <td><input type="text" name="vercode" /></td>
             </tr>
         </table>
 
-        {$send}
+        <input type="submit" id="button" name="submit" value="Send">
     </form>
 </div><br />

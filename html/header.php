@@ -75,7 +75,7 @@ $smarty->assign(
 );
 
 // display any errors if they exist
-if (isset($errorMsg) || isset($errormsg)) {
+if (isset($errorMsg)) {
     if ($config['email_errors'] == 1 && isset($errorMsg)) {
         email($config['email_admin'], $errorMsg);
     }
@@ -84,10 +84,8 @@ if (isset($errorMsg) || isset($errormsg)) {
                         quote_smart($errorMsg));
         $db->sql_query($sql);
     }
-    if (isset($errorMsg))
-        $smarty->assign('errorMsg', $errorMsg);
-    else
-        $smarty->assign('errorMsg', $errormsg);
+
+    $smarty->assign('errorMsg', $errorMsg);
 
     $smarty->display('../templates/' . $config['template'] . '/header.htm');
     $smarty->display('../templates/' . $config['template'] . '/error.htm');
