@@ -32,46 +32,35 @@ include(INCLUDES_PATH . 'authentication.php');
 $current_version = VERSION_NUMBER;
 $site_version = SITE_VERSION;
 $version_info = '';
-if ($fsock = @fsockopen('www.flintmancomputers.com', 80, $errno, $errstr, 10)) {
-    @fputs($fsock, "GET /flint_check/ver_check_FCMS.txt HTTP/1.1\r\n");
-    @fputs($fsock, "HOST: www.flintmancomputers.com\r\n");
-    @fputs($fsock, "Connection: close\r\n\r\n");
-
-    $get_info = false;
-    while (!@feof($fsock)) {
-        if ($get_info) {
-            $version_info .= @ fread($fsock, 1024);
+// Version check from https://bellavance.co/96-2/
+$remote_version = false;
+$errstr = '';
+$html = @file_get_contents('https://bellavance.co/96-2/');
+if ($html !== false) {
+    if (preg_match('/<p>([0-9]+\.[0-9]+\.[0-9]+)<\/p>/', $html, $matches)) {
+        $remote_version = $matches[1];
+        $version_parts = explode('.', $remote_version);
+        $latest_major_version = isset($version_parts[0]) ? (int)$version_parts[0] : 0;
+        $latest_minor_version = isset($version_parts[1]) ? (int)$version_parts[1] : 0;
+        $latest_patch_revision = isset($version_parts[2]) ? (int)$version_parts[2] : 0;
+        $latest_sub_major_version = 0;
+        $latest_sub_minor_version = 0;
+        $latest_sub_patch_version = 0;
+        $latest_version = $remote_version;
+        if ($current_version == $latest_version && $current_version == $site_version) {
+            $version_info = '<p style="color:green">' . ADMIN_UPTODATE_TEXT . '</p>';
+        } elseif ($current_version != $site_version) {
+            $version_info = '<p style="color:red">' . ADMIN_VERSION_ISSUE_TEXT . '</p>';
         } else {
-            if (@fgets($fsock, 1024) == "\r\n") {
-                $get_info = true;
-            }
-        }
-    }
-    @fclose($fsock);
-    $version_info = explode("\n", $version_info);
-    $latest_major_version = (int) $version_info[0];
-    $latest_minor_version = (int) $version_info[1];
-    $latest_patch_revision = (int) $version_info[2];
-    $latest_sub_major_version = (int) $version_info[4];
-    $latest_sub_minor_version = (int) $version_info[5];
-    $latest_sub_patch_version = (int) $version_info[6];
-    $latest_version = (int) $version_info[0] . '.' . (int) $version_info[1] . '.' . (int) $version_info[2];
-
-    if ($current_version == $latest_version && $current_version == $site_version) {
-        $version_info = '<p style="color:green">' . ADMIN_UPTODATE_TEXT . '</p>';
-    } elseif ($current_version != $site_version) {
-        $version_info = '<p style="color:red">' . ADMIN_VERSION_ISSUE_TEXT . '</p>';
-    } else {
-        $version_info = '<div style="color:red">' . ADMIN_VERSION_OUTDATE_TEXT . '<br> ' . ADMIN_LATEST_TEXT .
+            $version_info = '<div style="color:red">' . ADMIN_VERSION_OUTDATE_TEXT . '<br> ' . ADMIN_LATEST_TEXT .
                 $latest_version . ADMIN_YOUR_VERSION_TEXT . $current_version . '<br>
             </div><br>';
+        }
+    } else {
+        $version_info = '<p style="color:red">Error: Could not parse remote version</p>';
     }
 } else {
-    if ($errstr) {
-        $version_info = '<p style="color:red">Error: ' . $errstr . '</p>';
-    } else {
-        $version_info = '<p style="color:red">FSocket is Disabled</p>';
-    }
+    $version_info = '<p style="color:red">Error: Could not fetch remote version</p>';
 }
 
 $site_info = '
