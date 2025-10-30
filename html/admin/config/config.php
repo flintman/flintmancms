@@ -163,7 +163,6 @@ else {
     $dis = $_POST['disclaimer'];
     $frt_page = $_POST['frt_page'];
     $meta = scrub_input($_POST['meta']);
-    $admin_email = isset($_POST['admin_email']) ? scrub_input($_POST['admin_email']) : '';
     $groups = scrub_input($_POST['groups']);
     $maintain_message = $_POST['maintain_message'];
     $add_to_link = $_POST['add_to_link'];
@@ -176,8 +175,6 @@ else {
     update_config($dis, "disclamer");
     update_config($maintain, "maintain");
     update_config($meta, "meta_tags");
-    update_config($email, "email_errors");
-    update_config($admin_email, "email_admin");
     update_config($allow_login, "allow_login");
     update_config($groups, "default_priv");
     update_config($maintain_message, "maintain_message");
