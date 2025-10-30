@@ -30,6 +30,7 @@ include(INCLUDES_PATH . 'authentication.php');
 
 $links = array();
 $form_action = '';
+$content = '';
 
 if (isset($_GET['action']) && $_GET['action'] == 'edit') {
 
@@ -136,7 +137,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     }
 }
 elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
-    if (!$_POST['submit']) {
+    if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=links&action=add";
 
         $active_link = '<input type="checkbox" name="active" value="1">';

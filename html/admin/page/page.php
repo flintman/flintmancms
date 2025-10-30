@@ -97,7 +97,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     }
 }
 elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
-    if (!$_POST['submit']) {
+    if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=page&action=add";
 
         $active_page = '<input type="checkbox" name="active" value="1">';
