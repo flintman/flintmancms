@@ -22,6 +22,7 @@ function login() {
 
     global $groups;
     global $db;
+    global $config;
 
     if (isset($_POST['username'])) {
         $username = strtolower(scrub_input($_POST['username']));
@@ -41,6 +42,9 @@ function login() {
         or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
 
     $data = $db->sql_fetchrow($result);
+    if ($config['allow_login'] == false && $data['permissions'] != '1') {
+        $data = null;
+    }
     if ($data) {
         if ($password !== null && $password == $data['password']) {
             // Password login, generate new token if autologin requested
