@@ -111,6 +111,7 @@ CREATE TABLE IF NOT EXISTS `flintmancms_profile` (
   `sign_date` varchar(45) NOT NULL,
   `permissions` int(11) NOT NULL,
   `active` int(11) NOT NULL,
+  `remember_token` VARCHAR(255) DEFAULT NULL,
   `hash` varchar(75) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
