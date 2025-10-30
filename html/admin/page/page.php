@@ -66,10 +66,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                     'page_content' => $page_content,
                     'button' => $button,
                     'page_back' => $page_back,
-                    'toggle' => $toggle,
-                    'page_active_text' => ADMIN_PAGE_ACTIVE_TEXT,
-                    'page_title_text' => ADMIN_PAGE_DISPLAY_TEXT,
-                    'page_enter_text' => ADMIN_PAGE_ENTER_TEXT,
+                    'toggle' => $toggle
                 )
         );
     }else {
@@ -117,10 +114,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
                     'page_content' => $page_content,
                     'button' => $button,
                     'page_back' => $page_back,
-                    'toggle' => $toggle,
-                    'page_active_text' => ADMIN_PAGE_ACTIVE_TEXT,
-                    'page_title_text' => ADMIN_PAGE_DISPLAY_TEXT,
-                    'page_enter_text' => ADMIN_PAGE_ENTER_TEXT,
+                    'toggle' => $toggle
                 )
         );
     } else {
@@ -158,7 +152,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
 
 elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
     $page_id = scrub_input($_GET['page_id']);
-    if (!$_POST['submit']) {
+    if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=page&action=delete&page_id=" . $page_id . "";
 
         $content = 'Are you sure you want to Delete?<br><br>';

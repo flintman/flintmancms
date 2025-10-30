@@ -1,35 +1,37 @@
 <form action="{$form_action}" method="post" >
     <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
-            <td><div id="admin_title">{$head}</div></td>
+            <td><div id="admin_title">{ADMIN_GROUP_HEADER}</div></td>
         </tr>
         <tr>
             <td valign="top" >
-                <table width="100%" border="0" cellspacing="1" cellpadding="3" >
-                    <tr>
-                        <td width="200" ><strong><span >{$group_name_text}</span></strong></td>
-                        <td >{$name}</td>
-                    </tr>
-                </table>
+                {if isset($smarty.get.action) && ($smarty.get.action == 'add' || $smarty.get.action == 'edit')}
+                    <table width="100%" border="0" cellspacing="1" cellpadding="3" >
+                        <tr>
+                            <td width="200" ><strong><span >{ADMIN_GROUP_NAME_TEXT}</span></strong></td>
+                            <td >{$name}</td>
+                        </tr>
+                    </table>
+                {/if}
             </td></tr>
     </table>
-
+{if isset($smarty.get.action) && ($smarty.get.action == 'add' || $smarty.get.action == 'edit')}
     <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
-            <td><div id="admin_title">{$group_select_rights_text}</div></td>
+            <td><div id="admin_title">{ADMIN_GROUP_RIGHTS_TEXT}</div></td>
         </tr>
         <tr>
             <td valign="top" >
                 <table width="100%" border="0" cellspacing="1" cellpadding="3" >
                     <tr>
-                        <td width="200" ><strong><span ><b>{$page_text}</b></span></strong></td>
+                        <td width="200" ><strong><span ><b>{PAGE_TEXT}</b></span></strong></td>
                     </tr>
                     <tr>
                         <td >{$pages}</td>
                     </tr>
 
                     <tr>
-                        <td ><strong><span><b>{$plugin_text}</b></span></strong></td>
+                        <td ><strong><span><b>{PLUGINS_TEXT}</b></span></strong></td>
                     </tr>
                     <tr>
                         <td >{$plugins}</td>
@@ -37,6 +39,7 @@
                 </table>
             </td></tr>
     </table>
+{/if}
     {$content}<br><br>
 
     {$group_back}&nbsp;&nbsp;&nbsp;&nbsp; {$button}

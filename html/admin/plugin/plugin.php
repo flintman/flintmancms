@@ -165,9 +165,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
 
     $smarty->assign(
             array(
-                'active_text' => ADMIN_PLUGINS_ACTIVE_TEXT,
                 'active_plugins' => $active_plugins,
-                'inactive_text' => ADMIN_PLUGINS_INACTIVE_TEXT,
                 'inactive_plugins' => $inactive_plugins,
                 'save_button' => $save_button,
                 'plugins_back'=> $plugins_back,

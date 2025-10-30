@@ -1,5 +1,4 @@
 -TODO
-    - On login check if login is allowed and if not don't log in unless admin
     - Clean up all the code
     - Get all text into the language files for easier to add more languages
     - get all html code or most of it out of the php code.  Gives themes more flexability

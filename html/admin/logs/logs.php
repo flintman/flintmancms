@@ -65,8 +65,7 @@ $smarty->assign(
             'form_action' => "admin.php?n=logs",
             'content' => $content,
             'button' => $button,
-            'logs_back' => $logs_back,
-            'head' => ADMIN_LOGS_HEADER
+            'logs_back' => $logs_back
         )
 );
 

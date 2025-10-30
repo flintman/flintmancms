@@ -104,12 +104,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                     'link_link' => $link_link,
                     'link_back' => $link_back,
                     'sublink_link' => $link_sub,
-                    'button' => $button,
-                    'active_text' => ADMIN_LINK_ACTIVATE_TEXT,
-                    'window_text' => ADMIN_LINK_OPEN_TEXT,
-                    'name_text' => ADMIN_LINK_NAME_TEXT,
-                    'url_text' => ADMIN_LINK_URL_TEXT,
-                    'sublink_text' => ADMIN_LINK_SUB_TEXT
+                    'button' => $button
                 )
         );
     } else {
@@ -166,12 +161,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
                     'link_link' => $link_link,
                     'link_back' => $link_back,
                     'sublink_link' => $link_sub,
-                    'button' => $button,
-                    'active_text' => ADMIN_LINK_ACTIVATE_TEXT,
-                    'window_text' => ADMIN_LINK_OPEN_TEXT,
-                    'name_text' => ADMIN_LINK_NAME_TEXT,
-                    'url_text' => ADMIN_LINK_URL_TEXT,
-                    'sublink_text' => ADMIN_LINK_SUB_TEXT
+                    'button' => $button
                 )
         );
     } else {
@@ -204,7 +194,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
 
 elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
     $link_id = scrub_input($_GET['link_id']);
-    if (!$_POST['submit']) {
+    if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=links&action=delete&link_id=" . $link_id . "";
 
         $content = QUESTION_DELETE_TEXT;
@@ -319,8 +309,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
 
 $smarty->assign(
         array(
-            'content' => $content,
-            'head' => ADMIN_LINK_HEADER
+            'content' => $content
         )
 );
 

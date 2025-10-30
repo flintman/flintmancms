@@ -4,26 +4,28 @@
 
         <table width="100%">
             <tr>
-                <td>{$username_text}</td>
+                <td>{ADMIN_USER_USERNAME_TEXT}</td>
                 <td>{$username}<b id="user"></b></td>
             </tr>
             <tr>
-                <td>{$email_text}</td>
+                <td>{ADMIN_USER_EMAIL_TEXT}</td>
                 <td>{$email}<b id="email"></b></td>
             </tr>
             <tr>
-                <td>{$groups_text}</td>
+                <td>{ADMIN_USER_GROUPS_TEXT}</td>
                 <td>{$groups}</td>
             </tr>
+            {if $smarty.get.action != 'add'}
+                <tr>
+                    <td colspan="2"><b>{ADMIN_USER_ONLY_CHANGE_TEXT}</b></td>
+                </tr>
+            {/if}
             <tr>
-                <b>{$change_password}</b>
-            </tr>
-            <tr>
-                <td>{$password_text}</td>
+                <td>{ADMIN_USER_PASSWORD_TEXT}</td>
                 <td>{$password}</td>
             </tr>
             <tr>
-                <td>{$passwordtwo_text}</td>
+                <td>{ADMIN_USER_PASSWORD_TWO_TEXT}</td>
                 <td>{$password2}<b id="pass"></b></td>
             </tr>
         </table>

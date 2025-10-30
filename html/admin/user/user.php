@@ -100,18 +100,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                 'password2' => $password2,
                 'email' => $email,
                 'send' => $send,
-                'groups' => $groups,
-                'change_password' => ADMIN_USER_ONLY_CHANGE_TEXT,
-                'username_text' => ADMIN_USER_USERNAME_TEXT,
-                'email_text' => ADMIN_USER_EMAIL_TEXT,
-                'password_text' => ADMIN_USER_PASSWORD_TEXT,
-                'passwordtwo_text' => ADMIN_USER_PASSWORD_TWO_TEXT,
-                'groups_text' => ADMIN_USER_GROUPS_TEXT
+                'groups' => $groups
             )
     );
 
     include (BASE_PATH . 'header.php');
-    $smarty->display(TEMPLATES_PATH . $config['template'] . '/admin/user_add.htm');
+    $smarty->display(TEMPLATES_PATH . $config['template'] . '/admin/user_add-edit.htm');
 } elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
     if (isset($_POST['submit'])) {
         $error_add = 0;
@@ -175,17 +169,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                     'email' => $email,
                     'groups' => $groups,
                     'send' => $send,
-                    'on_submit' => 'onsubmit="return validate_reg();"',
-                    'username_text' => ADMIN_USER_USERNAME_TEXT,
-                    'email_text' => ADMIN_USER_EMAIL_TEXT,
-                    'password_text' => ADMIN_USER_PASSWORD_TEXT,
-                    'passwordtwo_text' => ADMIN_USER_PASSWORD_TWO_TEXT,
-                    'groups_text' => ADMIN_USER_GROUPS_TEXT
+                    'on_submit' => 'onsubmit="return validate_reg();"'
                 )
         );
 
         include (BASE_PATH . 'header.php');
-        $smarty->display(TEMPLATES_PATH . $config['template'] . '/admin/user_add.htm');
+        $smarty->display(TEMPLATES_PATH . $config['template'] . '/admin/user_add-edit.htm');
     }
 } elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
     $id = scrub_input($_GET['id']);

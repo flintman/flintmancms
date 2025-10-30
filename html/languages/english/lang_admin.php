@@ -36,7 +36,7 @@ define('ADMIN_MAINTANCE_TEXT', "Maintance Mode:");
 define('ADMIN_ALLOW_LOG_TEXT', "Allow Logins and Registering:");
 define('ADMIN_EMAIL_ERRORS_TEXT',"Email Admin with Errors?");
 define('ADMIN_EMAIL_TEXT', "Admin Email Address:");
-define('ADMIN_DEAULT_TEXT', "Default Group");
+define('ADMIN_DEFAULT_TEXT', "Default Group");
 define('ADMIN_DISCLAIMER_TEXT', "Disclaimer:");
 define('ADMIN_META_TEXT', "Meta Tags:");
 define('ADMIN_MAIN_MESSAGE_TEXT', "Maintaince Message:");

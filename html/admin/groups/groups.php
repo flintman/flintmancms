@@ -154,16 +154,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             'name' => $name,
             'pages' => $pages,
             'plugins' => $plugins,
-            'button' => $button,
-            'group_name_text' => ADMIN_GROUP_NAME_TEXT,
-            'group_select_rights_text' => ADMIN_GROUP_RIGHTS_TEXT,
-            'page_text' => PAGE_TEXT,
-            'plugin_text' => PLUGINS_TEXT
+            'button' => $button
         )
     );
 }
 elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
-    if (!$_POST['submit']) {
+    if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=groups&action=add";
         $name = '<input name="name" type="text" size="45" maxlength="255">';
         $group_back = '<a href="admin.php?n=groups" class="button">' . BACK_TEXT . '</a>';
@@ -188,7 +184,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
     } else {
         if ($_POST['submit'] == "Save") {
             $name = scrub_input($_POST['name']);
-            $sql = sprintf("INSERT INTO " . DB_PREFIX . "_groups VALUES('0',%s)", quote_smart($name));
+            $sql = sprintf("INSERT INTO " . DB_PREFIX . "_groups (id, name) VALUES('0',%s)", quote_smart($name));
 
         $db->sql_query($sql)
             or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -199,8 +195,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
             while ($data = $db->sql_fetchrow($result)) {
 
                 if (isset($_POST['p' . $data['id']])) {
-                    $sql2 = sprintf("INSERT INTO " . DB_PREFIX . "_group_links
-                            VALUES('0',%s, 'page',%s)",
+                    $sql2 = sprintf("INSERT INTO " . DB_PREFIX . "_group_links (id, group_id, type, type_id, link_id)
+                            VALUES('0',%s, 'page',%s, 0)",
                                     quote_smart($last_id), quote_smart($data['id']));
             $db->sql_query($sql2)
                 or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -212,8 +208,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
             $result = $db->sql_query($sql);
             while ($data = $db->sql_fetchrow($result)) {
                 if (isset($_POST['pg' . $data['id']])) {
-                    $sql2 = sprintf("INSERT INTO " . DB_PREFIX . "_group_links
-                            VALUES('0',%s, 'plugins',%s)",
+                    $sql2 = sprintf("INSERT INTO " . DB_PREFIX . "_group_links (id, group_id, type, type_id, link_id)
+                            VALUES('0',%s, 'plugins',%s, 0)",
                                     quote_smart($last_id), quote_smart($data['id']));
             $db->sql_query($sql2)
                 or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -228,18 +224,14 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
                 'name' => $name,
                 'pages' => $pages,
                 'plugins' => $plugins,
-                'button' => $button,
-                'group_name_text' => ADMIN_GROUP_NAME_TEXT,
-                'group_select_rights_text' => ADMIN_GROUP_RIGHTS_TEXT,
-                'page_text' => PAGE_TEXT,
-                'plugin_text' => PLUGINS_TEXT
+                'button' => $button
             )
     );
 }
 
 elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
     $id = scrub_input($_GET['id']);
-    if (!$_POST['submit']) {
+    if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=groups&action=delete&id=" . $id . "";
         $content = QUESTION_DELETE_TEXT;
         $group_back = '<a href="admin.php?n=groups" class="button">' . BACK_TEXT . '</a>';
@@ -306,8 +298,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
 $smarty->assign(
         array(
             'form_action' => $form_action,
-            'group_back' => $group_back,
-            'head' => ADMIN_GROUP_HEADER,
+            'group_back' => $group_back
         )
 );
 

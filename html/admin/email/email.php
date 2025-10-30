@@ -31,7 +31,6 @@ $form_action = '';
 $button = '';
 $save = '';
 $content = '';
-$page_back = BACK_TEXT ;
 
 if (isset($_POST['submit'])) {
     $message = scrub_input($_POST['message']);
@@ -75,8 +74,6 @@ if (isset($_POST['submit'])) {
     $email_pass_value = $config['SMTP_pass'];
     $admin_email_value = $config['email_admin'];
     $current_encryption = isset($config['SMTP_encryption']) ? $config['SMTP_encryption'] : 'none';
-    $save_text = SAVE_TEXT;
-    $send_text = SEND_TEXT;
 
     $smarty->assign(
         array(
@@ -88,17 +85,7 @@ if (isset($_POST['submit'])) {
             'email_pass_value' => $email_pass_value,
             'admin_email_value' => $admin_email_value,
             'current_encryption' => $current_encryption,
-            'save_text' => $save_text,
-            'send_text' => $send_text,
-            'admin_type_message_text' => ADMIN_TYPE_MESSAGE_TEXT,
-            'email_type_text' => ADMIN_USE_SMTP_TEXT,
-            'email_host_text' => ADMIN_SMTP_HOST_TEXT,
-            'email_port_text' => ADMIN_SMTP_PORT_TEXT,
-            'email_user_text' => ADMIN_SMTP_USER_TEXT,
-            'email_pass_text' => ADMIN_SMTP_PASS_TEXT,
-            'email_encryption_text' => 'SMTP Encryption',
-            'admin_email_text' => ADMIN_EMAIL_TEXT,
-            'admin_email_errors_text' => ADMIN_EMAIL_ERRORS_TEXT,
+            'email_encryption_text' => 'SMTP Encryption'
         )
     );
 }
@@ -106,7 +93,6 @@ if (isset($_POST['submit'])) {
 $smarty->assign(
         array(
             'form_action' => $form_action,
-            'page_back' => $page_back,
             'content' => $content
         )
 );

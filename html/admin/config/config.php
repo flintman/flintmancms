@@ -114,25 +114,6 @@ if (!isset($_POST['submit'])) {
             "selected_language" => $config['language']
         )
     );
-
-    // put the variables into the template
-    $smarty->assign(
-            array(
-                'head' => ADMIN_CONFIG_HEADER,
-                'admin_title_text' => ADMIN_TITLE_TEXT,
-                'admin_template_text' => ADMIN_TEMPLATE_TEXT,
-                'admin_language_text' => ADMIN_LANGUAGE_TEXT,
-                'admin_debug_text' => ADMIN_DEBUG_TEXT,
-                'admin_maintance_text' => ADMIN_MAINTANCE_TEXT,
-                'admin_allow_log_text' => ADMIN_ALLOW_LOG_TEXT,
-                'admin_default_text' => ADMIN_DEAULT_TEXT,
-                'admin_disclaimer_text' => ADMIN_DISCLAIMER_TEXT,
-                'admin_meta_text' => ADMIN_META_TEXT,
-                'admin_main_message_text' => ADMIN_MAIN_MESSAGE_TEXT,
-                'admin_frt_page_text' => ADMIN_FRT_PAGE_TEXT,
-                'admin_add_link_text' => ADMIN_ADD_LINK_TEXT
-            )
-    );
 }
 else {
     // form submission, update the database
