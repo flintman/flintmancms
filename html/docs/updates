@@ -2,18 +2,14 @@
 V1.0.3
     ----Files added----
 
-
     ----Files Edited----
 /common.php
 /admin/admin.php
 /includes/functions_plugins.php
 
-
-
 --------------------------------------------------------------------------------
 V1.0.2
     ----Files added----
-
 
     ----Files Edited----
 /admin/links.php
@@ -29,7 +25,6 @@ V1.0.2
 /components/register.php
 /header.php
 
-
 --------------------------------------------------------------------------------
 V1.0.1
 
@@ -39,7 +34,6 @@ V1.0.1
 /docs/*.*
 /install/sql/1.0.0.sql
 /includes/menu/*.*
-
 
     ----Files Edited----
 /components/profile/profile.php
@@ -56,7 +50,6 @@ V1.0.1
 /plugins/portfolio/portfolio.php
 /header.php
 /ALL files
-
 
     ----Files Removed----
 /menu.php
