@@ -1,3 +1,4 @@
+
 body {
     background-image: url(../images/background.jpg);
     color: #ffffff;
@@ -6,6 +7,76 @@ body {
     font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
     color: #555;
     margin: 12px 0 0 0;
+}
+
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+img, table, td, th {
+    max-width: 100%;
+    height: auto;
+}
+
+.maintable {
+    width: 100%;
+    max-width: 759px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#logo {
+    background-image: url(../images/header.png);
+    width: 100%;
+    max-width: 759px;
+    height: auto;
+    min-height: 60px;
+    background-size: cover;
+    background-position: center;
+}
+
+#sitename {
+    margin-left: 24px;
+    margin-top: 50px;
+    text-align: left;
+    font: 10pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    color: #ffb432;
+}
+
+#infoleft, #inforight {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+    .maintable, #logo {
+        max-width: 100%;
+        width: 100%;
+    }
+    #logo {
+        min-height: 40px;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        font-size: 14px;
+    }
+    .maintable {
+        padding: 0 2vw;
+    }
+    #logo {
+        min-height: 30px;
+    }
+    #sitename {
+        margin-left: 8px;
+        margin-top: 20px;
+        font-size: 1.2em;
+    }
 }
 
 .maintable {
