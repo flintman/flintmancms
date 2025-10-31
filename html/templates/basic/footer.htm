@@ -14,18 +14,19 @@
                 <div class='menuwrapper'>
                     <!-- Menu items -->
                     {foreach from=$menu item=menuitem}
-                            <li>
-                                <a href="{$menuitem.link}"{if $menuitem.new_window} target="_blank"{/if}>{$menuitem.text}</a>
-                                {if isset($menuitem.submenu) && $menuitem.submenu|@count > 0}
-                                    <ul>
-                                    {foreach from=$menuitem.submenu item=subitem}
-                                        <li><a href="{$subitem.link}"{if $subitem.new_window} target="_blank"{/if}>{$subitem.text}</a></li>
-                                    {/foreach}
-                                    </ul>
-                                {/if}
-                            </li>
+                    <div class='menuitem'>
+                        <a href="{$menuitem.link}"{if $menuitem.new_window} target="_blank"{/if}>{$menuitem.text}</a>
+                        {if isset($menuitem.submenu) && $menuitem.submenu|@count > 0}
+                            <ul>
+                            {foreach from=$menuitem.submenu item=subitem}
+                            <div class='submenuitem'>
+                                <a href="{$subitem.link}"{if $subitem.new_window} target="_blank"{/if}>{$subitem.text}</a>
+                            </div>
+                            {/foreach}
+                            </ul>
+                        {/if}
                     {/foreach}
-                        </ul>
+                    </div>
                 </div>
             </td>
         </tr>
