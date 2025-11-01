@@ -40,7 +40,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'Save') {
         $date = $_POST['date_taken'];
         $job_name = $_POST['job_name'];
-        $sql = sprintf("INSERT INTO " . DB_PREFIX . "_portfolio VALUES('0',%s,%s)",
+        $sql = sprintf("INSERT INTO " . DB_PREFIX . "_portfolio_portfolio VALUES('0',%s,%s)",
                 quote_smart($job_name), quote_smart($date));
         $result = $db->sql_query($sql);
         if (!$result) {
@@ -52,7 +52,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         $id = scrub_input($_GET['id']);
     if (!isset($_POST['submit']) || !$_POST['submit']) {
         $form_action = "admin.php?n=plugins&p=portfolio&action=edit&id=" . $id . "";
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio WHERE id=%s",
+        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
                 quote_smart($id));
         $result = $db->sql_query($sql);
         $data = $db->sql_fetchrow($result);
@@ -63,7 +63,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'Save') {
         $date = scrub_input($_POST['date_taken']);
         $job_name = scrub_input($_POST['job_name']);
-        $sql = sprintf("UPDATE " . DB_PREFIX . "_portfolio SET name=%s,date_taken=%s WHERE id=%s",
+        $sql = sprintf("UPDATE " . DB_PREFIX . "_portfolio_portfolio SET name=%s,date_taken=%s WHERE id=%s",
                 quote_smart($job_name), quote_smart($date), quote_smart($id));
         $db->sql_query($sql);
         header("Location: admin.php?n=plugins&p=portfolio");
@@ -77,7 +77,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         $content .= '<input type="submit" value="Save" name="submit" class="button">';
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'Save') {
         $x = 1;
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio WHERE id=%s",
+        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
                 quote_smart($id));
         $result = $db->sql_query($sql);
         $data = $db->sql_fetchrow($result);
@@ -90,7 +90,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         $uploadfile = "plugins/portfolio/images/" . basename($filename);
         if (is_writable("plugins/portfolio/images/")) {
             if (move_uploaded_file($_FILES['picfile']['tmp_name'], $uploadfile)) {
-                $sql = sprintf("INSERT INTO " . DB_PREFIX . "_photos VALUES('0',%s,%s)",
+                $sql = sprintf("INSERT INTO " . DB_PREFIX . "__portfolio_photos VALUES('0',%s,%s)",
                         quote_smart($id), quote_smart($filename));
                 $db->sql_query($sql);
                 header("Location: admin.php?n=plugins&p=portfolio");
@@ -110,14 +110,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         $content .= '<input type="submit" value="Delete" name="submit" class="button">';
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'Delete') {
         // they confirmed
-        $sql = sprintf("DELETE FROM " . DB_PREFIX . "_portfolio WHERE id=%s",
+        $sql = sprintf("DELETE FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
                 quote_smart($id));
         $db->sql_query($sql);
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_photos WHERE portfolio_id=%s",
+        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_photos WHERE portfolio_id=%s",
                 quote_smart($id));
         $result = $db->sql_query($sql);
         while ($data = $db->sql_fetchrow($result)) {
-            $sql2 = sprintf("DELETE FROM " . DB_PREFIX . "_photos WHERE id=%s",
+            $sql2 = sprintf("DELETE FROM " . DB_PREFIX . "_portfolio_photos WHERE id=%s",
                     quote_smart($data['id']));
             $db->sql_query($sql2);
             $filename = $data['photo_name'];
@@ -130,7 +130,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         header("Location: admin.php?n=plugins&p=portfolio");
     }
 } else {
-    $sql = "SELECT * FROM " . DB_PREFIX . "_portfolio";
+    $sql = "SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio";
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {
         array_push($photo, array(

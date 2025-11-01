@@ -52,7 +52,7 @@ $id = isset($_GET['id']) ? scrub_input($_GET['id']) : null;
 
 if (isset($_GET['action']) && $_GET['action'] == 'view') {
     $body = '<table width="100%"><tr>';
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio WHERE id=%s",
+    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
             quote_smart($id));
     $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result);
@@ -61,7 +61,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'view') {
     $title .='<br><font size="-2" color="blue"><a href="index.php?n=plugins&p=portfolio" class="button">Back</a><br>
 					Click Picture to Zoom</font>';
     $y = 1;
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_photos WHERE portfolio_id=%s",
+    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_photos WHERE portfolio_id=%s",
             quote_smart($id));
     $result2 = $db->sql_query($sql);
 
@@ -79,12 +79,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'view') {
     $body = '<table width="100%"><tr>';
 
     $title = 'Select Album below';
-    $sql = "SELECT * FROM " . DB_PREFIX . "_portfolio";
+    $sql = "SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio";
     $result = $db->sql_query($sql);
     $y = 1;
 
     while ($data = $db->sql_fetchrow($result)) {
-        $sql2 = sprintf("SELECT * FROM " . DB_PREFIX . "_photos WHERE portfolio_id=%s",
+        $sql2 = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_photos WHERE portfolio_id=%s",
                 quote_smart($data['id']));
         $result2 = $db->sql_query($sql2);
         $data2 = $db->sql_fetchrow($result2);

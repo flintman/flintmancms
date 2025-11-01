@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * ************************************************************************* */
 
+
 if (!defined('IN_CMS')) {
     die("ERROR - Hacking attempt");
 }
@@ -116,24 +117,28 @@ function create_dirs($path) {
 }
 
 function install_sql($folder) {
-    Global $db;
-    $fd = fopen(PLUGINS_PATH . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'install.sql', 'r');
+    global $db;
+    $sql_file = PLUGINS_PATH . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'install.sql';
+    if (!file_exists($sql_file)) return "SQL file not found";
+    $fd = fopen($sql_file, 'r');
+    $errorMsg = '';
     if ($fd) {
         $sql_error = 0;
-
-        while (!feof($fd)) {
-            $line = fgetc($fd);
+        $sql = '';
+        while (($line = fgets($fd)) !== false) {
+            $trim = trim($line);
+            // Skip comments and MySQL directives
+            if ($trim === '' || strpos($trim, '--') === 0 || strpos($trim, '/*') === 0 || strpos($trim, '#') === 0 || strpos($trim, '/*!') === 0) {
+                continue;
+            }
             $sql .= $line;
-
-            if ($line == ';') {
-                $sql = substr(str_replace('`prefix', '`' . DB_PREFIX, $sql), 0, -1);
-
-                $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line "
-                        . __LINE__ . " Of " . __FILE__;
-
+            if (substr(trim($line), -1) == ';') {
+                $query = str_replace('`prefix', '`' . DB_PREFIX, $sql);
+                $db->sql_query($query) or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
                 $sql = '';
             }
         }
+        fclose($fd);
     }
     if ($errorMsg)
         return $errorMsg;
@@ -143,6 +148,7 @@ function install_sql($folder) {
 
 function plugin_db_setup($folder) {
     global $db;
+    $errorMsg = '';
     require_once (PLUGINS_PATH . $folder . '/variable.php');
     $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_plugins WHERE name=%s",
                     quote_smart($folder));
@@ -174,6 +180,7 @@ function plugin_db_setup($folder) {
 
 function deactivate_plugins($id, $name, $delete_tables) {
     global $db;
+    $errorMsg = '';
     require_once (PLUGINS_PATH . $name . '/variable.php');
     $x = 0;
     //Deletes tables if user called to and checkes if there is even tables to Drop
@@ -206,19 +213,25 @@ function deactivate_plugins($id, $name, $delete_tables) {
 
 function activate_plugins($name, $id=0) {
     global $db;
+    $errorMsg = '';
+    // Remove echo to avoid headers already sent before header() calls
+    // echo "Activating Plugin: " . $name . "<br>";
     require_once (PLUGINS_PATH . $name . '/variable.php');
     $has_tables = 0;
     $x = 0;
     $count = count($plugin_db_tables);
+    // Remove echo to avoid headers already sent before header() calls
+    // echo "Checking for required database tables...<br>";
     if ($count > '0') {
         while ($x < $count) {
-            $sql = "SELECT * FROM " . DB_PREFIX . "_" . $plugin_db_tables[$x];
-            $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line "
-                    . __LINE__ . " Of " . __FILE__;
-            $data = $db->sql_numrows($result);
-            if ($data != 0) {
+            $table_name = DB_PREFIX . "_" . $plugin_db_tables[$x];
+            $check_sql = "SHOW TABLES LIKE '" . $table_name . "'";
+            $result = $db->sql_query($check_sql);
+            if ($db->sql_numrows($result) > 0) {
+                // Table exists
                 $has_tables = 1;
             } else {
+                // Table does not exist
                 $has_tables = 0;
                 break;
             }

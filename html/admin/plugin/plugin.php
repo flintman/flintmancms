@@ -23,10 +23,11 @@ if (!defined('IN_CMS')) {
     die("ERROR - Hacking attempt");
 }
 
+
 // page authentication
 array_push($page_lvl, "Admin");
 include(INCLUDES_PATH . 'authentication.php');
-
+$form_action = '';
 $active_plugins = array();
 $inactive_plugins = array();
 $content = '';
@@ -42,7 +43,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     if (extension_loaded('zip')) {
         $pZipSupport = True;
 
-        if (!$_POST['submit']) {
+        if (!isset($_POST['submit'])) {
 
         } elseif ($_POST['submit'] == 'Save') {
             // unzip file
@@ -64,7 +65,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     }
 } elseif (isset($_GET['action']) && $_GET['action'] == 'active') {
     $id = scrub_input($_GET['id']);
-    if (!$_POST['submit']) {
+    if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=plugin&action=active&id=" . $id . "";
         $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_plugins WHERE id=%s",
                         quote_smart($id));

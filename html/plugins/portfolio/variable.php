@@ -19,7 +19,7 @@
  * ************************************************************************* */
 
 //All the tables that are created
-$plugin_db_tables = array("photos", "portfolio");
+$plugin_db_tables = array("portfolio_photos", "portfolio_portfolio");
 
 //Name of Plugin
 $plugin_name = "Portfolio";
