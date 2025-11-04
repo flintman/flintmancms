@@ -57,7 +57,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'view') {
     $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result);
 
-    $title = $data['name'] . "<br><font size='-2'>Photos taken on " . $data['date_taken'] . "</font>";
+    // Escape user data for XSS protection
+    $safe_name = htmlspecialchars($data['name'], ENT_QUOTES, 'UTF-8');
+    $safe_date = htmlspecialchars($data['date_taken'], ENT_QUOTES, 'UTF-8');
+
+    $title = $safe_name . "<br><font size='-2'>Photos taken on " . $safe_date . "</font>";
     $title .='<br><font size="-2" color="blue"><a href="index.php?n=plugins&p=portfolio" class="button">Back</a><br>
 					Click Picture to Zoom</font>';
     $y = 1;
@@ -66,7 +70,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'view') {
     $result2 = $db->sql_query($sql);
 
     while ($data2 = $db->sql_fetchrow($result2)) {
-        $body.=' <a href="plugins/portfolio/images/' . $data2['photo_name'] . '"" rel="thumbnail"><img src="plugins/portfolio/images/' . $data2['photo_name'] . '" style="width: 120px; height: 120px" /></a> ';
+        $safe_photo_name = htmlspecialchars($data2['photo_name'], ENT_QUOTES, 'UTF-8');
+        $body.=' <a href="plugins/portfolio/images/' . $safe_photo_name . '" rel="thumbnail"><img src="plugins/portfolio/images/' . $safe_photo_name . '" style="width: 120px; height: 120px" /></a> ';
         if ($y == 3) {
             $y = 0;
             $body .= '</tr><tr>';
@@ -90,10 +95,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'view') {
         $data2 = $db->sql_fetchrow($result2);
         $total = $db->sql_numrows($result2);
         if ($total > 0) {
-            $tooltip_content = '<center>This is album <b>' . $data['name'] . '. </b><br>Click to Enter album</center>';
+            // Escape user data for XSS protection
+            $safe_album_name = htmlspecialchars($data['name'], ENT_QUOTES, 'UTF-8');
+            $tooltip_content = '<center>This is album <b>' . $safe_album_name . '. </b><br>Click to Enter album</center>';
             $body .= "<td><center><a onMouseover=\"ddrivetip('" . $tooltip_content . "', 250)\";
-                        onMouseout=\"hideddrivetip()\" href='index.php?n=plugins&p=portfolio&action=view&id=" . $data['id'] . "'>
-                            <img src=\"plugins/portfolio/images/" . $data2['photo_name'] . "\" style=\"width: 120px; height: 120px\" />
+                        onMouseout=\"hideddrivetip()\" href='index.php?n=plugins&p=portfolio&action=view&id=" . (int)$data['id'] . "'>
+                            <img src=\"plugins/portfolio/images/" . htmlspecialchars($data2['photo_name'], ENT_QUOTES, 'UTF-8') . "\" style=\"width: 120px; height: 120px\" />
                                 </a></center></td>";
             if ($y == 3) {
                 $y = 0;

@@ -92,16 +92,18 @@
  *
  * 1. Always sanitize user input with scrub_input()
  * 2. Use quote_smart() for SQL parameters to prevent injection
- * 3. Check for IN_CMS constant to prevent direct file access
- * 4. Follow the naming convention: pluginname_tablename for database tables
- * 5. Use the $plugin_db_tables array in variable.php for ALL plugin tables
- * 6. Include index.html files in all directories for security
- * 7. Handle both GET and POST requests safely
- * 8. **CSRF Protection (CRITICAL): ALL forms must include csrf_token hidden field**
- * 9. **CSRF Verification: ALWAYS verify token in POST handlers with verify_csrf_token()**
- * 10. Provide clear error messages and validation
- * 11. Use Smarty templates for consistent UI
- * 12. Clean up all resources when plugin is deactivated
+ * 3. **XSS Protection (CRITICAL): Escape ALL user data for output with:**
+ *    htmlspecialchars($data, ENT_QUOTES, 'UTF-8')
+ * 4. Check for IN_CMS constant to prevent direct file access
+ * 5. Follow the naming convention: pluginname_tablename for database tables
+ * 6. Use the $plugin_db_tables array in variable.php for ALL plugin tables
+ * 7. Include index.html files in all directories for security
+ * 8. Handle both GET and POST requests safely
+ * 9. **CSRF Protection (CRITICAL): ALL forms must include csrf_token hidden field**
+ * 10. **CSRF Verification: ALWAYS verify token in POST handlers with verify_csrf_token()**
+ * 11. Provide clear error messages and validation
+ * 12. Use Smarty templates for consistent UI
+ * 13. Clean up all resources when plugin is deactivated
  *
  * CSRF TOKEN EXAMPLE:
  * Template: <input type="hidden" name="csrf_token" value="{$csrf_token}">

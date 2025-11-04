@@ -100,6 +100,11 @@ $smarty = new Smarty();
 $smarty->setTemplateDir('templates/');
 $smarty->setCompileDir('templates_c/');
 
+// XSS Protection: Auto-escaping disabled by default
+// This CMS builds HTML dynamically, so we escape user data at output points instead
+// Use htmlspecialchars() when outputting user-controlled data in PHP
+// Use {$variable|escape} in templates for user input
+
 // CSRF Protection Functions
 function generate_csrf_token() {
     if (!isset($_SESSION['csrf_token'])) {

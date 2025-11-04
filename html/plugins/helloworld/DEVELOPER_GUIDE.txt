@@ -606,14 +606,54 @@ Show confirmation, then delete:
    2. Verify token before processing POST data
    3. Use verify_csrf_token() function (available globally)
 
-8. FILE UPLOADS:
-   - Validate file types
+8. XSS PROTECTION (REQUIRED):
+   - ALWAYS escape user-controlled data when outputting to HTML
+   - Use htmlspecialchars() for all user input displayed in PHP
+   - Never directly output $_GET, $_POST, or database user content without escaping
+
+   WRONG (Vulnerable to XSS):
+   $body .= '<div>' . $data['user_input'] . '</div>';
+   $body .= '<img alt="' . $_GET['title'] . '">';
+
+   CORRECT (Safe):
+   $body .= '<div>' . htmlspecialchars($data['user_input'], ENT_QUOTES, 'UTF-8') . '</div>';
+   $body .= '<img alt="' . htmlspecialchars($_GET['title'], ENT_QUOTES, 'UTF-8') . '">';
+
+   Best Practice Pattern:
+   // Escape user data immediately when retrieving from database
+   $safe_name = htmlspecialchars($data['name'], ENT_QUOTES, 'UTF-8');
+   $safe_description = htmlspecialchars($data['description'], ENT_QUOTES, 'UTF-8');
+
+   // Then use the safe variables in HTML
+   $body .= '<h2>' . $safe_name . '</h2>';
+   $body .= '<p>' . $safe_description . '</p>';
+
+   CRITICAL: Escape data in these contexts:
+   - HTML content: htmlspecialchars($data, ENT_QUOTES, 'UTF-8')
+   - HTML attributes: htmlspecialchars($data, ENT_QUOTES, 'UTF-8')
+   - JavaScript strings: json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP)
+   - URLs: urlencode($data)
+
+9. FILE UPLOADS:
+   - Use validate_upload() function for comprehensive validation
+   - Validate file types with MIME detection (not just extensions)
    - Check file sizes
-   - Store outside web root or with random names
-   - Never trust uploaded filenames
+   - Generate random secure filenames
+   - Store with read-only permissions (0644)
+   - Add .htaccess to prevent code execution in upload directories
+
+   Example:
+   $validation = validate_upload($_FILES['file'], ['image/jpeg', 'image/png'], 5242880);
+   if (!$validation['valid']) {
+       $errorMsg = $validation['error'];
+   } else {
+       $filename = $validation['filename']; // Secure random name
+       move_uploaded_file($_FILES['file']['tmp_name'], 'uploads/' . $filename);
+       chmod('uploads/' . $filename, 0644);
+   }
 
 ================================================================================
-9. TESTING YOUR PLUGIN
+10. TESTING YOUR PLUGIN
 ================================================================================
 
 FUNCTIONALITY TESTING:
@@ -648,9 +688,13 @@ SECURITY TESTING:
 ----------------
   [ ] Direct PHP file access blocked (IN_CMS check)
   [ ] SQL injection attempts fail (quote_smart)
-  [ ] XSS attempts escaped (htmlspecialchars)
+  [ ] XSS attempts escaped (htmlspecialchars on all user data output)
+  [ ] Test XSS payloads: <script>alert('XSS')</script> in all input fields
+  [ ] User data displays as text, not executable code
   [ ] CSRF tokens present in all forms
   [ ] CSRF tokens verified in all POST handlers
+  [ ] File upload validation working (if applicable)
+  [ ] Upload directory has .htaccess protection
   [ ] Non-admin users can't access admin pages
   [ ] Invalid IDs don't cause errors
   [ ] Form resubmission prevented (redirects)
@@ -673,7 +717,7 @@ PERFORMANCE:
   [ ] No console errors in browser
 
 ================================================================================
-10. DEPLOYMENT CHECKLIST
+11. DEPLOYMENT CHECKLIST
 ================================================================================
 
 PRE-DEPLOYMENT:
@@ -683,9 +727,13 @@ PRE-DEPLOYMENT:
 [ ] Error handling in place
 [ ] SQL tested and optimized
 [ ] All files have proper permissions
-[ ] Security measures implemented
-[ ] CSRF tokens in ALL forms
-[ ] CSRF verification in ALL POST handlers
+[ ] Security measures implemented:
+    [ ] XSS protection: htmlspecialchars() on all user data output
+    [ ] SQL injection: quote_smart() on all database queries
+    [ ] CSRF tokens in ALL forms
+    [ ] CSRF verification in ALL POST handlers
+    [ ] File uploads use validate_upload() function
+    [ ] Upload directories have .htaccess protection
 [ ] Cross-browser testing complete
 [ ] Mobile testing complete
 
