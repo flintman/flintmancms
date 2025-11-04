@@ -1,0 +1,242 @@
+/* ============================================================================
+ * FlintmanCMS Hello World Plugin - Stylesheet
+ * ============================================================================
+ *
+ * PURPOSE:
+ * Custom CSS styles specific to the Hello World plugin.
+ * This file is loaded via $scriptAdd in helloworld.php
+ *
+ * SCOPE:
+ * These styles apply only to pages where the plugin is active.
+ * Use specific class names to avoid conflicts with other plugins/themes.
+ *
+ * ============================================================================ */
+
+/* ----------------------------------------------------------------------------
+ * Message Cards - Individual message display boxes
+ * ---------------------------------------------------------------------------- */
+.hello-message-card {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hello-message-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.hello-message-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--accent-primary, #4f46e5);
+    font-size: 1.25rem;
+}
+
+.hello-message-card .author {
+    color: var(--text-secondary, #666);
+    font-style: italic;
+    margin: 0.5rem 0;
+}
+
+.hello-message-card .date {
+    color: var(--text-tertiary, #999);
+    font-size: 0.875rem;
+    margin: 0.5rem 0;
+}
+
+/* ----------------------------------------------------------------------------
+ * Message Detail View
+ * ---------------------------------------------------------------------------- */
+.hello-message-detail {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 0.75rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hello-message-detail h2 {
+    color: var(--accent-primary, #4f46e5);
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.hello-message-detail .meta {
+    color: var(--text-secondary, #666);
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+}
+
+/* ----------------------------------------------------------------------------
+ * Message Form
+ * ---------------------------------------------------------------------------- */
+.hello-form {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 0.75rem;
+    padding: 2rem;
+    max-width: 600px;
+}
+
+.hello-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.hello-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-primary, #333);
+}
+
+.hello-form .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--input-border, #ccc);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.hello-form .form-control:focus {
+    outline: none;
+    border-color: var(--accent-primary, #4f46e5);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* ----------------------------------------------------------------------------
+ * Messages Container
+ * ---------------------------------------------------------------------------- */
+.hello-messages {
+    margin-top: 1rem;
+}
+
+.hello-messages p {
+    margin-bottom: 1rem;
+    color: var(--text-secondary, #666);
+}
+
+.hello-messages hr {
+    border: none;
+    border-top: 1px solid var(--border-color, #ddd);
+    margin: 1.5rem 0;
+}
+
+/* ----------------------------------------------------------------------------
+ * Success Message
+ * ---------------------------------------------------------------------------- */
+.success-message {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid var(--success, #10b981);
+    border-left: 4px solid var(--success, #10b981);
+    color: var(--success, #10b981);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* ----------------------------------------------------------------------------
+ * Admin Interface Styles
+ * ---------------------------------------------------------------------------- */
+.plugin-admin-container {
+    padding: 1rem 0;
+}
+
+.form-table {
+    border-collapse: collapse;
+}
+
+.form-table td {
+    padding: 0.75rem;
+    vertical-align: top;
+}
+
+.form-table strong {
+    color: var(--text-primary, #333);
+}
+
+.warning-box {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--error, #ef4444);
+    border-left: 4px solid var(--error, #ef4444);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.warning-box h3 {
+    color: var(--error, #ef4444);
+    margin-bottom: 1rem;
+}
+
+.warning-box blockquote {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-left: 3px solid var(--text-secondary, #666);
+    font-style: italic;
+}
+
+.btn-danger {
+    background: var(--error, #ef4444) !important;
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background: #dc2626 !important;
+}
+
+/* ----------------------------------------------------------------------------
+ * Responsive Design
+ * ---------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .hello-message-card,
+    .hello-message-detail,
+    .hello-form {
+        padding: 1rem;
+    }
+
+    .hello-message-detail h2 {
+        font-size: 1.5rem;
+    }
+
+    .form-table td {
+        display: block;
+        width: 100% !important;
+    }
+
+    .form-table tr {
+        border-bottom: 1px solid var(--border-color, #ddd);
+        padding: 0.5rem 0;
+    }
+}
+
+/* ============================================================================
+ * NOTES FOR CSS DEVELOPERS
+ * ============================================================================
+ *
+ * CSS VARIABLE USAGE:
+ * - Use var(--variable-name, fallback) for theme compatibility
+ * - Check Aurora theme (templates/aurora/style/style.css) for available vars
+ * - Common variables: --card-bg, --text-primary, --accent-primary, etc.
+ *
+ * NAMING CONVENTIONS:
+ * - Use plugin-specific prefixes (e.g., .hello-message-card)
+ * - Avoid generic class names that might conflict
+ * - Keep specificity low for easier overrides
+ *
+ * RESPONSIVE DESIGN:
+ * - Mobile-first approach
+ * - Use media queries for larger screens
+ * - Test on various devices
+ *
+ * BROWSER COMPATIBILITY:
+ * - Use vendor prefixes where needed
+ * - Test in multiple browsers
+ * - Provide fallbacks for CSS variables
+ *
+ * ============================================================================ */

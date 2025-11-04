@@ -1,0 +1,266 @@
+================================================================================
+FLINTMANCMS PLUGIN QUICK REFERENCE
+Hello World Plugin Template
+================================================================================
+
+ESSENTIAL FILES CHECKLIST:
+--------------------------
+[ ] variable.php          - Plugin metadata & tables
+[ ] sql/install.sql       - Database schema
+[ ] pluginname.php        - Frontend logic
+[ ] admin/admin.php       - Admin interface
+[ ] template/page.htm     - Admin template
+[ ] css/pluginname.css    - Styles
+[ ] js/pluginname.js      - Scripts
+[ ] index.html (all dirs) - Security
+
+QUICK START CODE SNIPPETS:
+==========================
+
+SECURITY CHECK (Top of every PHP file):
+---------------------------------------
+if (!defined('IN_CMS')) {
+    die("ERROR - Direct access not permitted");
+}
+
+ADMIN AUTHENTICATION:
+--------------------
+array_push($page_lvl, 'Admin');
+include(INCLUDES_PATH . 'authentication.php');
+
+DATABASE QUERY:
+--------------
+// Single row
+$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_table WHERE id=%s",
+               quote_smart($id));
+$result = $db->sql_query($sql);
+$data = $db->sql_fetchrow($result);
+
+// Multiple rows
+$sql = "SELECT * FROM " . DB_PREFIX . "_table ORDER BY date DESC";
+$result = $db->sql_query($sql);
+while ($row = $db->sql_fetchrow($result)) {
+    // Process $row
+}
+
+INSERT/UPDATE/DELETE:
+--------------------
+// Insert
+$sql = sprintf("INSERT INTO " . DB_PREFIX . "_table (col1, col2) VALUES (%s, %s)",
+               quote_smart($val1), quote_smart($val2));
+
+// Update
+$sql = sprintf("UPDATE " . DB_PREFIX . "_table SET col=%s WHERE id=%s",
+               quote_smart($value), quote_smart($id));
+
+// Delete
+$sql = sprintf("DELETE FROM " . DB_PREFIX . "_table WHERE id=%s",
+               quote_smart($id));
+
+$db->sql_query($sql);
+
+SANITIZE INPUT:
+--------------
+$id = scrub_input($_GET['id']);
+$name = scrub_input($_POST['name']);
+
+SAFE OUTPUT:
+-----------
+echo htmlspecialchars($user_input);
+$body .= '<p>' . htmlspecialchars($data['field']) . '</p>';
+
+LOAD CSS/JS:
+-----------
+$scriptAdd .= '<link rel="stylesheet" href="plugins/pluginname/css/style.css" type="text/css" />';
+$scriptAdd .= '<script src="plugins/pluginname/js/script.js" type="text/javascript"></script>';
+
+FORM PROCESSING PATTERN:
+------------------------
+if ($action == 'add') {
+    if (!isset($_POST['submit'])) {
+        // Display form
+        $form_action = "admin.php?n=plugins&p=pluginname&action=add";
+        $content = '<input type="text" name="field" class="form-control">';
+        $content .= '<input type="submit" name="submit" value="Save">';
+    } else {
+        // Process form
+        $value = scrub_input($_POST['field']);
+        // Save to database
+        header("Location: admin.php?n=plugins&p=pluginname");
+        exit;
+    }
+}
+
+SMARTY ASSIGNMENT:
+-----------------
+$smarty->assign('text', $page_title);
+$smarty->assign('body', $html_content);
+$smarty->assign('form_action', $form_action);
+$smarty->assign('content', $admin_content);
+
+REPORT TABLE:
+------------
+$items = array();
+$report->setMainAttributes('width="100%"');
+$report->setFieldHeadingAttributes('class="header"');
+$report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
+$report->addOutputColumn('id', 'ID', 'left', 50);
+$report->addOutputColumn('name', 'Name', 'left');
+$content = $report->getListFromArray($items);
+
+COMMON CSS CLASSES:
+------------------
+.btn, .btn-primary     - Primary action button
+.button                - Secondary button
+.form-control          - Input fields
+.form-group            - Form field container
+.error-message         - Error display
+.success-message       - Success display
+
+FILE STRUCTURE:
+==============
+
+IMPORTANT: FlintmanCMS uses "flintmancms" as the DB_PREFIX
+- In variable.php: List tables WITHOUT prefix (e.g., "pluginname_table")
+- In install.sql: Use FULL names WITH prefix (e.g., flintmancms_pluginname_table)
+- In PHP code: Use DB_PREFIX constant (e.g., DB_PREFIX . "_pluginname_table")
+
+variable.php TEMPLATE:
+---------------------
+<?php
+if (!defined('IN_CMS')) die("ERROR");
+
+$plugin_db_tables = array("pluginname_table1", "pluginname_table2");
+$plugin_name = "Plugin Name";
+$plugin_description = "What it does";
+$plugin_version = "1.0.0";
+$plugin_folder = "pluginname";
+?>
+
+install.sql TEMPLATE:
+--------------------
+CREATE TABLE `flintmancms_pluginname_table` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `field` varchar(255) NOT NULL,
+  `created_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+FRONTEND PHP TEMPLATE:
+---------------------
+<?php
+if (!defined('IN_CMS')) die("ERROR - Hacking attempt");
+
+$scriptAdd .= '<link rel="stylesheet" href="plugins/pluginname/css/style.css" />';
+
+// Authentication
+$page_lvl = isset($page_lvl) ? $page_lvl : array();
+// ... add permission checks
+include(INCLUDES_PATH . 'authentication.php');
+
+// Process actions
+$action = isset($_GET['action']) ? scrub_input($_GET['action']) : 'list';
+$body = '';
+
+if ($action == 'view') {
+    // View single item
+} elseif ($action == 'add') {
+    // Add form
+} else {
+    // List all items
+}
+
+$smarty->assign('text', $title);
+$smarty->assign('body', $body);
+?>
+
+ADMIN PHP TEMPLATE:
+------------------
+<?php
+if (!defined('IN_CMS')) die("ERROR - Hacking attempt");
+
+array_push($page_lvl, 'Admin');
+include(INCLUDES_PATH . 'authentication.php');
+
+$form_action = '';
+$content = '';
+$errorMsg = '';
+
+if (isset($_GET['action']) && $_GET['action'] == 'add') {
+    // Add logic
+} elseif (isset($_GET['action']) && $_GET['action'] == 'edit') {
+    // Edit logic
+} elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
+    // Delete logic
+} else {
+    // List with Report class
+}
+
+$smarty->assign('form_action', $form_action);
+$smarty->assign('content', $content);
+?>
+
+COMMON PITFALLS TO AVOID:
+=========================
+❌ Direct SQL concatenation: "SELECT * FROM table WHERE id=" . $_GET['id']
+✅ Use quote_smart: sprintf("... WHERE id=%s", quote_smart($id))
+
+❌ Direct output: echo $_POST['name']
+✅ Escape output: echo htmlspecialchars($_POST['name'])
+
+❌ No input sanitization: $id = $_GET['id']
+✅ Sanitize input: $id = scrub_input($_GET['id'])
+
+❌ Missing IN_CMS check
+✅ if (!defined('IN_CMS')) die("ERROR");
+
+❌ No authentication check in admin
+✅ array_push($page_lvl, 'Admin'); include(... 'authentication.php');
+
+❌ Form resubmission: echo "Success!"
+✅ Redirect after POST: header("Location: ..."); exit;
+
+TESTING CHECKLIST:
+==================
+[ ] Activation creates tables without errors
+[ ] Frontend displays correctly
+[ ] Forms validate and save data
+[ ] Admin CRUD operations work
+[ ] CSS and JS load properly
+[ ] No PHP errors/warnings
+[ ] SQL injection attempts fail
+[ ] XSS attempts are escaped
+[ ] Non-admins can't access admin pages
+[ ] Mobile responsive
+[ ] Works in different themes
+
+URLS TO TEST:
+=============
+Frontend: index.php?n=plugins&p=pluginname
+Admin:    admin.php?n=plugins&p=pluginname
+Add:      ...&action=add
+Edit:     ...&action=edit&id=1
+Delete:   ...&action=delete&id=1
+View:     ...&action=view&id=1
+
+DEBUGGING:
+==========
+Check PHP errors:     tail -f /var/log/php_errors.log
+Database errors:      echo $db->sql_error();
+Query result:         var_dump($data);
+Check POST data:      var_dump($_POST);
+Browser console:      F12 -> Console tab
+Network requests:     F12 -> Network tab
+
+HELPFUL RESOURCES:
+==================
+- Full Documentation: DEVELOPER_GUIDE.txt
+- Architecture: README.txt
+- Portfolio Plugin: /plugins/portfolio/ (complex example)
+- CMS Functions: /includes/functions/
+- Database Class: /includes/mysql.php
+- Report Class: /includes/report.php
+
+================================================================================
+Need help? Review the full DEVELOPER_GUIDE.txt for detailed explanations!
+================================================================================

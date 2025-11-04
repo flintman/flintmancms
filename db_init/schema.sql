@@ -94,7 +94,8 @@ CREATE TABLE IF NOT EXISTS `flintmancms_plugins` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 INSERT INTO `flintmancms_plugins` (`id`, `name`, `active`, `version`) VALUES
-(NULL, 'portfolio', 1, '1.0.0');
+(NULL, 'portfolio', 1, '1.0.0'),
+(NULL, 'helloworld', 0, '1.0.0');
 
 CREATE TABLE IF NOT EXISTS `flintmancms_portfolio` (
   `id` int(20) NOT NULL AUTO_INCREMENT,

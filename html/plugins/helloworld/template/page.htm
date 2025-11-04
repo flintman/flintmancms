@@ -1,0 +1,100 @@
+{*
+ * ============================================================================
+ * FlintmanCMS Hello World Plugin - Admin Template
+ * ============================================================================
+ *
+ * PURPOSE:
+ * This Smarty template wraps the admin interface content in a form structure.
+ * It receives variables from admin/admin.php and renders them in HTML.
+ *
+ * AVAILABLE VARIABLES (assigned in admin.php):
+ * - {$form_action} : The URL where the form should submit
+ * - {$content}     : The HTML content to display (forms, tables, etc.)
+ *
+ * WHEN IS THIS USED?
+ * This template is rendered when accessing:
+ * admin.php?n=plugins&p=helloworld
+ *
+ * TEMPLATE FLOW:
+ * 1. admin/admin.php processes logic and builds $content
+ * 2. admin/admin.php assigns variables to Smarty
+ * 3. CMS loads this template
+ * 4. Template receives and displays the variables
+ * 5. Result is wrapped in main site layout (header/footer)
+ *
+ * CUSTOMIZATION:
+ * You can add additional HTML structure here, but typically the admin.php
+ * file builds all the content and this template just wraps it.
+ *
+ * ============================================================================
+ *}
+
+<div class="plugin-admin-container">
+    {*
+     * Check if we have a form action.
+     * If yes, wrap content in a form for submissions.
+     * If no, just display the content (used for list view with report tables)
+     *}
+    {if $form_action != ''}
+        <form action="{$form_action}" enctype="multipart/form-data" method="post">
+            {$content}
+        </form>
+    {else}
+        {* No form needed - just display content (typically a table) *}
+        {$content}
+    {/if}
+</div>
+
+{*
+ * ============================================================================
+ * NOTES FOR TEMPLATE DEVELOPERS
+ * ============================================================================
+ *
+ * SMARTY BASICS:
+ *
+ * 1. VARIABLES:
+ *    - Display: {$variable_name}
+ *    - Assigned from PHP: $smarty->assign('variable_name', $value);
+ *
+ * 2. CONDITIONALS:
+ *    {if $condition}
+ *        ...
+ *    {elseif $other_condition}
+ *        ...
+ *    {else}
+ *        ...
+ *    {/if}
+ *
+ * 3. LOOPS:
+ *    {foreach from=$array item=element}
+ *        {$element.property}
+ *    {/foreach}
+ *
+ * 4. COMMENTS:
+ *    Example: look at the brackets here in this entire comment.
+ *
+ * 5. ESCAPING:
+ *    {$variable|escape} - HTML escape for security
+ *    {$variable|escape:'url'} - URL encode
+ *
+ * FORM CONSIDERATIONS:
+ *
+ * - enctype="multipart/form-data" allows file uploads
+ * - method="post" for form submissions
+ * - action="{$form_action}" sets submission URL
+ *
+ * WHEN TO MODIFY THIS TEMPLATE:
+ *
+ * - Add custom CSS classes for plugin-specific styling
+ * - Add JavaScript for client-side validation
+ * - Customize the layout structure
+ * - Add header/footer sections specific to plugin admin
+ *
+ * WHEN NOT TO MODIFY:
+ *
+ * - For content changes, modify admin/admin.php instead
+ * - For adding forms/tables, build them in admin.php $content
+ * - For processing logic, use admin/admin.php
+ *
+ * ============================================================================
+ *}
