@@ -36,8 +36,8 @@ if (!isset($_POST['submit']) || !$_POST['submit']) {
         $password = scrub_input($_POST['password']);
         $password2 = scrub_input($_POST['password2']);
         $email = scrub_input($_POST['email']);
-        if ($password != "" && $password = $password2) {
-            $password = md5($password);
+        if ($password != "" && $password == $password2) {
+            $password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
             $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET password=%s WHERE id=%s",
                             quote_smart($password), quote_smart($id));
             $result = $db->sql_query($sql)

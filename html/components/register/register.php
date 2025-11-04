@@ -72,7 +72,7 @@ if (isset($_GET['active'])) {
             $errorMsg = ERROR_CODE;
         }
         if (!isset($error)) {
-            $password = md5($password);
+            $password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
             $hash_code = md5(time() . $email . $username);
             $sql = sprintf("INSERT INTO " . DB_PREFIX . "_profile VALUES('0',%s,%s,%s,'" . time() . "',
                 %s,'0',%s)", quote_smart($username), quote_smart($password), quote_smart($email),

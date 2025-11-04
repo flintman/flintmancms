@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `flintmancms_portfolio` (
 CREATE TABLE IF NOT EXISTS `flintmancms_profile` (
   `id` int(4) NOT NULL AUTO_INCREMENT,
   `username` varchar(25) NOT NULL,
-  `password` varchar(45) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `email` varchar(45) NOT NULL,
   `sign_date` varchar(45) NOT NULL,
   `permissions` int(11) NOT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `flintmancms_profile` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 INSERT INTO `flintmancms_profile` (`id`, `username`, `password`, `email`, `sign_date`, `permissions`, `active`, `hash`) VALUES
-(NULL, 'admin', MD5('admin'), 'admin@admin.com', NOW(), 1, 1, '');
+(NULL, 'admin', '$2y$12$Dq3SwceZ/YYMalbA3Pmxo.8Vf6EWFDEFqZwy4ZZD6sudGYN7ClX.2', 'admin@admin.com', NOW(), 1, 1, '');
 
 CREATE TABLE IF NOT EXISTS `flintmancms_version` (
   `version_number` varchar(20) CHARACTER SET latin1 NOT NULL,

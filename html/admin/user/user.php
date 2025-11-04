@@ -71,9 +71,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             $email = scrub_input($_POST['email']);
             $groups = isset($_POST['groups']) ? scrub_input($_POST['groups']) : null;
             if ($password != "" && $password == $password2) {
-                $password = md5($password);
+                $hashed_password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
                 $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET password=%s WHERE id=%s",
-                                quote_smart($password), quote_smart($id));
+                                quote_smart($hashed_password), quote_smart($id));
                 $result = $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
             }
@@ -119,10 +119,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             $error_add = 1;
         }
         if ($error_add == 0) {
-            $password = md5($password);
+            $hashed_password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
             $sql = sprintf("INSERT INTO " . DB_PREFIX . "_profile
                     VALUES('0',%s,%s,%s,'" . time () . "',%s,'1','')",
-                            quote_smart($username), quote_smart($password), quote_smart($email),
+                            quote_smart($username), quote_smart($hashed_password), quote_smart($email),
                             quote_smart($groups));
             $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;

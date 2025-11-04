@@ -26,12 +26,12 @@ function login() {
 
     if (isset($_POST['username'])) {
         $username = strtolower(scrub_input($_POST['username']));
-        $password = md5(scrub_input($_POST['password']));
+        $password_input = scrub_input($_POST['password']); // Don't hash yet
         $remember_token = null;
     } elseif (isset($_COOKIE['username']) && isset($_COOKIE['remember_token'])) {
         $username = $_COOKIE['username'];
         $remember_token = $_COOKIE['remember_token'];
-        $password = null;
+        $password_input = null;
     } else {
         logout();
     }
@@ -46,8 +46,8 @@ function login() {
         $data = null;
     }
     if ($data) {
-        if ($password !== null && $password == $data['password']) {
-            // Password login, generate new token if autologin requested
+        if ($password_input !== null && password_verify($password_input, $data['password'])) {
+            // Password login successful - verify using password_verify
             if (isset($_POST['autologin'])) {
                 $new_token = bin2hex(random_bytes(32));
                 setcookie('username', strtolower($data['username']), time() + 2629743);
@@ -136,6 +136,6 @@ if (!isset($_SESSION['initiated'])) {
 if (isset($_POST['username']))
     login();
 
-if (!$config['allow_login'] && $_SESSION['priv'] != '1')
+if (!$config['allow_login'] && (!isset($_SESSION['priv']) || $_SESSION['priv'] != '1'))
     logout();
 ?>
