@@ -9,7 +9,7 @@ $menu[] = array(
     'new_window' => 0
 );
 
-if ($_SESSION['user_logged_in']) {
+if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in']) {
     $menu[] = array(
         'text' => PROFILE_TEXT,
         'link' => 'index.php?n=profile' . $config['add_link'],
@@ -32,9 +32,10 @@ while ($data = $db->sql_fetchrow($result)) {
         );
     }
     $add = false;
-    if ($data['active'] && check_menu($_SESSION['priv'], $data['id'])) {
+    $user_priv = isset($_SESSION['priv']) ? $_SESSION['priv'] : '0';
+    if ($data['active'] && check_menu($user_priv, $data['id'])) {
         $add = true;
-    } elseif ($_SESSION['priv'] == "1") {
+    } elseif ($user_priv == "1") {
         $add = true;
     }
     if ($add) {
@@ -49,7 +50,7 @@ while ($data = $db->sql_fetchrow($result)) {
         $menu[] = $item;
     }
 }
-if ($_SESSION['priv'] == "1") {
+if (isset($_SESSION['priv']) && $_SESSION['priv'] == "1") {
     $menu[] = array(
         'text' => ADMIN_TEXT,
         'link' => 'admin.php',
