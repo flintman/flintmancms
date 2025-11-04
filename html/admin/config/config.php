@@ -143,13 +143,13 @@ else {
     else
         $allow_login = 0;
 
-    $title = scrub_input($_POST['title']);
-    $temp = scrub_input($_POST['template']);
-    $lang = scrub_input($_POST['language']);
+    $title = scrub_input($_POST['title'], ['max_length' => 200]);
+    $temp = scrub_input($_POST['template'], ['type' => 'alphanum', 'max_length' => 50]);
+    $lang = scrub_input($_POST['language'], ['type' => 'alphanum', 'max_length' => 50]);
     $dis = $_POST['disclaimer'];
     $frt_page = $_POST['frt_page'];
-    $meta = scrub_input($_POST['meta']);
-    $groups = scrub_input($_POST['groups']);
+    $meta = scrub_input($_POST['meta'], ['max_length' => 500]);
+    $groups = scrub_input($_POST['groups'], ['type' => 'int']);
     $maintain_message = $_POST['maintain_message'];
     $add_to_link = $_POST['add_to_link'];
 

@@ -53,7 +53,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         header("Location: admin.php?n=plugins&p=portfolio");
     }
 } elseif (isset($_GET['action']) && $_GET['action'] == 'edit') {
-        $id = scrub_input($_GET['id']);
+        $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit']) || !$_POST['submit']) {
         $form_action = "admin.php?n=plugins&p=portfolio&action=edit&id=" . $id . "";
         $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
@@ -69,15 +69,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
             die("CSRF token validation failed");
         }
-        $date = scrub_input($_POST['date_taken']);
-        $job_name = scrub_input($_POST['job_name']);
+        $date = scrub_input($_POST['date_taken'], ['max_length' => 50]);
+        $job_name = scrub_input($_POST['job_name'], ['max_length' => 200]);
         $sql = sprintf("UPDATE " . DB_PREFIX . "_portfolio_portfolio SET name=%s,date_taken=%s WHERE id=%s",
                 quote_smart($job_name), quote_smart($date), quote_smart($id));
         $db->sql_query($sql);
         header("Location: admin.php?n=plugins&p=portfolio");
     }
-} elseif (isset($_GET['action']) && $_GET['action'] == 'photo') {
-    $id = scrub_input($_GET['id']);
+    } elseif (isset($_GET['action']) && $_GET['action'] == 'del') {
+    $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit']) || !$_POST['submit']) {
         $form_action = "admin.php?n=plugins&p=portfolio&action=photo&id=" . $id . "";
 

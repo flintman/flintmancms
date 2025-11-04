@@ -28,8 +28,8 @@ if (!$config['allow_login'])
     Header("Location: index.php");
 
 if (isset($_GET['active'])) {
-    $hash = scrub_input($_GET['active']);
-    $username = scrub_input($_GET['id']);
+    $hash = scrub_input($_GET['active'], ['type' => 'alphanum', 'max_length' => 64]);
+    $username = scrub_input($_GET['id'], ['type' => 'alphanum', 'max_length' => 45]);
     $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_profile
             WHERE username=%s", quote_smart($username));
     $result = $db->sql_query($sql)
@@ -63,11 +63,11 @@ if (isset($_GET['active'])) {
             die("CSRF token validation failed");
         }
 
-        $email = scrub_input($_POST['email']);
-        $username = scrub_input($_POST['username']);
+        $email = scrub_input($_POST['email'], ['type' => 'email']);
+        $username = scrub_input($_POST['username'], ['type' => 'alphanum', 'max_length' => 45]);
         $password = scrub_input($_POST['password']);
         $password2 = scrub_input($_POST['password2']);
-        $code = scrub_input($_POST['vercode']);
+        $code = scrub_input($_POST['vercode'], ['type' => 'alphanum', 'max_length' => 10]);
 
         if ($email == "" || $username == "" || $password == "" || $password2 == "" || $password != $password2) {
             $error = 1;

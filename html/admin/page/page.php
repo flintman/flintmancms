@@ -31,7 +31,7 @@ $pages = array();
 $content = '';
 
 if (isset($_GET['action']) && $_GET['action'] == 'edit') {
-    $page_id = scrub_input($_GET['page_id']);
+    $page_id = scrub_input($_GET['page_id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_pages WHERE id =%s",
                         quote_smart($page_id));
@@ -75,7 +75,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             die("CSRF token validation failed");
         }
         If ($_POST['submit'] == "Save") {
-            $title = scrub_input($_POST['title']);
+            $title = scrub_input($_POST['title'], ['max_length' => 200]);
             $page_text = $_POST['page_text'];
 
             if (isset($_POST['display']))
@@ -127,8 +127,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
             die("CSRF token validation failed");
         }
         if ($_POST['submit'] == "Save") {
-            $title = scrub_input($_POST['title']);
-            $content = scrub_input($_POST['content']);
+            $title = scrub_input($_POST['title'], ['max_length' => 200]);
+            $content = scrub_input($_POST['content'], ['max_length' => 50000]);
 
             if (isset($_POST['display']))
                 $display = 1;
@@ -156,10 +156,9 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
         if (!isset($errorMsg))
             header("Location: admin.php?n=page");
     }
-}
 
-elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
-    $page_id = scrub_input($_GET['page_id']);
+} elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
+    $page_id = scrub_input($_GET['page_id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=page&action=delete&page_id=" . $page_id . "";
 

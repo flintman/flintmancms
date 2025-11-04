@@ -28,7 +28,7 @@ $text = "";
 if (!isset($_GET['page_id'])) {
     $page_id = '1';
 } else {
-    $page_id = scrub_input($_GET['page_id']);
+    $page_id = scrub_input($_GET['page_id'], ['type' => 'int']);
     $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_group_links WHERE
         type='page' AND type_id=%s", quote_smart($page_id));
     $result = $db->sql_query($sql);

@@ -79,8 +79,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
             die("CSRF token validation failed");
         }
-        $message = scrub_input($_POST['message']);
-        $author = scrub_input($_POST['author']);
+        $message = scrub_input($_POST['message'], ['max_length' => 500]);
+        $author = scrub_input($_POST['author'], ['type' => 'alphanum', 'max_length' => 100]);
         $active = isset($_POST['active']) ? 1 : 0;
 
         // Validation
@@ -112,7 +112,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
  * Similar to ADD, but loads existing data first
  * ======================================================================== */
 elseif (isset($_GET['action']) && $_GET['action'] == 'edit') {
-    $id = scrub_input($_GET['id']);
+    $id = scrub_input($_GET['id'], ['type' => 'int']);
 
     // STEP 1: Display the form with existing data
     if (!isset($_POST['submit']) || !$_POST['submit']) {
@@ -156,8 +156,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'edit') {
         if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
             die("CSRF token validation failed");
         }
-        $message = scrub_input($_POST['message']);
-        $author = scrub_input($_POST['author']);
+        $message = scrub_input($_POST['message'], ['max_length' => 500]);
+        $author = scrub_input($_POST['author'], ['type' => 'alphanum', 'max_length' => 100]);
         $active = isset($_POST['active']) ? 1 : 0;
 
         if (empty($message)) {
@@ -187,7 +187,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'edit') {
  * Requires confirmation before deleting
  * ======================================================================== */
 elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
-    $id = scrub_input($_GET['id']);
+    $id = scrub_input($_GET['id'], ['type' => 'int']);
 
     // STEP 1: Show confirmation
     if (!isset($_POST['submit']) || !$_POST['submit']) {
@@ -275,8 +275,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'settings') {
     } else {
         // Update settings
         $settings_to_update = array(
-            'default_greeting' => scrub_input($_POST['default_greeting']),
-            'max_messages' => scrub_input($_POST['max_messages']),
+            'default_greeting' => scrub_input($_POST['default_greeting'], ['max_length' => 200]),
+            'max_messages' => scrub_input($_POST['max_messages'], ['type' => 'int']),
             'allow_anonymous' => isset($_POST['allow_anonymous']) ? '1' : '0'
         );
 

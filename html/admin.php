@@ -23,7 +23,7 @@ $admin_pages = 1;
 require_once('common.php');
 extract($_GET);
 
-$p = isset($_GET['p']) ? scrub_input($_GET['p']) : '';
+$p = isset($_GET['p']) ? scrub_input($_GET['p'], ['type' => 'alphanum', 'max_length' => 50]) : '';
 //Checks is logged in
 if ($_SESSION['user_logged_in'] != 1) {
     $errorMsg = LOGIN_TEXT;

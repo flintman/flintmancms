@@ -59,10 +59,21 @@ $sql = sprintf("DELETE FROM " . DB_PREFIX . "_table WHERE id=%s",
 
 $db->sql_query($sql);
 
-SANITIZE INPUT:
---------------
+SANITIZE INPUT (ENHANCED):
+--------------------------
+Basic usage:
 $id = scrub_input($_GET['id']);
 $name = scrub_input($_POST['name']);
+
+Type-specific validation (RECOMMENDED):
+$email = scrub_input($_POST['email'], ['type' => 'email']);
+$age = scrub_input($_POST['age'], ['type' => 'int']);
+$price = scrub_input($_POST['price'], ['type' => 'float']);
+$url = scrub_input($_POST['website'], ['type' => 'url']);
+$username = scrub_input($_POST['username'], ['type' => 'alphanum', 'max_length' => 20]);
+$bio = scrub_input($_POST['bio'], ['max_length' => 500]);
+
+Available types: text, email, url, int, float, alpha, alphanum
 
 SAFE OUTPUT:
 -----------

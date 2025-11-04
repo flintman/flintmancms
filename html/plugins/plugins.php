@@ -22,7 +22,7 @@
 if (!defined('IN_CMS')) {
     die("ERROR - Hacking attempt");
 }
-$p = scrub_input($_GET['p']);
+$p = scrub_input($_GET['p'], ['type' => 'alphanum', 'max_length' => 50]);
 
 if ($config['maintain'] && ($_SESSION['priv'] < 900 ))
     header("Location: index.php?n=maintain");

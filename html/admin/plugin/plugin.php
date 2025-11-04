@@ -68,7 +68,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         }
     }
 } elseif (isset($_GET['action']) && $_GET['action'] == 'active') {
-    $id = scrub_input($_GET['id']);
+    $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=plugin&action=active&id=" . $id . "";
         $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_plugins WHERE id=%s",

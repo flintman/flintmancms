@@ -97,13 +97,116 @@ function quote_smart($value = "", $nullify = false, $conn = null) {
     return $value;
 }
 
-function scrub_input($value = "", $html_allowed = false) {
-    $value = strip_tags((string)$value, '<br><a>');
+/**
+ * Sanitize and validate user input
+ *
+ * IMPORTANT: This function has been enhanced with additional validation while
+ * maintaining backward compatibility with the original $html_allowed parameter.
+ *
+ * @param mixed $value The value to sanitize (string or array)
+ * @param bool|array $options Either boolean for backward compatibility, or array of options:
+ *                            - 'max_length' => int (default: 10000)
+ *                            - 'allow_html' => bool (default: false)
+ *                            - 'type' => string (text|email|url|int|float|alpha|alphanum)
+ *                            - 'allowed_tags' => string (default: '' - no tags)
+ * @return mixed Sanitized value (string, int, float, or array)
+ *
+ * Examples:
+ *   scrub_input($input) - Basic sanitization (backward compatible)
+ *   scrub_input($input, true) - Allow HTML (backward compatible - NOT RECOMMENDED)
+ *   scrub_input($email, ['type' => 'email']) - Email validation
+ *   scrub_input($age, ['type' => 'int']) - Integer validation
+ *   scrub_input($bio, ['max_length' => 500]) - Length-limited text
+ */
+function scrub_input($value = "", $options = false) {
+    // Backward compatibility: if $options is boolean, it's the old $html_allowed parameter
+    if (is_bool($options)) {
+        $html_allowed = $options;
+        $options = [
+            'allow_html' => $html_allowed,
+            'max_length' => 10000,
+            'type' => 'text',
+            'allowed_tags' => $html_allowed ? '<br><a>' : ''
+        ];
+    } else {
+        // New enhanced options
+        $defaults = [
+            'max_length' => 10000,
+            'allow_html' => false,
+            'type' => 'text', // text, email, url, int, float, alpha, alphanum
+            'allowed_tags' => '' // Only used if allow_html is true
+        ];
+        $options = is_array($options) ? array_merge($defaults, $options) : $defaults;
+    }
 
-    if (!$html_allowed)
-        $value = htmlspecialchars($value);
+    // Handle arrays recursively
+    if (is_array($value)) {
+        return array_map(function($v) use ($options) {
+            return scrub_input($v, $options);
+        }, $value);
+    }
 
-    return $value;
+    // Convert to string and trim whitespace
+    $value = trim((string)$value);
+
+    // Empty string check
+    if ($value === '') {
+        return $options['type'] === 'int' ? 0 : ($options['type'] === 'float' ? 0.0 : '');
+    }
+
+    // Type-specific validation
+    switch ($options['type']) {
+        case 'email':
+            // Validate and sanitize email
+            $value = filter_var($value, FILTER_SANITIZE_EMAIL);
+            $validated = filter_var($value, FILTER_VALIDATE_EMAIL);
+            return $validated !== false ? $validated : '';
+
+        case 'url':
+            // Validate and sanitize URL
+            $value = filter_var($value, FILTER_SANITIZE_URL);
+            $validated = filter_var($value, FILTER_VALIDATE_URL);
+            return $validated !== false ? $validated : '';
+
+        case 'int':
+            // Validate integer
+            $validated = filter_var($value, FILTER_VALIDATE_INT);
+            return $validated !== false ? $validated : 0;
+
+        case 'float':
+            // Validate float
+            $validated = filter_var($value, FILTER_VALIDATE_FLOAT);
+            return $validated !== false ? $validated : 0.0;
+
+        case 'alpha':
+            // Only letters and spaces
+            return preg_replace('/[^a-zA-Z\s]/', '', $value);
+
+        case 'alphanum':
+            // Only letters, numbers, and spaces
+            return preg_replace('/[^a-zA-Z0-9\s]/', '', $value);
+
+        case 'text':
+        default:
+            // Length validation (before tag stripping to prevent bypass)
+            if (strlen($value) > $options['max_length']) {
+                $value = substr($value, 0, $options['max_length']);
+            }
+
+            // HTML handling
+            if ($options['allow_html'] && !empty($options['allowed_tags'])) {
+                // Strip all tags except allowed ones
+                $value = strip_tags($value, $options['allowed_tags']);
+                // Don't escape if HTML is explicitly allowed
+            } else {
+                // Strip ALL tags
+                $value = strip_tags($value);
+                // Escape HTML special characters
+                $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            }
+
+            return $value;
+    }
 }
 
 function update_config($value, $name) {

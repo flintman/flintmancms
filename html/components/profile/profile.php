@@ -22,7 +22,7 @@
 if (!defined('IN_CMS')) {
     die("ERROR - Hacking attempt");
 }
-$id = scrub_input($_SESSION['profile_id']);
+$id = scrub_input($_SESSION['profile_id'], ['type' => 'int']);
 if (!isset($_POST['submit']) || !$_POST['submit']) {
     $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_profile
             WHERE id=%s", quote_smart($id));
@@ -39,7 +39,7 @@ if (!isset($_POST['submit']) || !$_POST['submit']) {
         }
         $password = scrub_input($_POST['password']);
         $password2 = scrub_input($_POST['password2']);
-        $email = scrub_input($_POST['email']);
+        $email = scrub_input($_POST['email'], ['type' => 'email']);
         if ($password != "" && $password == $password2) {
             $password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
             $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET password=%s WHERE id=%s",

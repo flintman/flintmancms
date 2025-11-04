@@ -26,7 +26,7 @@ if (file_exists('install/install.php')) {
 }
 require_once('common.php');
 
-$n = isset($_GET['n']) ? scrub_input($_GET['n']) : '';
+$n = isset($_GET['n']) ? scrub_input($_GET['n'], ['type' => 'alphanum', 'max_length' => 50]) : '';
 
 if ($config['maintain'] && $n != 'logout') {
     include(COMPONENTS_PATH . 'maintain/maintain.php');

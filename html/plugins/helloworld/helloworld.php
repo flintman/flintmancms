@@ -51,7 +51,7 @@ $scriptAdd .= '<script src="plugins/helloworld/js/helloworld.js" type="text/java
 $page_lvl = isset($page_lvl) ? $page_lvl : array();
 
 // Get the plugin name from URL parameter
-$p = isset($_GET['p']) ? scrub_input($_GET['p']) : '';
+$p = isset($_GET['p']) ? scrub_input($_GET['p'], ['type' => 'alphanum', 'max_length' => 50]) : '';
 
 // Query to find this plugin's ID and permissions
 $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_plugins WHERE name=%s",
@@ -86,7 +86,7 @@ include(INCLUDES_PATH . 'authentication.php');
 $title = "Hello World Plugin";  // Page title
 $body = "";                      // HTML content to display
 $message = "";                   // Status/error messages
-$action = isset($_GET['action']) ? scrub_input($_GET['action']) : 'list';
+$action = isset($_GET['action']) ? scrub_input($_GET['action'], ['type' => 'alpha', 'max_length' => 20]) : 'list';
 
 /* ========================================================================
  * STEP 4: HANDLE USER ACTIONS
@@ -96,8 +96,8 @@ $action = isset($_GET['action']) ? scrub_input($_GET['action']) : 'list';
  * ======================================================================== */
 
 // ACTION: View a single message in detail
-if ($action == 'view' && isset($_GET['id'])) {
-    $id = scrub_input($_GET['id']);
+if ($action === 'view' && isset($_GET['id'])) {
+    $id = scrub_input($_GET['id'], ['type' => 'int']);
 
     // Query for specific message
     $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_helloworld_messages WHERE id=%s AND active=1",
@@ -141,8 +141,8 @@ elseif ($action == 'add') {
         $body .= '</div>';
     } else {
         // Process the form submission
-        $new_message = scrub_input($_POST['message']);
-        $new_author = scrub_input($_POST['author']);
+        $new_message = scrub_input($_POST['message'], ['max_length' => 500]);
+        $new_author = scrub_input($_POST['author'], ['type' => 'alphanum', 'max_length' => 100]);
 
         if (!empty($new_message) && !empty($new_author)) {
             $sql = sprintf("INSERT INTO " . DB_PREFIX . "_helloworld_messages (message, author, created_date, active) " .

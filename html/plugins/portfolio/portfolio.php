@@ -28,7 +28,7 @@ $scriptAdd .= '<link rel="stylesheet" href="plugins/portfolio/scripts/thumbnailv
 <script src="plugins/portfolio/scripts/thumbnailviewer.js" type="text/javascript"></script>';
 
 $page_lvl = isset($page_lvl) ? $page_lvl : array();
-$p = isset($_GET['p']) ? scrub_input($_GET['p']) : '';
+$p = isset($_GET['p']) ? scrub_input($_GET['p'], ['type' => 'alphanum', 'max_length' => 50]) : '';
 $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_plugins WHERE name=%s",
                 quote_smart($p));
 $result = $db->sql_query($sql);
@@ -48,7 +48,7 @@ while ($data = $db->sql_fetchrow($result)) {
 include(INCLUDES_PATH . 'authentication.php');
 
 
-$id = isset($_GET['id']) ? scrub_input($_GET['id']) : null;
+$id = isset($_GET['id']) ? scrub_input($_GET['id'], ['type' => 'int']) : null;
 
 if (isset($_GET['action']) && $_GET['action'] == 'view') {
     $body = '<table width="100%"><tr>';

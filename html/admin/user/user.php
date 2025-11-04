@@ -31,7 +31,7 @@ $content = '';
 $form_action = "";
 
 if (isset($_GET['action']) && $_GET['action'] == 'edit') {
-    $id = scrub_input($_GET['id']);
+    $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_profile
             WHERE id =%s", quote_smart($id));
@@ -71,9 +71,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             }
             $password = scrub_input($_POST['password']);
             $password2 = scrub_input($_POST['password2']);
-            $username = scrub_input($_POST['username']);
-            $email = scrub_input($_POST['email']);
-            $groups = isset($_POST['groups']) ? scrub_input($_POST['groups']) : null;
+            $username = scrub_input($_POST['username'], ['type' => 'alphanum', 'max_length' => 45]);
+            $email = scrub_input($_POST['email'], ['type' => 'email']);
+            $groups = isset($_POST['groups']) ? scrub_input($_POST['groups'], ['type' => 'int']) : null;
             if ($password != "" && $password == $password2) {
                 $hashed_password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
                 $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET password=%s WHERE id=%s",
@@ -123,9 +123,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             die("CSRF token validation failed");
         }
         $error_add = 0;
-        $email = scrub_input($_POST['email']);
-        $username = scrub_input($_POST['username']);
-        $groups = scrub_input($_POST['groups']);
+        $email = scrub_input($_POST['email'], ['type' => 'email']);
+        $username = scrub_input($_POST['username'], ['type' => 'alphanum', 'max_length' => 45]);
+        $groups = scrub_input($_POST['groups'], ['type' => 'int']);
         $password = scrub_input($_POST['password']);
         $password2 = scrub_input($_POST['password2']);
 
@@ -191,7 +191,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         $smarty->display(TEMPLATES_PATH . $config['template'] . '/admin/user_add-edit.htm');
     }
 } elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
-    $id = scrub_input($_GET['id']);
+    $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=user&action=delete&id=" . $id . "";
         $user_back = '<a href="admin.php?n=user" class="button">' . BACK_TEXT . '</a>';
@@ -220,7 +220,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             )
     );
 } elseif (isset($_GET['action']) && $_GET['action'] == 'active') {
-    $id = scrub_input($_GET['id']);
+    $id = scrub_input($_GET['id'], ['type' => 'int']);
     $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET active='1' WHERE id=%s",
                     quote_smart($id));
     $result = $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error() .
@@ -228,7 +228,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     if (!isset($errorMsg))
         header("Location: admin.php?n=user");
 } elseif (isset($_GET['action']) && $_GET['action'] == 'deactive') {
-    $id = scrub_input($_GET['id']);
+    $id = scrub_input($_GET['id'], ['type' => 'int']);
     $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET active='0' WHERE id=%s",
                     quote_smart($id));
     $result = $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error() .

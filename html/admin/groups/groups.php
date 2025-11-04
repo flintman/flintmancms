@@ -34,7 +34,7 @@ $group_back = '';
 $form_action = '';
 
 if (isset($_GET['action']) && $_GET['action'] == 'edit') {
-    $id = scrub_input($_GET['id']);
+    $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_groups WHERE id =%s",
                         quote_smart($id));
@@ -93,8 +93,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             die("CSRF token validation failed");
         }
         if ($_POST['submit'] == "Save") {
-            $name = scrub_input($_POST['name']);
-            $id = scrub_input($_GET['id']);
+            $name = scrub_input($_POST['name'], ['max_length' => 100]);
+            $id = scrub_input($_GET['id'], ['type' => 'int']);
             $sql = sprintf("UPDATE " . DB_PREFIX . "_groups SET
                     name=%s WHERE id=%s", quote_smart($name), quote_smart($id));
         $db->sql_query($sql)
@@ -191,7 +191,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
             die("CSRF token validation failed");
         }
         if ($_POST['submit'] == "Save") {
-            $name = scrub_input($_POST['name']);
+            $name = scrub_input($_POST['name'], ['max_length' => 100]);
             $sql = sprintf("INSERT INTO " . DB_PREFIX . "_groups (id, name) VALUES('0',%s)", quote_smart($name));
 
         $db->sql_query($sql)
@@ -237,8 +237,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
     );
 }
 
-elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
-    $id = scrub_input($_GET['id']);
+} elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
+    $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=groups&action=delete&id=" . $id . "";
         $content = QUESTION_DELETE_TEXT;

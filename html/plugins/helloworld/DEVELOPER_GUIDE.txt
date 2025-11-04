@@ -548,11 +548,32 @@ Show confirmation, then delete:
        die("ERROR - Direct access not permitted");
    }
 
-2. INPUT SANITIZATION:
-   - Use scrub_input() for ALL user input
-   - Applies to $_GET, $_POST, $_COOKIE
+2. INPUT SANITIZATION (CRITICAL):
+   - Use scrub_input() for ALL user input from $_GET, $_POST, $_COOKIE
+   - Enhanced with type validation and length limits
 
+   Basic usage (backward compatible):
    $id = scrub_input($_GET['id']);
+   $name = scrub_input($_POST['name']);
+
+   Enhanced validation (RECOMMENDED):
+   $email = scrub_input($_POST['email'], ['type' => 'email']);
+   $age = scrub_input($_POST['age'], ['type' => 'int']);
+   $website = scrub_input($_POST['url'], ['type' => 'url']);
+   $bio = scrub_input($_POST['bio'], ['max_length' => 500]);
+   $username = scrub_input($_POST['username'], ['type' => 'alphanum', 'max_length' => 20]);
+
+   Available types:
+   - 'text' (default) - strips tags, escapes HTML
+   - 'email' - validates email format
+   - 'url' - validates URL format
+   - 'int' - returns integer or 0
+   - 'float' - returns float or 0.0
+   - 'alpha' - only letters and spaces
+   - 'alphanum' - only letters, numbers, and spaces
+
+   Array handling (automatic):
+   $tags = scrub_input($_POST['tags']); // Works with arrays
 
 3. SQL INJECTION PREVENTION:
    - ALWAYS use quote_smart() + sprintf() for SQL parameters

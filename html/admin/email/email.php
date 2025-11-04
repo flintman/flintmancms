@@ -37,7 +37,7 @@ if (isset($_POST['submit'])) {
     if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
         die("CSRF token validation failed");
     }
-    $message = scrub_input($_POST['message']);
+    $message = scrub_input($_POST['message'], ['max_length' => 5000]);
     email($config['email_admin'], $message);
     $content = ADMIN_SEND_MESSAGE_TEXT;
 } elseif (isset($_POST['save'])) {
@@ -55,12 +55,12 @@ if (isset($_POST['submit'])) {
     else
         $email = 0;
 
-    $email_host = scrub_input($_POST['email_host']);
-    $email_port = scrub_input($_POST['email_port']);
-    $email_user = scrub_input($_POST['email_user']);
-    $email_pass = scrub_input($_POST['email_pass']);
-    $email_encryption = scrub_input($_POST['email_encryption']);
-    $admin_email = scrub_input($_POST['admin_email']);
+    $email_host = scrub_input($_POST['email_host'], ['max_length' => 255]);
+    $email_port = scrub_input($_POST['email_port'], ['type' => 'int']);
+    $email_user = scrub_input($_POST['email_user'], ['max_length' => 255]);
+    $email_pass = scrub_input($_POST['email_pass'], ['max_length' => 255]);
+    $email_encryption = scrub_input($_POST['email_encryption'], ['type' => 'alpha', 'max_length' => 10]);
+    $admin_email = scrub_input($_POST['admin_email'], ['type' => 'email']);
 
     update_config($email_type, "sendviaSTMP");
     update_config($email_host, "SMTP_host");

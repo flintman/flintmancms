@@ -29,7 +29,7 @@ function login() {
         if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
             die("CSRF token validation failed");
         }
-        $username = strtolower(scrub_input($_POST['username']));
+        $username = strtolower(scrub_input($_POST['username'], ['type' => 'alphanum', 'max_length' => 45]));
         $password_input = scrub_input($_POST['password']); // Don't hash yet
         $remember_token = null;
     } elseif (isset($_COOKIE['username']) && isset($_COOKIE['remember_token'])) {

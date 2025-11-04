@@ -34,7 +34,7 @@ $content = '';
 
 if (isset($_GET['action']) && $_GET['action'] == 'edit') {
 
-    $link_id = scrub_input($_GET['link_id']);
+    $link_id = scrub_input($_GET['link_id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_links WHERE sub_link=%s ORDER BY `link_order`",
                         quote_smart($link_id));
@@ -113,9 +113,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             die("CSRF token validation failed");
         }
         if ($_POST['submit'] == "Save") {
-            $name = scrub_input($_POST['name']);
+            $name = scrub_input($_POST['name'], ['max_length' => 100]);
             $url = $_POST['url'];
-            $sublink = scrub_input($_POST['sublink']);
+            $sublink = scrub_input($_POST['sublink'], ['type' => 'int']);
             if (isset($_POST['window']))
                 $window = 1;
             else
@@ -174,9 +174,9 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
             die("CSRF token validation failed");
         }
         If ($_POST['submit'] == "Save") {
-            $name = scrub_input($_POST['name']);
+            $name = scrub_input($_POST['name'], ['max_length' => 100]);
             $url = $_POST['url'];
-            $sublink = scrub_input($_POST['sublink']);
+            $sublink = scrub_input($_POST['sublink'], ['type' => 'int']);
 
             if (isset($_POST['active']))
                 $active = 1;
@@ -201,7 +201,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
 }
 
 elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
-    $link_id = scrub_input($_GET['link_id']);
+    $link_id = scrub_input($_GET['link_id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=links&action=delete&link_id=" . $link_id . "";
 
@@ -231,10 +231,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
             header("Location: admin.php?n=links");
     }
 } elseif (isset($_GET['action']) && $_GET['action'] == 'up') {
-    $link_id = scrub_input($_GET['link_id']);
-    $order = scrub_input($_GET['order']);
-    $order_minus = scrub_input($_GET['order']) - 1;
-    $sublink = scrub_input($_GET['sublink']);
+    $link_id = scrub_input($_GET['link_id'], ['type' => 'int']);
+    $order = scrub_input($_GET['order'], ['type' => 'int']);
+    $order_minus = scrub_input($_GET['order'], ['type' => 'int']) - 1;
+    $sublink = scrub_input($_GET['sublink'], ['type' => 'int']);
 
     if ($order == 1) {
         if (isset($_GET['e']))
@@ -258,10 +258,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
         }
     }
 } elseif (isset($_GET['action']) && $_GET['action'] == 'down') {
-    $link_id = scrub_input($_GET['link_id']);
-    $order = scrub_input($_GET['order']);
-    $order_plus = scrub_input($_GET['order']) + 1;
-    $sublink = scrub_input($_GET['sublink']);
+    $link_id = scrub_input($_GET['link_id'], ['type' => 'int']);
+    $order = scrub_input($_GET['order'], ['type' => 'int']);
+    $order_plus = scrub_input($_GET['order'], ['type' => 'int']) + 1;
+    $sublink = scrub_input($_GET['sublink'], ['type' => 'int']);
     $count = count_links($sublink);
     if ($order >= ($count)) {
         if (isset($_GET['e']))
