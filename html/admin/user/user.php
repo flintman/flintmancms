@@ -65,6 +65,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         $send = '<input type="submit" id="button" class="button" name="submit" value="Send">';
     } else {
         If (isset($_POST['submit'])) {
+            // Verify CSRF token
+            if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+                die("CSRF token validation failed");
+            }
             $password = scrub_input($_POST['password']);
             $password2 = scrub_input($_POST['password2']);
             $username = scrub_input($_POST['username']);
@@ -108,6 +112,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     $smarty->display(TEMPLATES_PATH . $config['template'] . '/admin/user_add-edit.htm');
 } elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
     if (isset($_POST['submit'])) {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         $error_add = 0;
         $email = scrub_input($_POST['email']);
         $username = scrub_input($_POST['username']);
@@ -184,6 +192,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         $button = '<input type="submit" class="button" id="button" name="submit" value="'.DELETE_TEXT.'">';
         $content = QUESTION_DELETE_TEXT;
     } else {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         If ($_POST['submit'] == "Delete") {
             $sql = sprintf("DELETE FROM " . DB_PREFIX . "_profile WHERE id=%s",
                             quote_smart($id));

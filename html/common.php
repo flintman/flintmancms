@@ -90,6 +90,21 @@ $smarty = new Smarty();
 $smarty->setTemplateDir('templates/');
 $smarty->setCompileDir('templates_c/');
 
+// CSRF Protection Functions
+function generate_csrf_token() {
+    if (!isset($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function verify_csrf_token($token) {
+    if (!isset($_SESSION['csrf_token']) || !isset($token)) {
+        return false;
+    }
+    return hash_equals($_SESSION['csrf_token'], $token);
+}
+
 // get auth type
 require_once(INCLUDES_PATH . '/auth.php');
 
@@ -101,6 +116,7 @@ if ($config['allow_login'] || $admin_pages == 1) {
         'is_logged_in' => $is_logged_in,
         'allow_login' => $admin_pages == 1 ? true : $config['allow_login'],
         'username' => $username,
+        'csrf_token' => generate_csrf_token(),
     ]);
 }
 ?>

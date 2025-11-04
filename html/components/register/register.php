@@ -58,6 +58,11 @@ if (isset($_GET['active'])) {
 
     if (isset($_POST['submit'])) {
 
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
+
         $email = scrub_input($_POST['email']);
         $username = scrub_input($_POST['username']);
         $password = scrub_input($_POST['password']);

@@ -75,6 +75,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     }
     // STEP 2: Process the form submission
     elseif (isset($_POST['submit']) && $_POST['submit'] == 'Save') {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         $message = scrub_input($_POST['message']);
         $author = scrub_input($_POST['author']);
         $active = isset($_POST['active']) ? 1 : 0;
@@ -148,6 +152,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'edit') {
     }
     // STEP 2: Process the update
     elseif (isset($_POST['submit']) && $_POST['submit'] == 'Update') {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         $message = scrub_input($_POST['message']);
         $author = scrub_input($_POST['author']);
         $active = isset($_POST['active']) ? 1 : 0;
@@ -208,6 +216,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
     }
     // STEP 2: Confirmed - perform deletion
     elseif (isset($_POST['submit']) && $_POST['submit'] == 'Delete') {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         $sql = sprintf("DELETE FROM " . DB_PREFIX . "_helloworld_messages WHERE id=%s",
                       quote_smart($id));
         $result = $db->sql_query($sql);

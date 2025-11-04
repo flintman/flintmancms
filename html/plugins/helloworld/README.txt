@@ -97,9 +97,15 @@
  * 5. Use the $plugin_db_tables array in variable.php for ALL plugin tables
  * 6. Include index.html files in all directories for security
  * 7. Handle both GET and POST requests safely
- * 8. Provide clear error messages and validation
- * 9. Use Smarty templates for consistent UI
- * 10. Clean up all resources when plugin is deactivated
+ * 8. **CSRF Protection (CRITICAL): ALL forms must include csrf_token hidden field**
+ * 9. **CSRF Verification: ALWAYS verify token in POST handlers with verify_csrf_token()**
+ * 10. Provide clear error messages and validation
+ * 11. Use Smarty templates for consistent UI
+ * 12. Clean up all resources when plugin is deactivated
+ *
+ * CSRF TOKEN EXAMPLE:
+ * Template: <input type="hidden" name="csrf_token" value="{$csrf_token}">
+ * Handler:  if (!verify_csrf_token($_POST['csrf_token'])) die("CSRF failed");
  *
  * ============================================================================
  */

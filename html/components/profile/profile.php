@@ -33,6 +33,10 @@ if (!isset($_POST['submit']) || !$_POST['submit']) {
     $username = $data['username'];
 } else {
     if (isset($_POST['submit'])) {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         $password = scrub_input($_POST['password']);
         $password2 = scrub_input($_POST['password2']);
         $email = scrub_input($_POST['email']);

@@ -70,6 +70,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                 )
         );
     }else {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         If ($_POST['submit'] == "Save") {
             $title = scrub_input($_POST['title']);
             $page_text = $_POST['page_text'];
@@ -118,6 +122,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
                 )
         );
     } else {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         if ($_POST['submit'] == "Save") {
             $title = scrub_input($_POST['title']);
             $content = scrub_input($_POST['content']);
@@ -168,6 +176,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
                 )
         );
     } else {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         if ($_POST['submit'] == "Delete") {
             $sql = sprintf("DELETE FROM " . DB_PREFIX . "_pages WHERE id=%s",
                             quote_smart($page_id));

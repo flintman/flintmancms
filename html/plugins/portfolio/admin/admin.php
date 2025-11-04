@@ -38,6 +38,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         $content .='Date Taken(xx/xx/xxxx) : <input name="date_taken" type="text" id="title" maxlength="255"><br>';
         $content .= '<input type="submit" value="Save" name="submit" class="button">';
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'Save') {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         $date = $_POST['date_taken'];
         $job_name = $_POST['job_name'];
         $sql = sprintf("INSERT INTO " . DB_PREFIX . "_portfolio_portfolio VALUES('0',%s,%s)",
@@ -61,6 +65,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         $content .='Date Taken(xx/xx/xxxx) : <input name="date_taken" value ="' . $data['date_taken'] . '" type="text" id="title" maxlength="255"><br>';
         $content .= '<input type="submit" value="Save" name="submit" class="button">';
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'Save') {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         $date = scrub_input($_POST['date_taken']);
         $job_name = scrub_input($_POST['job_name']);
         $sql = sprintf("UPDATE " . DB_PREFIX . "_portfolio_portfolio SET name=%s,date_taken=%s WHERE id=%s",
@@ -76,6 +84,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         $content .="<INPUT type =\"file\" NAME=\"picfile\">";
         $content .= '<input type="submit" value="Save" name="submit" class="button">';
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'Save') {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         $x = 1;
         $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
                 quote_smart($id));
@@ -109,6 +121,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         $content .= '<a href="admin" class="button">Back</a>&nbsp;&nbsp;&nbsp;';
         $content .= '<input type="submit" value="Delete" name="submit" class="button">';
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'Delete') {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         // they confirmed
         $sql = sprintf("DELETE FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
                 quote_smart($id));

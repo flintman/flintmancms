@@ -46,6 +46,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         if (!isset($_POST['submit'])) {
 
         } elseif ($_POST['submit'] == 'Save') {
+            // Verify CSRF token
+            if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+                die("CSRF token validation failed");
+            }
             // unzip file
             $reply = unzip($_FILES['zipfile']['tmp_name'], PLUGINS_PATH, true, false);
 
@@ -111,6 +115,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
             $errorMsg = $message;
     }
 } else {
+    // Verify CSRF token for plugin activation/deactivation
+    if (isset($_POST['submit']) && (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token']))) {
+        die("CSRF token validation failed");
+    }
     $sql = "SELECT * FROM " . DB_PREFIX . "_plugins WHERE active ='1'";
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {

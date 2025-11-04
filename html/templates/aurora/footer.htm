@@ -5,6 +5,7 @@
                     <div class="sidebar-card login-card">
                         <h3 class="card-title">Login</h3>
                         <form action="index.php" method="POST" class="login-form">
+                            <input type="hidden" name="csrf_token" value="{$csrf_token}">
                             <div class="form-group">
                                 <input name="username" type="text" placeholder="Username" class="form-control" required>
                             </div>

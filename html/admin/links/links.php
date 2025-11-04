@@ -108,6 +108,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                 )
         );
     } else {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         if ($_POST['submit'] == "Save") {
             $name = scrub_input($_POST['name']);
             $url = $_POST['url'];
@@ -165,6 +169,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
                 )
         );
     } else {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         If ($_POST['submit'] == "Save") {
             $name = scrub_input($_POST['name']);
             $url = $_POST['url'];
@@ -209,6 +217,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
                 )
         );
     } else {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         if ($_POST['submit'] == "Delete") {
             $sql = sprintf("DELETE FROM " . DB_PREFIX . "_links WHERE id=%s",
                             quote_smart($link_id));

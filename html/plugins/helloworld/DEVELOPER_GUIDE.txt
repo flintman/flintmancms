@@ -267,15 +267,20 @@ PURPOSE: Smarty template for admin interface
 VARIABLES RECEIVED:
   - {$form_action}: Where form submits
   - {$content}: HTML content from admin.php
+  - {$csrf_token}: CSRF protection token (automatically available)
 
 STRUCTURE:
   {if $form_action != ''}
       <form action="{$form_action}" method="post">
+          <input type="hidden" name="csrf_token" value="{$csrf_token}">
           {$content}
       </form>
   {else}
       {$content}
   {/if}
+
+IMPORTANT: The csrf_token hidden field is REQUIRED for security.
+Every form that submits data MUST include this token.
 
 WHEN TO CUSTOMIZE:
   - Add plugin-specific wrapper HTML
@@ -487,6 +492,10 @@ ADD:
       $content = '<input type="text" name="field" class="form-control">';
       $content .= '<input type="submit" name="submit" value="Save">';
   } else {
+      // IMPORTANT: ALWAYS verify CSRF token first!
+      if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+          die("CSRF token validation failed");
+      }
       // Process form
       $value = scrub_input($_POST['field']);
       // Insert to database
@@ -500,8 +509,16 @@ Similar to ADD, but load existing data first:
   $result = $db->sql_query($sql);
   $data = $db->sql_fetchrow($result);
 
-  $content = '<input type="text" name="field" value="' .
-             htmlspecialchars($data['field']) . '">';
+  if (!isset($_POST['submit'])) {
+      $content = '<input type="text" name="field" value="' .
+                 htmlspecialchars($data['field']) . '">';
+  } else {
+      // IMPORTANT: ALWAYS verify CSRF token first!
+      if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+          die("CSRF token validation failed");
+      }
+      // Process update...
+  }
 
 DELETE:
 Show confirmation, then delete:
@@ -509,6 +526,10 @@ Show confirmation, then delete:
       $content = 'Are you sure?';
       $content .= '<input type="submit" name="submit" value="Delete">';
   } else {
+      // IMPORTANT: ALWAYS verify CSRF token first!
+      if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+          die("CSRF token validation failed");
+      }
       $sql = sprintf("DELETE FROM table WHERE id=%s", quote_smart($id));
       $db->sql_query($sql);
       header("Location: ...");
@@ -560,9 +581,30 @@ Show confirmation, then delete:
    - Verify data types and formats
    - Provide clear error messages
 
-7. CSRF PROTECTION:
-   - For critical operations, implement CSRF tokens
-   - Verify referer for sensitive actions
+7. CSRF PROTECTION (REQUIRED):
+   - ALL forms MUST include CSRF token
+   - Verify token on ALL POST handlers
+   - Token is automatically available in Smarty templates
+
+   Template (page.htm):
+   <form action="{$form_action}" method="post">
+       <input type="hidden" name="csrf_token" value="{$csrf_token}">
+       <!-- form fields -->
+   </form>
+
+   PHP Handler:
+   if (isset($_POST['submit'])) {
+       // ALWAYS verify CSRF token FIRST
+       if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+           die("CSRF token validation failed");
+       }
+       // Process form data...
+   }
+
+   CRITICAL: Every state-changing operation (add/edit/delete) must:
+   1. Include csrf_token hidden field in template
+   2. Verify token before processing POST data
+   3. Use verify_csrf_token() function (available globally)
 
 8. FILE UPLOADS:
    - Validate file types
@@ -607,6 +649,8 @@ SECURITY TESTING:
   [ ] Direct PHP file access blocked (IN_CMS check)
   [ ] SQL injection attempts fail (quote_smart)
   [ ] XSS attempts escaped (htmlspecialchars)
+  [ ] CSRF tokens present in all forms
+  [ ] CSRF tokens verified in all POST handlers
   [ ] Non-admin users can't access admin pages
   [ ] Invalid IDs don't cause errors
   [ ] Form resubmission prevented (redirects)
@@ -640,6 +684,8 @@ PRE-DEPLOYMENT:
 [ ] SQL tested and optimized
 [ ] All files have proper permissions
 [ ] Security measures implemented
+[ ] CSRF tokens in ALL forms
+[ ] CSRF verification in ALL POST handlers
 [ ] Cross-browser testing complete
 [ ] Mobile testing complete
 

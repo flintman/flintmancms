@@ -39,6 +39,7 @@
                             <a href="index.php?n=logout">{LOGOUT_TEXT}</a>
                         {else}
                             <form action="index.php" method="POST">
+                                <input type="hidden" name="csrf_token" value="{$csrf_token}">
                                 <input name="username" type="text" value="username" size="15" maxlength="45" onFocus="if(this.value=='username')this.value='';">
                                 <input name="password" type="password" value="password" size="15" onFocus="if(this.value=='password')this.value='';"><br>
                                 <input type="submit" name="login" value="Login" style="font-size:10px" class="button">

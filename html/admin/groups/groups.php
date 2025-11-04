@@ -88,6 +88,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         $group_back = '<a href="admin.php?n=groups" class="button">' . BACK_TEXT . '</a>';
         $button = '<input type="submit" value="' . SAVE_TEXT . '" name="submit" class="button">';
     } else {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         if ($_POST['submit'] == "Save") {
             $name = scrub_input($_POST['name']);
             $id = scrub_input($_GET['id']);
@@ -182,6 +186,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
             $plugins .= '<input type="checkbox" name="pg' . $data['id'] . '" value="1">' . $data['name'] . '<br>';
         }
     } else {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         if ($_POST['submit'] == "Save") {
             $name = scrub_input($_POST['name']);
             $sql = sprintf("INSERT INTO " . DB_PREFIX . "_groups (id, name) VALUES('0',%s)", quote_smart($name));
@@ -243,6 +251,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
                 )
         );
     } else {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         If ($_POST['submit'] == "Delete") {
             $sql = sprintf("DELETE FROM " . DB_PREFIX . "_groups WHERE id=%s",
                             quote_smart($id));

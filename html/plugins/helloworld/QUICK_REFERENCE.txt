@@ -83,12 +83,32 @@ if ($action == 'add') {
         $content = '<input type="text" name="field" class="form-control">';
         $content .= '<input type="submit" name="submit" value="Save">';
     } else {
+        // IMPORTANT: Verify CSRF token FIRST!
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         // Process form
         $value = scrub_input($_POST['field']);
         // Save to database
         header("Location: admin.php?n=plugins&p=pluginname");
         exit;
     }
+}
+
+CSRF PROTECTION (REQUIRED):
+---------------------------
+// Template (page.htm) - Add to ALL forms:
+<form action="{$form_action}" method="post">
+    <input type="hidden" name="csrf_token" value="{$csrf_token}">
+    {$content}
+</form>
+
+// PHP Handler - Verify FIRST in ALL POST handlers:
+if (isset($_POST['submit'])) {
+    if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed");
+    }
+    // Process form...
 }
 
 SMARTY ASSIGNMENT:

@@ -33,10 +33,18 @@ $save = '';
 $content = '';
 
 if (isset($_POST['submit'])) {
+    // Verify CSRF token
+    if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed");
+    }
     $message = scrub_input($_POST['message']);
     email($config['email_admin'], $message);
     $content = ADMIN_SEND_MESSAGE_TEXT;
 } elseif (isset($_POST['save'])) {
+    // Verify CSRF token
+    if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed");
+    }
     if (isset($_POST['email_type']))
         $email_type = 1;
     else

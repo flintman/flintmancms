@@ -1,6 +1,7 @@
 
 <div class='padder'>
     <form action="index.php?n=register" name="register" method="POST" {$on_submit}>
+        <input type="hidden" name="csrf_token" value="{$csrf_token}">
 
         <table width="100%">
             <tr>

@@ -1,4 +1,5 @@
 <form action="{$form_action}" enctype="multipart/form-data" method="post">
+<input type="hidden" name="csrf_token" value="{$csrf_token}">
     <div>
         {$add}<br><br>
         {$save_button}

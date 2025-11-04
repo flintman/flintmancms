@@ -1,4 +1,5 @@
 <form action="{$form_action}" method="post" >
+<input type="hidden" name="csrf_token" value="{$csrf_token}">
     {if $content eq ''}
         <table>
             <tr>

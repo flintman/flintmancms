@@ -118,6 +118,11 @@ if (!isset($_POST['submit'])) {
 else {
     // form submission, update the database
 
+    // Verify CSRF token
+    if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed");
+    }
+
     if (isset($_POST['debug']))
         $debug = 1;
     else
