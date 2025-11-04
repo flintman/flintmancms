@@ -1,0 +1,40 @@
+# Security: Prevent execution of script files in upload directory
+# This protects against uploaded PHP shells and other malicious code
+
+# Deny execution of all script types
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|phps|phar|pl|py|jsp|asp|aspx|shtml|sh|cgi|exe|bat|com)$">
+    Require all denied
+</FilesMatch>
+
+# Only allow image files to be served
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+    Require all granted
+</FilesMatch>
+
+# Disable PHP engine completely (if mod_php is used)
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# Set proper MIME types for images
+<IfModule mod_mime.c>
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+    AddType image/gif .gif
+    AddType image/webp .webp
+</IfModule>
+
+# Additional security headers for images
+<IfModule mod_headers.c>
+    # Prevent MIME type sniffing
+    Header set X-Content-Type-Options "nosniff"
+
+    # Prevent images from being embedded in frames (clickjacking protection)
+    Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>

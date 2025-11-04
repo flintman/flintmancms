@@ -157,4 +157,92 @@ function getlinkID($type, $type_id) {
     return $data['id'];
 }
 
+/**
+ * Comprehensive file upload validation
+ * Protects against malicious file uploads, validates file types, sizes, and generates safe filenames
+ *
+ * @param array $file The $_FILES array element for the uploaded file
+ * @param array $allowed_types Array of allowed MIME types (default: image types)
+ * @param int $max_size Maximum file size in bytes (default: 5MB)
+ * @return array ['valid' => bool, 'error' => string|null, 'filename' => string|null, 'mime' => string|null]
+ */
+function validate_upload($file, $allowed_types = ['image/jpeg', 'image/png', 'image/gif'], $max_size = 5242880) {
+    // Check if file was uploaded
+    if (!isset($file) || !isset($file['tmp_name'])) {
+        return ['valid' => false, 'error' => 'No file uploaded'];
+    }
+
+    // Check for upload errors
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        $error_messages = [
+            UPLOAD_ERR_INI_SIZE => 'File exceeds upload_max_filesize directive',
+            UPLOAD_ERR_FORM_SIZE => 'File exceeds MAX_FILE_SIZE directive',
+            UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
+            UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+            UPLOAD_ERR_EXTENSION => 'Upload stopped by PHP extension'
+        ];
+        $error = isset($error_messages[$file['error']])
+            ? $error_messages[$file['error']]
+            : 'Unknown upload error: ' . $file['error'];
+        return ['valid' => false, 'error' => $error];
+    }
+
+    // Check file size
+    if ($file['size'] > $max_size) {
+        return ['valid' => false, 'error' => 'File too large (max ' . round($max_size / 1048576, 2) . 'MB)'];
+    }
+
+    // Check file size is not zero
+    if ($file['size'] == 0) {
+        return ['valid' => false, 'error' => 'File is empty'];
+    }
+
+    // Validate MIME type using fileinfo
+    if (!function_exists('finfo_open')) {
+        return ['valid' => false, 'error' => 'Server configuration error: fileinfo extension missing'];
+    }
+
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+
+    if (!in_array($mime, $allowed_types)) {
+        return ['valid' => false, 'error' => 'Invalid file type. Allowed: ' . implode(', ', $allowed_types)];
+    }
+
+    // For images, perform additional validation
+    if (strpos($mime, 'image/') === 0) {
+        $img_info = @getimagesize($file['tmp_name']);
+        if ($img_info === false) {
+            return ['valid' => false, 'error' => 'Not a valid image file'];
+        }
+
+        // Verify the MIME type matches getimagesize result
+        $image_mime = $img_info['mime'];
+        if ($image_mime !== $mime) {
+            return ['valid' => false, 'error' => 'Image MIME type mismatch'];
+        }
+    }
+
+    // Generate safe random filename
+    $ext_map = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/gif' => 'gif',
+        'image/webp' => 'webp'
+    ];
+
+    $safe_ext = isset($ext_map[$mime]) ? $ext_map[$mime] : 'bin';
+    $safe_name = bin2hex(random_bytes(16)) . '.' . $safe_ext;
+
+    return [
+        'valid' => true,
+        'filename' => $safe_name,
+        'mime' => $mime,
+        'error' => null
+    ];
+}
+
 ?>

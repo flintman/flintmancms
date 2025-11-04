@@ -81,36 +81,45 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     if (!isset($_POST['submit']) || !$_POST['submit']) {
         $form_action = "admin.php?n=plugins&p=portfolio&action=photo&id=" . $id . "";
 
-        $content .="<INPUT type =\"file\" NAME=\"picfile\">";
+        $content .= '<label for="picfile">Select Image (JPG, PNG, or GIF, max 5MB):</label><br>';
+        $content .= '<input type="file" name="picfile" id="picfile" accept="image/jpeg,image/png,image/gif" required><br><br>';
         $content .= '<input type="submit" value="Save" name="submit" class="button">';
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'Save') {
         // Verify CSRF token
         if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
             die("CSRF token validation failed");
         }
-        $x = 1;
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
-                quote_smart($id));
-        $result = $db->sql_query($sql);
-        $data = $db->sql_fetchrow($result);
-        $job_name = $data['name'];
-        $filename = "$job_name$x.jpg";
-        While (is_file("plugins/portfolio/images/" . $filename)) {
-            $x++;
-            $filename = "$job_name$x.jpg";
-        }
-        $uploadfile = "plugins/portfolio/images/" . basename($filename);
-        if (is_writable("plugins/portfolio/images/")) {
-            if (move_uploaded_file($_FILES['picfile']['tmp_name'], $uploadfile)) {
-                $sql = sprintf("INSERT INTO " . DB_PREFIX . "__portfolio_photos VALUES('0',%s,%s)",
-                        quote_smart($id), quote_smart($filename));
-                $db->sql_query($sql);
-                header("Location: admin.php?n=plugins&p=portfolio");
-            } else {
-                $errorMsg = "File didn't Upload ";
-            }
+
+        // Validate uploaded file
+        $validation = validate_upload($_FILES['picfile'], ['image/jpeg', 'image/png', 'image/gif'], 5242880);
+
+        if (!$validation['valid']) {
+            $errorMsg = "Upload failed: " . $validation['error'];
         } else {
-            $errorMsg = "The path is Not Writable<br><br>";
+            $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
+                    quote_smart($id));
+            $result = $db->sql_query($sql);
+            $data = $db->sql_fetchrow($result);
+
+            // Use secure random filename from validation
+            $filename = $validation['filename'];
+            $uploadfile = "plugins/portfolio/images/" . $filename;
+
+            if (is_writable("plugins/portfolio/images/")) {
+                if (move_uploaded_file($_FILES['picfile']['tmp_name'], $uploadfile)) {
+                    // Set secure file permissions (read-only for web server)
+                    chmod($uploadfile, 0644);
+
+                    $sql = sprintf("INSERT INTO " . DB_PREFIX . "_portfolio_photos VALUES('0',%s,%s)",
+                            quote_smart($id), quote_smart($filename));
+                    $db->sql_query($sql);
+                    header("Location: admin.php?n=plugins&p=portfolio");
+                } else {
+                    $errorMsg = "File didn't upload - check directory permissions";
+                }
+            } else {
+                $errorMsg = "The upload directory is not writable";
+            }
         }
     }
 } elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {

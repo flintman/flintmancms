@@ -1,0 +1,14 @@
+# Ignore all files in this directory
+*
+
+# But keep these security/structural files
+!.gitignore
+!.htaccess
+!index.html
+
+# Ignore all image files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
