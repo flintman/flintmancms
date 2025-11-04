@@ -28,6 +28,7 @@ define('WELCOME_TO_TEXT', WELCOME_TEXT . " to");
 define('ADMIN_TEXT',"Admin");
 define("USERNAME_TEXT","Username");
 define("STATE_TEXT","State");
+define("PASSWORD_MISMATCH_TEXT","Passwords do not match");
 
 //Questions
 define('QUESTION_DELETE_TEXT',"Are you sure you want to Delete?");

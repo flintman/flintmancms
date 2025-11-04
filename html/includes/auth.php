@@ -46,7 +46,7 @@ function login() {
         or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
 
     $data = $db->sql_fetchrow($result);
-    if ($config['allow_login'] == false && $data['permissions'] != '1') {
+    if ($data && $config['allow_login'] == false && $data['permissions'] != '1') {
         $data = null;
     }
     if ($data) {
@@ -118,7 +118,7 @@ function logout() {
 
 }
 
-session_start();
+// Session is now started in common.php before this file is included
 // good ole authentication
 $_SESSION['name'] = $session_name;
 

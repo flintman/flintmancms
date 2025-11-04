@@ -46,19 +46,23 @@ if (!isset($_POST['submit']) || !$_POST['submit']) {
                             quote_smart($password), quote_smart($id));
             $result = $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
+        } elseif ($password != "") {
+            $errorMsg = PASSWORD_MISMATCH_TEXT;
         }
         $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET email=%s WHERE id=%s",
                         quote_smart($email), quote_smart($id));
         $result = $db->sql_query($sql)
                 or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__;
     }
-    if (!isset($errorMsg))
+    if (!isset($errorMsg)) {
         header("Location: index.php");
+    }
 }
 $smarty->assign(
         array(
             'username' => $username,
-            'email' => $email
+            'email' => $email,
+            'csrf_token' => generate_csrf_token()
         )
 );
 

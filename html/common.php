@@ -78,6 +78,11 @@ define('VERSION_NUMBER', $data['version_number']);
 
 $session_name = md5($config['site_name']);
 
+// Start session early for CSRF protection
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $scriptAdd = '';
 
 //Setups page lvls

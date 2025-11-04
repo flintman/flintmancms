@@ -109,7 +109,8 @@ if (isset($_GET['active'])) {
                 array(
                     'username' => $username,
                     'on_submit' => 'onsubmit="return validate_reg();"',
-                    'code_text' => REG_CODE_TEXT. ' <img src="includes/createimg.php">'
+                    'code_text' => REG_CODE_TEXT. ' <img src="includes/createimg.php">',
+                    'csrf_token' => generate_csrf_token()
                 )
         );
 
