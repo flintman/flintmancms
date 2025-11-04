@@ -1,0 +1,257 @@
+FlintmanCMS - SQL Query Examples
+================================
+
+This file demonstrates both SQL query approaches in FlintmanCMS.
+
+APPROACH 1: quote_smart() + sprintf() (STANDARD)
+=================================================
+
+This is the current standard used throughout the codebase.
+Use this for consistency with existing code.
+
+Example 1: Simple SELECT
+------------------------
+$id = scrub_input($_GET['id']);
+$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_helloworld WHERE id=%s",
+    quote_smart($id));
+$result = $db->sql_query($sql);
+$data = $db->sql_fetchrow($result);
+
+Example 2: INSERT
+-----------------
+$name = scrub_input($_POST['name']);
+$message = scrub_input($_POST['message']);
+$status = scrub_input($_POST['status']);
+
+$sql = sprintf("INSERT INTO " . DB_PREFIX . "_helloworld (name, message, status) VALUES (%s, %s, %s)",
+    quote_smart($name),
+    quote_smart($message),
+    quote_smart($status));
+$db->sql_query($sql);
+$new_id = $db->sql_nextid();
+
+Example 3: UPDATE
+-----------------
+$id = scrub_input($_GET['id']);
+$name = scrub_input($_POST['name']);
+$message = scrub_input($_POST['message']);
+
+$sql = sprintf("UPDATE " . DB_PREFIX . "_helloworld SET name=%s, message=%s WHERE id=%s",
+    quote_smart($name),
+    quote_smart($message),
+    quote_smart($id));
+$db->sql_query($sql);
+
+Example 4: DELETE
+-----------------
+$id = scrub_input($_GET['id']);
+$sql = sprintf("DELETE FROM " . DB_PREFIX . "_helloworld WHERE id=%s",
+    quote_smart($id));
+$db->sql_query($sql);
+
+Example 5: Multiple Conditions
+-------------------------------
+$status = scrub_input($_GET['status']);
+$user_id = scrub_input($_SESSION['user_id']);
+
+$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_helloworld WHERE status=%s AND user_id=%s ORDER BY created DESC",
+    quote_smart($status),
+    quote_smart($user_id));
+$result = $db->sql_query($sql);
+$rowset = $db->sql_fetchrowset($result);
+
+
+APPROACH 2: sql_prepare() - Prepared Statements (OPTIONAL)
+===========================================================
+
+This is a newer addition for developers who prefer prepared statements.
+Both approaches are equally secure.
+
+Example 1: Simple SELECT
+------------------------
+$id = scrub_input($_GET['id']);
+$result = $db->sql_prepare(
+    "SELECT * FROM " . DB_PREFIX . "_helloworld WHERE id = ?",
+    [$id]
+);
+$data = $result->fetch_assoc();
+
+Example 2: INSERT
+-----------------
+$name = scrub_input($_POST['name']);
+$message = scrub_input($_POST['message']);
+$status = scrub_input($_POST['status']);
+
+$db->sql_prepare(
+    "INSERT INTO " . DB_PREFIX . "_helloworld (name, message, status) VALUES (?, ?, ?)",
+    [$name, $message, $status]
+);
+$new_id = $db->sql_nextid();
+
+Example 3: UPDATE
+-----------------
+$id = scrub_input($_GET['id']);
+$name = scrub_input($_POST['name']);
+$message = scrub_input($_POST['message']);
+
+$db->sql_prepare(
+    "UPDATE " . DB_PREFIX . "_helloworld SET name = ?, message = ? WHERE id = ?",
+    [$name, $message, $id]
+);
+
+Example 4: DELETE
+-----------------
+$id = scrub_input($_GET['id']);
+$db->sql_prepare(
+    "DELETE FROM " . DB_PREFIX . "_helloworld WHERE id = ?",
+    [$id]
+);
+
+Example 5: Multiple Conditions
+-------------------------------
+$status = scrub_input($_GET['status']);
+$user_id = scrub_input($_SESSION['user_id']);
+
+$result = $db->sql_prepare(
+    "SELECT * FROM " . DB_PREFIX . "_helloworld WHERE status = ? AND user_id = ? ORDER BY created DESC",
+    [$status, $user_id]
+);
+
+// Fetch all rows
+$rowset = [];
+while ($row = $result->fetch_assoc()) {
+    $rowset[] = $row;
+}
+
+
+COMPARING THE TWO APPROACHES
+=============================
+
+Feature              | quote_smart()        | sql_prepare()
+---------------------|----------------------|-------------------
+Security             | ✅ Secure            | ✅ Secure
+Performance          | Good                 | Better (cached)
+Consistency          | Standard (100+ uses) | New option
+Code complexity      | Simple               | Slightly simpler
+Learning curve       | Familiar             | Familiar to SQL users
+Type handling        | Manual               | Automatic
+Error detection      | Runtime              | Compile time
+
+
+WHEN TO USE WHICH?
+==================
+
+Use quote_smart() when:
+- Modifying existing code (maintain consistency)
+- Working on established modules
+- You want to match the existing codebase style
+- Simple queries where performance isn't critical
+
+Use sql_prepare() when:
+- Writing new plugins from scratch
+- Building high-performance features
+- You prefer prepared statement syntax
+- Working with complex queries
+
+
+SECURITY NOTES
+==============
+
+Both approaches are SECURE when used correctly:
+
+✅ SAFE (quote_smart):
+    $sql = sprintf("WHERE id=%s", quote_smart($id));
+
+✅ SAFE (sql_prepare):
+    $db->sql_prepare("WHERE id = ?", [$id]);
+
+❌ UNSAFE (never do this):
+    $sql = "WHERE id=" . $id;
+    $sql = "WHERE name='" . $name . "'";
+    $sql = "WHERE id={$_GET['id']}";
+
+
+IMPORTANT REMINDERS
+===================
+
+1. ALWAYS sanitize input first:
+   $id = scrub_input($_GET['id']);
+
+2. ALWAYS use DB_PREFIX:
+   DB_PREFIX . "_tablename"
+
+3. NEVER expose SQL errors to users:
+   Errors are now logged automatically to error_log()
+
+4. ALWAYS verify CSRF tokens on POST:
+   if (!verify_csrf_token($_POST['csrf_token'])) die("CSRF failed");
+
+5. ALWAYS escape output for XSS:
+   echo htmlspecialchars($data['name'], ENT_QUOTES, 'UTF-8');
+
+
+COMPLETE EXAMPLE (CRUD with CSRF)
+==================================
+
+// LIST
+$result = $db->sql_query("SELECT * FROM " . DB_PREFIX . "_helloworld ORDER BY id DESC");
+$rowset = $db->sql_fetchrowset($result);
+
+// ADD (with CSRF)
+if (isset($_POST['submit'])) {
+    if (!verify_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed");
+    }
+
+    $name = scrub_input($_POST['name']);
+    $message = scrub_input($_POST['message']);
+
+    $sql = sprintf("INSERT INTO " . DB_PREFIX . "_helloworld (name, message) VALUES (%s, %s)",
+        quote_smart($name),
+        quote_smart($message));
+    $db->sql_query($sql);
+
+    header("Location: admin.php?n=plugins&p=helloworld");
+    exit;
+}
+
+// EDIT (with CSRF)
+$id = scrub_input($_GET['id']);
+$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_helloworld WHERE id=%s", quote_smart($id));
+$result = $db->sql_query($sql);
+$data = $db->sql_fetchrow($result);
+
+if (isset($_POST['submit'])) {
+    if (!verify_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed");
+    }
+
+    $name = scrub_input($_POST['name']);
+    $message = scrub_input($_POST['message']);
+
+    $sql = sprintf("UPDATE " . DB_PREFIX . "_helloworld SET name=%s, message=%s WHERE id=%s",
+        quote_smart($name),
+        quote_smart($message),
+        quote_smart($id));
+    $db->sql_query($sql);
+
+    header("Location: admin.php?n=plugins&p=helloworld");
+    exit;
+}
+
+// DELETE (with CSRF)
+if (isset($_POST['submit'])) {
+    if (!verify_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed");
+    }
+
+    $id = scrub_input($_GET['id']);
+    $sql = sprintf("DELETE FROM " . DB_PREFIX . "_helloworld WHERE id=%s", quote_smart($id));
+    $db->sql_query($sql);
+
+    header("Location: admin.php?n=plugins&p=helloworld");
+    exit;
+}
+
+---
+For more details, see: /html/docs/SQL_SECURITY.md

@@ -45,8 +45,13 @@ if (!defined("SQL_LAYER")) {
 
             $this->db_connect_id = new \mysqli($this->server, $this->user, $this->password, $this->dbname);
             if ($this->db_connect_id->connect_error) {
-                die('Connect Error (' . $this->db_connect_id->connect_errno . ') ' . $this->db_connect_id->connect_error);
+                // Log error securely instead of exposing details
+                error_log('Database Connection Error: ' . $this->db_connect_id->connect_error);
+                die('Database connection failed. Please contact the administrator.');
             }
+
+            // Set charset to UTF-8 to prevent encoding-based SQL injection
+            $this->db_connect_id->set_charset('utf8mb4');
         }
 
         public function sql_close() {
@@ -68,12 +73,65 @@ if (!defined("SQL_LAYER")) {
             if ($query != "") {
                 $this->num_queries++;
                 $this->query_result = $this->db_connect_id->query($query);
+
+                // Log failed queries for security monitoring
+                if (!$this->query_result && error_reporting() !== 0) {
+                    error_log('SQL Query Error: ' . $this->db_connect_id->error . ' | Query: ' . substr($query, 0, 200));
+                }
             }
             if ($this->query_result) {
                 return $this->query_result;
             } else {
                 return false;
             }
+        }
+
+        /**
+         * Prepared statement wrapper for new code (optional, more secure)
+         *
+         * Example usage:
+         *   $result = $db->sql_prepare("SELECT * FROM users WHERE id = ? AND email = ?", [$id, $email]);
+         *   $data = $result->fetch_assoc();
+         *
+         * @param string $query SQL query with ? placeholders
+         * @param array $params Array of parameters to bind
+         * @return mysqli_result|false Query result or false on error
+         */
+        public function sql_prepare($query, $params = []) {
+            if (empty($query)) {
+                return false;
+            }
+
+            $stmt = $this->db_connect_id->prepare($query);
+            if (!$stmt) {
+                error_log('SQL Prepare Error: ' . $this->db_connect_id->error . ' | Query: ' . substr($query, 0, 200));
+                return false;
+            }
+
+            if (!empty($params)) {
+                // Build type string (s=string, i=integer, d=double, b=blob)
+                $types = '';
+                foreach ($params as $param) {
+                    if (is_int($param)) {
+                        $types .= 'i';
+                    } elseif (is_float($param)) {
+                        $types .= 'd';
+                    } else {
+                        $types .= 's';
+                    }
+                }
+
+                $stmt->bind_param($types, ...$params);
+            }
+
+            $stmt->execute();
+            $this->num_queries++;
+
+            // Return result for SELECT queries
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            return $result;
         }
 
         public function sql_numrows($query_id = null) {
@@ -206,7 +264,23 @@ if (!defined("SQL_LAYER")) {
                 "message" => $this->db_connect_id->error,
                 "code" => $this->db_connect_id->errno
             ];
+
+            // Log errors securely (don't expose to users)
+            if ($result['code'] !== 0) {
+                error_log('MySQL Error ' . $result['code'] . ': ' . $result['message']);
+            }
+
             return $result;
+        }
+
+        /**
+         * Escape string for SQL queries (used by quote_smart())
+         *
+         * @param string $value Value to escape
+         * @return string Escaped value
+         */
+        public function sql_escape_string($value) {
+            return $this->db_connect_id->real_escape_string($value);
         }
     }
 }

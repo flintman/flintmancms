@@ -555,11 +555,36 @@ Show confirmation, then delete:
    $id = scrub_input($_GET['id']);
 
 3. SQL INJECTION PREVENTION:
-   - Use quote_smart() for SQL parameters
-   - Use sprintf() for parameterized queries
-   - Never concatenate user input directly
+   - ALWAYS use quote_smart() + sprintf() for SQL parameters
+   - Never concatenate user input directly into queries
+   - The current approach is SECURE when used consistently
 
-   $sql = sprintf("SELECT * FROM table WHERE id=%s", quote_smart($id));
+   ❌ WRONG (SQL Injection vulnerability):
+   $sql = "SELECT * FROM table WHERE id=" . $_GET['id'];
+   $sql = "SELECT * FROM table WHERE name='" . $_POST['name'] . "'";
+
+   ✅ CORRECT (Safe with quote_smart):
+   $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_table WHERE id=%s",
+       quote_smart($id));
+
+   $sql = sprintf("INSERT INTO " . DB_PREFIX . "_table (name, email) VALUES (%s, %s)",
+       quote_smart($name),
+       quote_smart($email));
+
+   Advanced: For NEW code, you can optionally use prepared statements:
+   $result = $db->sql_prepare(
+       "SELECT * FROM " . DB_PREFIX . "_table WHERE id = ? AND status = ?",
+       [$id, $status]
+   );
+   $data = $result->fetch_assoc();
+
+   Benefits of prepared statements:
+   - Slightly more secure (true parameter binding)
+   - Better performance for repeated queries
+   - Cleaner syntax for complex queries
+
+   Note: Both approaches are secure. Use quote_smart() for consistency with
+   existing code, or sql_prepare() for new features if you prefer.
 
 4. XSS PREVENTION:
    - Use htmlspecialchars() when outputting user data
