@@ -101,7 +101,8 @@ if (isset($_POST['submit'])) {
 $smarty->assign(
         array(
             'form_action' => $form_action,
-            'content' => $content
+            'content' => $content,
+            'page_back' => BACK_TEXT
         )
 );
 
