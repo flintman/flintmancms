@@ -10,7 +10,7 @@ INSERT INTO `flintmancms_config` (`name`, `value`) VALUES
 ('maintain', '0'),
 ('meta_tags', ''),
 ('email_errors', '0'),
-('email_admin', 'admin@admin.com'),
+('email_admin', 'admin@yourdomain.com'),
 ('disclamer', ''),
 ('debug', '0'),
 ('allow_login', '0'),
@@ -21,6 +21,7 @@ INSERT INTO `flintmancms_config` (`name`, `value`) VALUES
 ('SMTP_hostport', ''),
 ('SMTP_user',''),
 ('SMTP_pass',''),
+('SMTP_encryption', 'none'),
 ('maintain_message', 'This Site is under Construction'),
 ('frt_page', 'index.php?n=page&page_id=1'),
 ('add_link', '#scroll');
