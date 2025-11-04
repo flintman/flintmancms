@@ -1,0 +1,323 @@
+/* Aurora Theme - Navigation Menu Styles */
+
+/* Main Navigation */
+.main-nav {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    display: block;
+    padding: 0.75rem 1.25rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background: var(--bg-tertiary);
+    color: var(--accent-primary);
+}
+
+.nav-register {
+    background: var(--accent-primary);
+    color: white !important;
+}
+
+.nav-register:hover {
+    background: var(--accent-hover);
+    color: white !important;
+}
+
+/* User Menu */
+.user-menu .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-menu .nav-link::after {
+    content: '▾';
+    font-size: 0.75rem;
+}
+
+/* Submenu Styles */
+.has-submenu > .nav-link::after {
+    content: '▾';
+    margin-left: 0.25rem;
+    font-size: 0.75rem;
+    transition: transform 0.2s ease;
+}
+
+.has-submenu:hover > .nav-link::after {
+    transform: rotate(180deg);
+}
+
+.submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-lg);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+    list-style: none;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+}
+
+.nav-item:hover .submenu,
+.nav-item:focus-within .submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.submenu-item {
+    list-style: none;
+}
+
+.submenu-link {
+    display: block;
+    padding: 0.625rem 1.25rem;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.submenu-link:hover {
+    background: var(--bg-secondary);
+    color: var(--accent-primary);
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.mobile-menu-toggle span {
+    width: 2rem;
+    height: 0.2rem;
+    background: var(--text-primary);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    position: relative;
+    transform-origin: 1px;
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg);
+}
+
+/* Responsive Navigation */
+@media (max-width: 968px) {
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 300px;
+        height: 100vh;
+        background: var(--card-bg);
+        flex-direction: column;
+        align-items: stretch;
+        padding: 5rem 0 2rem;
+        gap: 0;
+        box-shadow: var(--shadow-lg);
+        border-left: 1px solid var(--border-color);
+        transition: right 0.3s ease;
+        overflow-y: auto;
+        z-index: 999;
+    }
+
+    .nav-menu.active {
+        right: 0;
+    }
+
+    .nav-item {
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-link {
+        padding: 1rem 1.5rem;
+        border-radius: 0;
+    }
+
+    .submenu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        box-shadow: none;
+        border: none;
+        border-top: 1px solid var(--border-color);
+        margin: 0;
+        background: var(--bg-secondary);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    .nav-item:hover .submenu,
+    .nav-item:focus-within .submenu {
+        max-height: 500px;
+    }
+
+    .has-submenu > .nav-link::after {
+        position: absolute;
+        right: 1.5rem;
+    }
+
+    .submenu-link {
+        padding-left: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-menu {
+        width: 100%;
+        right: -100%;
+    }
+
+    .nav-menu.active {
+        right: 0;
+    }
+}
+
+/* Old Menu Compatibility (for existing menu structure) */
+#nav {
+    list-style: none;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+}
+
+#nav li {
+    position: relative;
+}
+
+#nav li a,
+#nav span.nolink {
+    display: block;
+    padding: 0.75rem 1.25rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+#nav li a:hover {
+    background: var(--bg-tertiary);
+    color: var(--accent-primary);
+}
+
+#nav li ul {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-lg);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    list-style: none;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+}
+
+#nav li:hover ul {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#nav li ul li {
+    width: 100%;
+}
+
+#nav li ul li a {
+    border-radius: 0;
+    padding: 0.625rem 1.25rem;
+}
+
+#nav li ul li a:hover {
+    background: var(--bg-secondary);
+}
+
+/* Menu Utilities */
+.menuitem,
+.submenuitem {
+    margin: 0;
+}
+
+.menuitem a,
+.submenuitem a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.menuitem a:hover,
+.submenuitem a:hover {
+    color: var(--accent-primary);
+}
+
+.menuwrapper,
+.loginwrapper {
+    padding: 1rem;
+}
+
+.menutable {
+    width: 100%;
+}
+
+.menutop,
+.menubody,
+.menubottom {
+    padding: 0.5rem;
+}

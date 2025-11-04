@@ -1,0 +1,89 @@
+                </div>
+
+                <aside class="sidebar">
+                    {if $allow_login && !$is_logged_in}
+                    <div class="sidebar-card login-card">
+                        <h3 class="card-title">Login</h3>
+                        <form action="index.php" method="POST" class="login-form">
+                            <div class="form-group">
+                                <input name="username" type="text" placeholder="Username" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <input name="password" type="password" placeholder="Password" class="form-control" required>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="autologin" checked="checked">
+                                    <span>{REMEMBER_ME_TEXT}</span>
+                                </label>
+                            </div>
+                            <button type="submit" name="login" class="btn btn-primary btn-block">Login</button>
+                        </form>
+                    </div>
+                    {/if}
+
+                    {if $allow_login && $is_logged_in}
+                    <div class="sidebar-card user-card">
+                        <h3 class="card-title">{WELCOME_TEXT}</h3>
+                        <p class="user-name">{$username}</p>
+                    </div>
+                    {/if}
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    {$disclamer}
+                </div>
+                <div class="footer-links">
+                    <a href="admin.php">{ADMIN_TEXT}</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme toggle functionality
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const htmlElement = document.documentElement;
+
+            // Check for saved theme preference or default to light mode
+            const currentTheme = getCookie('theme') || 'light';
+            htmlElement.setAttribute('data-theme', currentTheme);
+
+            themeToggle.addEventListener('click', function() {
+                const theme = htmlElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                htmlElement.setAttribute('data-theme', theme);
+                setCookie('theme', theme, 365);
+            });
+
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const navMenu = document.getElementById('navMenu');
+
+            mobileMenuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                mobileMenuToggle.classList.toggle('active');
+            });
+
+            // Cookie functions
+            function setCookie(name, value, days) {
+                const expires = new Date(Date.now() + days * 864e5).toUTCString();
+                document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+            }
+
+            function getCookie(name) {
+                return document.cookie.split('; ').reduce((r, v) => {
+                    const parts = v.split('=');
+                    return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+                }, '');
+            }
+        })();
+    </script>
+</body>
+</html>
