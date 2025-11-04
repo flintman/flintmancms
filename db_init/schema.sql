@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `flintmancms_pages` (
 INSERT INTO `flintmancms_pages` (`id`, `title`, `context`, `active`, `show_title`) VALUES
 (NULL, 'Front Page', '<p><strong>Welcome to Flintman CMS</strong></p>', 1, 0);
 
-CREATE TABLE IF NOT EXISTS `flintmancms_photos` (
+CREATE TABLE IF NOT EXISTS `flintmancms_portfolio_photos` (
   `id` int(2) NOT NULL AUTO_INCREMENT,
   `portfolio_id` int(2) DEFAULT NULL,
   `photo_name` varchar(255) DEFAULT '',
@@ -97,7 +97,7 @@ INSERT INTO `flintmancms_plugins` (`id`, `name`, `active`, `version`) VALUES
 (NULL, 'portfolio', 1, '1.0.0'),
 (NULL, 'helloworld', 0, '1.0.0');
 
-CREATE TABLE IF NOT EXISTS `flintmancms_portfolio` (
+CREATE TABLE IF NOT EXISTS `flintmancms_portfolio_portfolio` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT '',
   `date_taken` varchar(255) DEFAULT '',
