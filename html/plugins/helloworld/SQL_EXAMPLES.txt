@@ -12,7 +12,7 @@ Use this for consistency with existing code.
 Example 1: Simple SELECT
 ------------------------
 $id = scrub_input($_GET['id']);
-$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_helloworld WHERE id=%s",
+$sql = sprintf("SELECT * FROM flintmancms_helloworld WHERE id=%s",
     quote_smart($id));
 $result = $db->sql_query($sql);
 $data = $db->sql_fetchrow($result);
@@ -23,7 +23,7 @@ $name = scrub_input($_POST['name']);
 $message = scrub_input($_POST['message']);
 $status = scrub_input($_POST['status']);
 
-$sql = sprintf("INSERT INTO " . DB_PREFIX . "_helloworld (name, message, status) VALUES (%s, %s, %s)",
+$sql = sprintf("INSERT INTO flintmancms_helloworld (name, message, status) VALUES (%s, %s, %s)",
     quote_smart($name),
     quote_smart($message),
     quote_smart($status));
@@ -36,7 +36,7 @@ $id = scrub_input($_GET['id']);
 $name = scrub_input($_POST['name']);
 $message = scrub_input($_POST['message']);
 
-$sql = sprintf("UPDATE " . DB_PREFIX . "_helloworld SET name=%s, message=%s WHERE id=%s",
+$sql = sprintf("UPDATE flintmancms_helloworld SET name=%s, message=%s WHERE id=%s",
     quote_smart($name),
     quote_smart($message),
     quote_smart($id));
@@ -45,7 +45,7 @@ $db->sql_query($sql);
 Example 4: DELETE
 -----------------
 $id = scrub_input($_GET['id']);
-$sql = sprintf("DELETE FROM " . DB_PREFIX . "_helloworld WHERE id=%s",
+$sql = sprintf("DELETE FROM flintmancms_helloworld WHERE id=%s",
     quote_smart($id));
 $db->sql_query($sql);
 
@@ -54,7 +54,7 @@ Example 5: Multiple Conditions
 $status = scrub_input($_GET['status']);
 $user_id = scrub_input($_SESSION['user_id']);
 
-$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_helloworld WHERE status=%s AND user_id=%s ORDER BY created DESC",
+$sql = sprintf("SELECT * FROM flintmancms_helloworld WHERE status=%s AND user_id=%s ORDER BY created DESC",
     quote_smart($status),
     quote_smart($user_id));
 $result = $db->sql_query($sql);
@@ -71,7 +71,7 @@ Example 1: Simple SELECT
 ------------------------
 $id = scrub_input($_GET['id']);
 $result = $db->sql_prepare(
-    "SELECT * FROM " . DB_PREFIX . "_helloworld WHERE id = ?",
+    "SELECT * FROM flintmancms_helloworld WHERE id = ?",
     [$id]
 );
 $data = $result->fetch_assoc();
@@ -83,7 +83,7 @@ $message = scrub_input($_POST['message']);
 $status = scrub_input($_POST['status']);
 
 $db->sql_prepare(
-    "INSERT INTO " . DB_PREFIX . "_helloworld (name, message, status) VALUES (?, ?, ?)",
+    "INSERT INTO flintmancms_helloworld (name, message, status) VALUES (?, ?, ?)",
     [$name, $message, $status]
 );
 $new_id = $db->sql_nextid();
@@ -95,7 +95,7 @@ $name = scrub_input($_POST['name']);
 $message = scrub_input($_POST['message']);
 
 $db->sql_prepare(
-    "UPDATE " . DB_PREFIX . "_helloworld SET name = ?, message = ? WHERE id = ?",
+    "UPDATE flintmancms_helloworld SET name = ?, message = ? WHERE id = ?",
     [$name, $message, $id]
 );
 
@@ -103,7 +103,7 @@ Example 4: DELETE
 -----------------
 $id = scrub_input($_GET['id']);
 $db->sql_prepare(
-    "DELETE FROM " . DB_PREFIX . "_helloworld WHERE id = ?",
+    "DELETE FROM flintmancms_helloworld WHERE id = ?",
     [$id]
 );
 
@@ -113,7 +113,7 @@ $status = scrub_input($_GET['status']);
 $user_id = scrub_input($_SESSION['user_id']);
 
 $result = $db->sql_prepare(
-    "SELECT * FROM " . DB_PREFIX . "_helloworld WHERE status = ? AND user_id = ? ORDER BY created DESC",
+    "SELECT * FROM flintmancms_helloworld WHERE status = ? AND user_id = ? ORDER BY created DESC",
     [$status, $user_id]
 );
 
@@ -178,7 +178,7 @@ IMPORTANT REMINDERS
    $id = scrub_input($_GET['id']);
 
 2. ALWAYS use DB_PREFIX:
-   DB_PREFIX . "_tablename"
+   "flintmancms_tablename"
 
 3. NEVER expose SQL errors to users:
    Errors are now logged automatically to error_log()
@@ -194,7 +194,7 @@ COMPLETE EXAMPLE (CRUD with CSRF)
 ==================================
 
 // LIST
-$result = $db->sql_query("SELECT * FROM " . DB_PREFIX . "_helloworld ORDER BY id DESC");
+$result = $db->sql_query("SELECT * FROM flintmancms_helloworld ORDER BY id DESC");
 $rowset = $db->sql_fetchrowset($result);
 
 // ADD (with CSRF)
@@ -206,7 +206,7 @@ if (isset($_POST['submit'])) {
     $name = scrub_input($_POST['name']);
     $message = scrub_input($_POST['message']);
 
-    $sql = sprintf("INSERT INTO " . DB_PREFIX . "_helloworld (name, message) VALUES (%s, %s)",
+    $sql = sprintf("INSERT INTO flintmancms_helloworld (name, message) VALUES (%s, %s)",
         quote_smart($name),
         quote_smart($message));
     $db->sql_query($sql);
@@ -217,7 +217,7 @@ if (isset($_POST['submit'])) {
 
 // EDIT (with CSRF)
 $id = scrub_input($_GET['id']);
-$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_helloworld WHERE id=%s", quote_smart($id));
+$sql = sprintf("SELECT * FROM flintmancms_helloworld WHERE id=%s", quote_smart($id));
 $result = $db->sql_query($sql);
 $data = $db->sql_fetchrow($result);
 
@@ -229,7 +229,7 @@ if (isset($_POST['submit'])) {
     $name = scrub_input($_POST['name']);
     $message = scrub_input($_POST['message']);
 
-    $sql = sprintf("UPDATE " . DB_PREFIX . "_helloworld SET name=%s, message=%s WHERE id=%s",
+    $sql = sprintf("UPDATE flintmancms_helloworld SET name=%s, message=%s WHERE id=%s",
         quote_smart($name),
         quote_smart($message),
         quote_smart($id));
@@ -246,7 +246,7 @@ if (isset($_POST['submit'])) {
     }
 
     $id = scrub_input($_GET['id']);
-    $sql = sprintf("DELETE FROM " . DB_PREFIX . "_helloworld WHERE id=%s", quote_smart($id));
+    $sql = sprintf("DELETE FROM flintmancms_helloworld WHERE id=%s", quote_smart($id));
     $db->sql_query($sql);
 
     header("Location: admin.php?n=plugins&p=helloworld");

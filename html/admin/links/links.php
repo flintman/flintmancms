@@ -36,7 +36,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
 
     $link_id = scrub_input($_GET['link_id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_links WHERE sub_link=%s ORDER BY `link_order`",
+        $sql = sprintf("SELECT * FROM flintmancms_links WHERE sub_link=%s ORDER BY `link_order`",
                         quote_smart($link_id));
         $result = $db->sql_query($sql)
                 or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -59,7 +59,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         $report->addOutputColumn('del', '', 'left');
         $content = $report->getListFromArray($links);
 
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_links WHERE id =%s",
+        $sql = sprintf("SELECT * FROM flintmancms_links WHERE id =%s",
                         quote_smart($link_id));
         $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result) or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -77,7 +77,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             $newwindow = '<input type="checkbox" name="window" value="1" checked>';
 
         $link_sub = '<select name="sublink">';
-        $sql2 = "SELECT * FROM " . DB_PREFIX . "_links";
+        $sql2 = "SELECT * FROM flintmancms_links";
         $link_sub .= "<option value='0'></option>";
         $result2 = $db->sql_query($sql2);
         While ($data2 = $db->sql_fetchrow($result2)) {
@@ -125,7 +125,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             else
                 $active = 0;
 
-            $sql = sprintf("UPDATE " . DB_PREFIX . "_links SET name=%s,new_window=%s,link=%s,
+            $sql = sprintf("UPDATE flintmancms_links SET name=%s,new_window=%s,link=%s,
                     active=%s,sub_link=%s WHERE id=%s", quote_smart($name), quote_smart($window),
                             quote_smart($url), quote_smart($active), quote_smart($sublink), quote_smart($link_id));
             $db->sql_query($sql)
@@ -144,7 +144,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
         $link_link = '<input name="url" SIZE=45 type="text">';
         $newwindow = '<input type="checkbox" name="window" value="1">';
         $link_sub = '<select name="sublink">';
-        $sql = "SELECT * FROM " . DB_PREFIX . "_links";
+        $sql = "SELECT * FROM flintmancms_links";
         $link_sub .= "<option value='0'></option>";
         $result = $db->sql_query($sql);
         While ($data = $db->sql_fetchrow($result)) {
@@ -188,7 +188,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
                 $window = 0;
 
             $count = count_links($sublink);
-            $sql = sprintf("INSERT INTO " . DB_PREFIX . "_links VALUES('0',%s,%s,%s,%s,%s,%s)",
+            $sql = sprintf("INSERT INTO flintmancms_links VALUES('0',%s,%s,%s,%s,%s,%s)",
                             quote_smart($name), quote_smart($url), quote_smart($active), quote_smart($window),
                             quote_smart($count), quote_smart($sublink));
 
@@ -222,7 +222,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
             die("CSRF token validation failed");
         }
         if ($_POST['submit'] == "Delete") {
-            $sql = sprintf("DELETE FROM " . DB_PREFIX . "_links WHERE id=%s",
+            $sql = sprintf("DELETE FROM flintmancms_links WHERE id=%s",
                             quote_smart($link_id));
             $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -242,11 +242,11 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
         else
             header("Location: admin.php?n=links");
     } else {
-        $sql = sprintf("UPDATE " . DB_PREFIX . "_links SET link_order=%s WHERE link_order=%s AND sub_link=%s",
+        $sql = sprintf("UPDATE flintmancms_links SET link_order=%s WHERE link_order=%s AND sub_link=%s",
                         quote_smart($order), quote_smart($order_minus), quote_smart($sublink));
         $db->sql_query($sql)
                 or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
-        $sql = sprintf("UPDATE " . DB_PREFIX . "_links SET link_order=%s WHERE id=%s",
+        $sql = sprintf("UPDATE flintmancms_links SET link_order=%s WHERE id=%s",
                         quote_smart($order_minus), quote_smart($link_id));
         $db->sql_query($sql)
                 or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -269,11 +269,11 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
         else
             header("Location: admin.php?n=links");
     } else {
-        $sql = sprintf("UPDATE " . DB_PREFIX . "_links SET link_order=%s WHERE link_order=%s AND sub_link=%s",
+        $sql = sprintf("UPDATE flintmancms_links SET link_order=%s WHERE link_order=%s AND sub_link=%s",
                         quote_smart($order), quote_smart($order_plus), quote_smart($sublink));
         $db->sql_query($sql)
                 or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
-        $sql = sprintf("UPDATE " . DB_PREFIX . "_links SET link_order=%s WHERE id=%s",
+        $sql = sprintf("UPDATE flintmancms_links SET link_order=%s WHERE id=%s",
                         quote_smart($order_plus), quote_smart($link_id));
         $db->sql_query($sql)
                 or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -285,7 +285,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
         }
     }
 } else {
-    $sql = "SELECT * FROM " . DB_PREFIX . "_links WHERE sub_link='0' ORDER BY `link_order`";
+    $sql = "SELECT * FROM flintmancms_links WHERE sub_link='0' ORDER BY `link_order`";
     $result = $db->sql_query($sql)
             or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
     While ($data = $db->sql_fetchrow($result)) {

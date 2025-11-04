@@ -89,7 +89,7 @@ $site_info = '
 
 $log_info ='<table width="100%" border="1" cellpadding="5"><br>';
 
-$sql = "SELECT * FROM " . DB_PREFIX . "_logs ORDER by id DESC LIMIT 10";
+$sql = "SELECT * FROM flintmancms_logs ORDER by id DESC LIMIT 10";
 $result = $db->sql_query($sql);
 While ($data = $db->sql_fetchrow($result)) {
      $timestamp = date('Y-m-d H:i:s', $data['timestamp']);

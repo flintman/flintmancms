@@ -36,7 +36,7 @@ $form_action = '';
 if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_groups WHERE id =%s",
+        $sql = sprintf("SELECT * FROM flintmancms_groups WHERE id =%s",
                         quote_smart($id));
         $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result)
@@ -49,13 +49,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         }
 
         //Gets all pages to set privliges on
-        $sql = "SELECT * FROM " . DB_PREFIX . "_pages";
+        $sql = "SELECT * FROM flintmancms_pages";
         $result = $db->sql_query($sql);
         $pages = "";
         $plugins = "";
         while ($data = $db->sql_fetchrow($result)) {
             if ($data['id'] != '1') {
-                $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_group_links WHERE
+                $sql = sprintf("SELECT * FROM flintmancms_group_links WHERE
                     type='page' AND type_id=%s AND group_id=%s",
                                 quote_smart($data['id']), quote_smart($id));
                 $links = $db->sql_query($sql);
@@ -69,10 +69,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         }
 
         //Gets all pages to set privliges on
-        $sql = "SELECT * FROM " . DB_PREFIX . "_plugins";
+        $sql = "SELECT * FROM flintmancms_plugins";
         $result = $db->sql_query($sql);
         while ($data = $db->sql_fetchrow($result)) {
-            $sql2 = sprintf("SELECT * FROM " . DB_PREFIX . "_group_links WHERE
+            $sql2 = sprintf("SELECT * FROM flintmancms_group_links WHERE
                     type='plugins' AND type_id=%s AND group_id=%s",
                             quote_smart($data['id']), quote_smart($id));
             $links = $db->sql_query($sql2);
@@ -95,14 +95,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         if ($_POST['submit'] == "Save") {
             $name = scrub_input($_POST['name'], ['max_length' => 100]);
             $id = scrub_input($_GET['id'], ['type' => 'int']);
-            $sql = sprintf("UPDATE " . DB_PREFIX . "_groups SET
+            $sql = sprintf("UPDATE flintmancms_groups SET
                     name=%s WHERE id=%s", quote_smart($name), quote_smart($id));
         $db->sql_query($sql)
             or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
-            $sql = "SELECT * FROM " . DB_PREFIX . "_pages";
+            $sql = "SELECT * FROM flintmancms_pages";
             $result = $db->sql_query($sql);
             while ($data = $db->sql_fetchrow($result)) {
-                $sql2 = sprintf("SELECT * FROM " . DB_PREFIX . "_group_links WHERE
+                $sql2 = sprintf("SELECT * FROM flintmancms_group_links WHERE
                     type='page' AND type_id=%s AND group_id=%s",
                                 quote_smart($data['id']), quote_smart($id));
                 $links = $db->sql_query($sql2);
@@ -110,21 +110,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                  $link_id = getlinkID('page', $data['id']);
                 if (isset($_POST['p' . $data['id']])) {
                     if (!$data_link)
-                        $sql3 = sprintf("INSERT INTO " . DB_PREFIX . "_group_links
+                        $sql3 = sprintf("INSERT INTO flintmancms_group_links
                                 VALUES('0',%s, 'page',%s,%s)",
                                         quote_smart($id), quote_smart($data['id']), quote_smart($link_id));
                 }else {
-                    $sql3 = sprintf("DELETE FROM " . DB_PREFIX . "_group_links WHERE type='page'
+                    $sql3 = sprintf("DELETE FROM flintmancms_group_links WHERE type='page'
                         AND type_id=%s AND group_id=%s", quote_smart($data['id']), quote_smart($id));
                 }
                 $db->sql_query($sql3) or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
             }
 
             //Gets all pages to set privliges on
-            $sql = "SELECT * FROM " . DB_PREFIX . "_plugins";
+            $sql = "SELECT * FROM flintmancms_plugins";
             $result = $db->sql_query($sql);
             while ($data = $db->sql_fetchrow($result)) {
-                $sql2 = sprintf("SELECT * FROM " . DB_PREFIX . "_group_links WHERE
+                $sql2 = sprintf("SELECT * FROM flintmancms_group_links WHERE
                     type='plugins' AND type_id=%s AND group_id=%s",
                                 quote_smart($data['id']), quote_smart($id));
                 $links = $db->sql_query($sql2);
@@ -132,11 +132,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                 $link_id = getlinkID('plugins', $data['id']);
                 if (isset($_POST['pg' . $data['id']])) {
                     if (!$data_link)
-                        $sql3 = sprintf("INSERT INTO " . DB_PREFIX . "_group_links
+                        $sql3 = sprintf("INSERT INTO flintmancms_group_links
                                 VALUES('0',%s, 'plugins',%s,%s)", quote_smart($id), quote_smart($data['id']),
                                 quote_smart($link_id));
                 } else {
-                    $sql3 = sprintf("DELETE FROM " . DB_PREFIX . "_group_links WHERE type='plugins'
+                    $sql3 = sprintf("DELETE FROM flintmancms_group_links WHERE type='plugins'
                         AND type_id=%s AND group_id=%s", quote_smart($data['id']), quote_smart($id));
                 }
         $db->sql_query($sql3)
@@ -170,7 +170,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
         $button = '<input type="submit" value="' . SAVE_TEXT . '" name="submit" class="button">';
 
         //Gets all pages to set privliges on
-        $sql = "SELECT * FROM " . DB_PREFIX . "_pages";
+        $sql = "SELECT * FROM flintmancms_pages";
         $result = $db->sql_query($sql);
         $pages = "";
         $plugins = "";
@@ -180,7 +180,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
         }
 
         //Gets all pages to set privliges on
-        $sql = "SELECT * FROM " . DB_PREFIX . "_plugins";
+        $sql = "SELECT * FROM flintmancms_plugins";
         $result = $db->sql_query($sql);
         while ($data = $db->sql_fetchrow($result)) {
             $plugins .= '<input type="checkbox" name="pg' . $data['id'] . '" value="1">' . $data['name'] . '<br>';
@@ -192,18 +192,18 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
         }
         if ($_POST['submit'] == "Save") {
             $name = scrub_input($_POST['name'], ['max_length' => 100]);
-            $sql = sprintf("INSERT INTO " . DB_PREFIX . "_groups (id, name) VALUES('0',%s)", quote_smart($name));
+            $sql = sprintf("INSERT INTO flintmancms_groups (id, name) VALUES('0',%s)", quote_smart($name));
 
         $db->sql_query($sql)
             or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
 
             $last_id = $db->sql_nextid();
-            $sql = "SELECT * FROM " . DB_PREFIX . "_pages";
+            $sql = "SELECT * FROM flintmancms_pages";
             $result = $db->sql_query($sql);
             while ($data = $db->sql_fetchrow($result)) {
 
                 if (isset($_POST['p' . $data['id']])) {
-                    $sql2 = sprintf("INSERT INTO " . DB_PREFIX . "_group_links (id, group_id, type, type_id, link_id)
+                    $sql2 = sprintf("INSERT INTO flintmancms_group_links (id, group_id, type, type_id, link_id)
                             VALUES('0',%s, 'page',%s, 0)",
                                     quote_smart($last_id), quote_smart($data['id']));
             $db->sql_query($sql2)
@@ -212,11 +212,11 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
             }
 
             //Gets all pages to set privliges on
-            $sql = "SELECT * FROM " . DB_PREFIX . "_plugins";
+            $sql = "SELECT * FROM flintmancms_plugins";
             $result = $db->sql_query($sql);
             while ($data = $db->sql_fetchrow($result)) {
                 if (isset($_POST['pg' . $data['id']])) {
-                    $sql2 = sprintf("INSERT INTO " . DB_PREFIX . "_group_links (id, group_id, type, type_id, link_id)
+                    $sql2 = sprintf("INSERT INTO flintmancms_group_links (id, group_id, type, type_id, link_id)
                             VALUES('0',%s, 'plugins',%s, 0)",
                                     quote_smart($last_id), quote_smart($data['id']));
             $db->sql_query($sql2)
@@ -256,11 +256,11 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
             die("CSRF token validation failed");
         }
         If ($_POST['submit'] == "Delete") {
-            $sql = sprintf("DELETE FROM " . DB_PREFIX . "_groups WHERE id=%s",
+            $sql = sprintf("DELETE FROM flintmancms_groups WHERE id=%s",
                             quote_smart($id));
         $db->sql_query($sql)
             or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
-            $sql = sprintf("DELETE FROM " . DB_PREFIX . "_group_links WHERE group_id=%s",
+            $sql = sprintf("DELETE FROM flintmancms_group_links WHERE group_id=%s",
                             quote_smart($id));
         $db->sql_query($sql)
             or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -269,7 +269,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
             header("Location: admin.php?n=groups");
     }
 } else {
-    $sql = "SELECT * FROM " . DB_PREFIX . "_groups";
+    $sql = "SELECT * FROM flintmancms_groups";
     $result = $db->sql_query($sql);
     While ($data = $db->sql_fetchrow($result)) {
         if ($data['id'] == 1) {

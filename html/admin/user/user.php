@@ -33,7 +33,7 @@ $form_action = "";
 if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_profile
+        $sql = sprintf("SELECT * FROM flintmancms_profile
             WHERE id =%s", quote_smart($id));
         $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result)
@@ -46,7 +46,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
 
         //Setups groups
         $groups = '<select name="groups">';
-        $sql2 = "SELECT * FROM " . DB_PREFIX . "_groups";
+        $sql2 = "SELECT * FROM flintmancms_groups";
         $result2 = $db->sql_query($sql2);
         While ($data2 = $db->sql_fetchrow($result2)) {
             $priv_id = $data2['id'];
@@ -76,14 +76,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             $groups = isset($_POST['groups']) ? scrub_input($_POST['groups'], ['type' => 'int']) : null;
             if ($password != "" && $password == $password2) {
                 $hashed_password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
-                $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET password=%s WHERE id=%s",
+                $sql = sprintf("UPDATE flintmancms_profile SET password=%s WHERE id=%s",
                                 quote_smart($hashed_password), quote_smart($id));
                 $result = $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
             }
             // Only update permissions if groups is set and not empty
             if ($groups !== null && $groups !== '') {
-                $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET username=%s,email=%s,permissions=%s WHERE id=%s",
+                $sql = sprintf("UPDATE flintmancms_profile SET username=%s,email=%s,permissions=%s WHERE id=%s",
                                 quote_smart($username), quote_smart($email), quote_smart($groups), quote_smart($id));
 
                 // SECURITY: If admin is changing their own permissions, regenerate session
@@ -92,7 +92,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                     $_SESSION['priv'] = $groups; // Update session with new permissions
                 }
             } else {
-                $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET username=%s,email=%s WHERE id=%s",
+                $sql = sprintf("UPDATE flintmancms_profile SET username=%s,email=%s WHERE id=%s",
                                 quote_smart($username), quote_smart($email), quote_smart($id));
             }
             $result = $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error() .
@@ -134,7 +134,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         }
         if ($error_add == 0) {
             $hashed_password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
-            $sql = sprintf("INSERT INTO " . DB_PREFIX . "_profile
+            $sql = sprintf("INSERT INTO flintmancms_profile
                     VALUES('0',%s,%s,%s,'" . time () . "',%s,'1','')",
                             quote_smart($username), quote_smart($hashed_password), quote_smart($email),
                             quote_smart($groups));
@@ -162,7 +162,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
 
         //Setups groups
         $groups = '<select name="groups">';
-        $sql = "SELECT * FROM " . DB_PREFIX . "_groups";
+        $sql = "SELECT * FROM flintmancms_groups";
         $result = $db->sql_query($sql);
         While ($data = $db->sql_fetchrow($result)) {
             $priv_id = $data['id'];
@@ -203,7 +203,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             die("CSRF token validation failed");
         }
         If ($_POST['submit'] == "Delete") {
-            $sql = sprintf("DELETE FROM " . DB_PREFIX . "_profile WHERE id=%s",
+            $sql = sprintf("DELETE FROM flintmancms_profile WHERE id=%s",
                             quote_smart($id));
             $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -221,7 +221,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     );
 } elseif (isset($_GET['action']) && $_GET['action'] == 'active') {
     $id = scrub_input($_GET['id'], ['type' => 'int']);
-    $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET active='1' WHERE id=%s",
+    $sql = sprintf("UPDATE flintmancms_profile SET active='1' WHERE id=%s",
                     quote_smart($id));
     $result = $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error() .
         " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -229,14 +229,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         header("Location: admin.php?n=user");
 } elseif (isset($_GET['action']) && $_GET['action'] == 'deactive') {
     $id = scrub_input($_GET['id'], ['type' => 'int']);
-    $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET active='0' WHERE id=%s",
+    $sql = sprintf("UPDATE flintmancms_profile SET active='0' WHERE id=%s",
                     quote_smart($id));
     $result = $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error() .
         " @ Line " . __LINE__ . " Of " . __FILE__;
     if (!isset($errorMsg))
         header("Location: admin.php?n=user");
 } else {
-    $sql = "SELECT * FROM " . DB_PREFIX . "_profile";
+    $sql = "SELECT * FROM flintmancms_profile";
     $result = $db->sql_query($sql);
     While ($data = $db->sql_fetchrow($result)) {
         if ($data['id'] == 1) {

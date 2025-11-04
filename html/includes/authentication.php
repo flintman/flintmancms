@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * ************************************************************************* */
 
-$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_groups WHERE id=%s",
+$sql = sprintf("SELECT * FROM flintmancms_groups WHERE id=%s",
                 quote_smart($_SESSION['priv']));
 $result = $db->sql_query($sql);
 $data = $db->sql_fetchrow($result);

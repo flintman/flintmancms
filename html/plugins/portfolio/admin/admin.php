@@ -44,7 +44,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         }
         $date = $_POST['date_taken'];
         $job_name = $_POST['job_name'];
-        $sql = sprintf("INSERT INTO " . DB_PREFIX . "_portfolio_portfolio VALUES('0',%s,%s)",
+        $sql = sprintf("INSERT INTO flintmancms_portfolio_portfolio VALUES('0',%s,%s)",
                 quote_smart($job_name), quote_smart($date));
         $result = $db->sql_query($sql);
         if (!$result) {
@@ -56,7 +56,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit']) || !$_POST['submit']) {
         $form_action = "admin.php?n=plugins&p=portfolio&action=edit&id=" . $id . "";
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
+        $sql = sprintf("SELECT * FROM flintmancms_portfolio_portfolio WHERE id=%s",
                 quote_smart($id));
         $result = $db->sql_query($sql);
         $data = $db->sql_fetchrow($result);
@@ -71,7 +71,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         }
         $date = scrub_input($_POST['date_taken'], ['max_length' => 50]);
         $job_name = scrub_input($_POST['job_name'], ['max_length' => 200]);
-        $sql = sprintf("UPDATE " . DB_PREFIX . "_portfolio_portfolio SET name=%s,date_taken=%s WHERE id=%s",
+        $sql = sprintf("UPDATE flintmancms_portfolio_portfolio SET name=%s,date_taken=%s WHERE id=%s",
                 quote_smart($job_name), quote_smart($date), quote_smart($id));
         $db->sql_query($sql);
         header("Location: admin.php?n=plugins&p=portfolio");
@@ -96,7 +96,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         if (!$validation['valid']) {
             $errorMsg = "Upload failed: " . $validation['error'];
         } else {
-            $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
+            $sql = sprintf("SELECT * FROM flintmancms_portfolio_portfolio WHERE id=%s",
                     quote_smart($id));
             $result = $db->sql_query($sql);
             $data = $db->sql_fetchrow($result);
@@ -110,7 +110,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
                     // Set secure file permissions (read-only for web server)
                     chmod($uploadfile, 0644);
 
-                    $sql = sprintf("INSERT INTO " . DB_PREFIX . "_portfolio_photos VALUES('0',%s,%s)",
+                    $sql = sprintf("INSERT INTO flintmancms_portfolio_photos VALUES('0',%s,%s)",
                             quote_smart($id), quote_smart($filename));
                     $db->sql_query($sql);
                     header("Location: admin.php?n=plugins&p=portfolio");
@@ -135,14 +135,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
             die("CSRF token validation failed");
         }
         // they confirmed
-        $sql = sprintf("DELETE FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
+        $sql = sprintf("DELETE FROM flintmancms_portfolio_portfolio WHERE id=%s",
                 quote_smart($id));
         $db->sql_query($sql);
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_photos WHERE portfolio_id=%s",
+        $sql = sprintf("SELECT * FROM flintmancms_portfolio_photos WHERE portfolio_id=%s",
                 quote_smart($id));
         $result = $db->sql_query($sql);
         while ($data = $db->sql_fetchrow($result)) {
-            $sql2 = sprintf("DELETE FROM " . DB_PREFIX . "_portfolio_photos WHERE id=%s",
+            $sql2 = sprintf("DELETE FROM flintmancms_portfolio_photos WHERE id=%s",
                     quote_smart($data['id']));
             $db->sql_query($sql2);
             $filename = $data['photo_name'];
@@ -155,7 +155,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         header("Location: admin.php?n=plugins&p=portfolio");
     }
 } else {
-    $sql = "SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio";
+    $sql = "SELECT * FROM flintmancms_portfolio_portfolio";
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {
         array_push($photo, array(

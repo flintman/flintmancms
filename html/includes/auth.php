@@ -41,7 +41,7 @@ function login() {
     }
 
     $escaped_username = mysqli_real_escape_string($db->db_connect_id, $username);
-    $sql = "SELECT * FROM " . DB_PREFIX . "_profile WHERE username='" . $escaped_username . "'";
+    $sql = "SELECT * FROM flintmancms_profile WHERE username='" . $escaped_username . "'";
     $result = $db->sql_query($sql)
         or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
 
@@ -58,12 +58,12 @@ function login() {
                 setcookie('remember_token', $new_token, time() + 2629743);
                 // Save token in DB
                 $escaped_token = mysqli_real_escape_string($db->db_connect_id, $new_token);
-                $update_sql = "UPDATE " . DB_PREFIX . "_profile SET remember_token='" . $escaped_token . "' WHERE id=" . (int)$data['id'];
+                $update_sql = "UPDATE flintmancms_profile SET remember_token='" . $escaped_token . "' WHERE id=" . (int)$data['id'];
                 $db->sql_query($update_sql);
             } else {
                 // Remove any old token
                 setcookie('remember_token', '', time() - 3600);
-                $update_sql = "UPDATE " . DB_PREFIX . "_profile SET remember_token=NULL WHERE id=" . (int)$data['id'];
+                $update_sql = "UPDATE flintmancms_profile SET remember_token=NULL WHERE id=" . (int)$data['id'];
                 $db->sql_query($update_sql);
             }
         } elseif ($remember_token !== null && $remember_token === $data['remember_token'] && !empty($remember_token)) {
@@ -72,7 +72,7 @@ function login() {
             setcookie('username', strtolower($data['username']), time() + 2629743);
             setcookie('remember_token', $new_token, time() + 2629743);
             $escaped_token = mysqli_real_escape_string($db->db_connect_id, $new_token);
-            $update_sql = "UPDATE " . DB_PREFIX . "_profile SET remember_token='" . $escaped_token . "' WHERE id=" . (int)$data['id'];
+            $update_sql = "UPDATE flintmancms_profile SET remember_token='" . $escaped_token . "' WHERE id=" . (int)$data['id'];
             $db->sql_query($update_sql);
         } else {
             // Invalid login
@@ -98,7 +98,7 @@ function logout() {
     // Remove token from DB if possible
     if (isset($_SESSION['profile_id']) && $_SESSION['profile_id'] > 0) {
         global $db;
-        $update_sql = "UPDATE " . DB_PREFIX . "_profile SET remember_token=NULL WHERE id=" . (int)$_SESSION['profile_id'];
+        $update_sql = "UPDATE flintmancms_profile SET remember_token=NULL WHERE id=" . (int)$_SESSION['profile_id'];
         $db->sql_query($update_sql);
     }
 

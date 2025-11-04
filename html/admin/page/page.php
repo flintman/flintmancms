@@ -33,7 +33,7 @@ $content = '';
 if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     $page_id = scrub_input($_GET['page_id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_pages WHERE id =%s",
+        $sql = sprintf("SELECT * FROM flintmancms_pages WHERE id =%s",
                         quote_smart($page_id));
         $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result) or
@@ -86,7 +86,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                 $active = 1;
             else
                 $active = 0;
-            $sql = sprintf("UPDATE " . DB_PREFIX . "_pages SET
+            $sql = sprintf("UPDATE flintmancms_pages SET
                     context=%s,title=%s,show_title=%s,active=%s WHERE id=%s",
                             quote_smart($page_text), quote_smart($title), quote_smart($display),
                             quote_smart($active), quote_smart($page_id));
@@ -138,7 +138,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
                 $active = 1;
             else
                 $active = 0;
-            $sql = sprintf("INSERT INTO " . DB_PREFIX . "_pages VALUES('0',%s,%s,%s,%s)",
+            $sql = sprintf("INSERT INTO flintmancms_pages VALUES('0',%s,%s,%s,%s)",
                             quote_smart($title), quote_smart($content), quote_smart($active), quote_smart($display));
             $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -148,7 +148,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
     $url = $db->sql_nextid();
             $url = 'index.php?n=page&page_id=' . $url;
             $count = count_links('0');
-            $sql = sprintf("INSERT INTO " . DB_PREFIX . "_links VALUES('0',%s,%s,%s,'0',%s,'0')",
+            $sql = sprintf("INSERT INTO flintmancms_links VALUES('0',%s,%s,%s,'0',%s,'0')",
                             quote_smart($title), quote_smart($url), quote_smart($active), quote_smart($count));
             $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -180,12 +180,12 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
             die("CSRF token validation failed");
         }
         if ($_POST['submit'] == "Delete") {
-            $sql = sprintf("DELETE FROM " . DB_PREFIX . "_pages WHERE id=%s",
+            $sql = sprintf("DELETE FROM flintmancms_pages WHERE id=%s",
                             quote_smart($page_id));
             $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;
             $url = 'index.php?n=page&page_id=' . $page_id;
-            $sql = sprintf("DELETE FROM " . DB_PREFIX . "_links WHERE link=%s",
+            $sql = sprintf("DELETE FROM flintmancms_links WHERE link=%s",
                             quote_smart($url));
             $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -194,7 +194,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
             header("Location: admin.php?n=page");
     }
 } else {
-    $sql = "SELECT * FROM " . DB_PREFIX . "_pages";
+    $sql = "SELECT * FROM flintmancms_pages";
     $result = $db->sql_query($sql);
     While ($data = $db->sql_fetchrow($result)) {
         if ($data['id'] == 1) {

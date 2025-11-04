@@ -80,7 +80,7 @@ if (isset($errorMsg)) {
         email($config['email_admin'], $errorMsg);
     }
     if (isset($errorMsg)) {
-        $sql = sprintf("INSERT INTO " . DB_PREFIX . "_logs VALUES('0',%s,'" . time() . "')",
+        $sql = sprintf("INSERT INTO flintmancms_logs VALUES('0',%s,'" . time() . "')",
                         quote_smart($errorMsg));
         $db->sql_query($sql);
     }

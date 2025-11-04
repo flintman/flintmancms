@@ -17,11 +17,11 @@ if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in']) {
     );
 }
 
-$sql = "SELECT * FROM " . DB_PREFIX . "_links WHERE sub_link='0' ORDER BY `link_order` ASC";
+$sql = "SELECT * FROM flintmancms_links WHERE sub_link='0' ORDER BY `link_order` ASC";
 $result = $db->sql_query($sql);
 while ($data = $db->sql_fetchrow($result)) {
     $submenu = array();
-    $sql3 = sprintf("SELECT * FROM " . DB_PREFIX . "_links WHERE sub_link=%s",
+    $sql3 = sprintf("SELECT * FROM flintmancms_links WHERE sub_link=%s",
         quote_smart($data['id']));
     $result3 = $db->sql_query($sql3);
     while ($data3 = $db->sql_fetchrow($result3)) {

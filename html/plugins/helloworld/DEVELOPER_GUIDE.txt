@@ -157,7 +157,7 @@ sql/install.sql
 PURPOSE: Creates database tables when plugin is activated
 LOADED: Automatically during first activation
 SYNTAX RULES:
-  - Use `flintmancms_` for table names (this is the actual DB_PREFIX)
+  - Use `flintmancms_` for table names
   - End each statement with semicolon
   - Comments start with --
   - All tables must be in $plugin_db_tables array
@@ -208,7 +208,7 @@ Action Processing:
   }
 
 Database Query:
-  $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_table WHERE id=%s",
+  $sql = sprintf("SELECT * FROM flintmancms_table WHERE id=%s",
                  quote_smart($id));
   $result = $db->sql_query($sql);
   $data = $db->sql_fetchrow($result);
@@ -327,21 +327,18 @@ INITIALIZATION:
 5. DATABASE INTEGRATION
 ================================================================================
 
-NOTE: For FlintmanCMS, the DB_PREFIX constant is set to "flintmancms", so your
-actual table names will be: flintmancms_helloworld_messages, etc.
-
 WORKFLOW:
 --------
 1. Define tables in variable.php $plugin_db_tables array (without prefix)
 2. Create schema in sql/install.sql (with flintmancms_ prefix)
 3. System creates tables during activation
-4. Access via $db object in PHP files (use DB_PREFIX constant)
+4. Access via $db object in PHP files
 
 QUERY PATTERNS:
 --------------
 
 SELECT (Single Row):
-  $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_table WHERE id=%s",
+  $sql = sprintf("SELECT * FROM flintmancms_table WHERE id=%s",
                  quote_smart($id));
   $result = $db->sql_query($sql);
   $data = $db->sql_fetchrow($result);
@@ -350,7 +347,7 @@ SELECT (Single Row):
   }
 
 SELECT (Multiple Rows):
-  $sql = "SELECT * FROM " . DB_PREFIX . "_table ORDER BY date DESC";
+  $sql = "SELECT * FROM flintmancms_table ORDER BY date DESC";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {
       echo $row['column'];
@@ -360,20 +357,20 @@ COUNT:
   $count = $db->sql_numrows($result);
 
 INSERT:
-  $sql = sprintf("INSERT INTO " . DB_PREFIX . "_table (col1, col2) " .
+  $sql = sprintf("INSERT INTO flintmancms_table (col1, col2) " .
                  "VALUES (%s, %s)",
                  quote_smart($val1),
                  quote_smart($val2));
   $db->sql_query($sql);
 
 UPDATE:
-  $sql = sprintf("UPDATE " . DB_PREFIX . "_table SET col=%s WHERE id=%s",
+  $sql = sprintf("UPDATE flintmancms_table SET col=%s WHERE id=%s",
                  quote_smart($value),
                  quote_smart($id));
   $db->sql_query($sql);
 
 DELETE:
-  $sql = sprintf("DELETE FROM " . DB_PREFIX . "_table WHERE id=%s",
+  $sql = sprintf("DELETE FROM flintmancms_table WHERE id=%s",
                  quote_smart($id));
   $db->sql_query($sql);
 
@@ -585,16 +582,16 @@ Show confirmation, then delete:
    $sql = "SELECT * FROM table WHERE name='" . $_POST['name'] . "'";
 
    ✅ CORRECT (Safe with quote_smart):
-   $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_table WHERE id=%s",
+   $sql = sprintf("SELECT * FROM flintmancms_table WHERE id=%s",
        quote_smart($id));
 
-   $sql = sprintf("INSERT INTO " . DB_PREFIX . "_table (name, email) VALUES (%s, %s)",
+   $sql = sprintf("INSERT INTO flintmancms_table (name, email) VALUES (%s, %s)",
        quote_smart($name),
        quote_smart($email));
 
    Advanced: For NEW code, you can optionally use prepared statements:
    $result = $db->sql_prepare(
-       "SELECT * FROM " . DB_PREFIX . "_table WHERE id = ? AND status = ?",
+       "SELECT * FROM flintmancms_table WHERE id = ? AND status = ?",
        [$id, $status]
    );
    $data = $result->fetch_assoc();
@@ -847,7 +844,6 @@ CSS/JS NOT LOADING:
 DATABASE ERRORS:
 ---------------
 - Use $db->sql_error() to see error message
-- Check table names include DB_PREFIX
 - Verify quote_smart() used for all parameters
 - Check SQL syntax
 - Ensure fields exist in tables

@@ -71,7 +71,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=plugin&action=active&id=" . $id . "";
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_plugins WHERE id=%s",
+        $sql = sprintf("SELECT * FROM flintmancms_plugins WHERE id=%s",
                         quote_smart($id));
         $result = $db->sql_query($sql);
         $data = $db->sql_fetchrow($result)
@@ -119,7 +119,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     if (isset($_POST['submit']) && (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token']))) {
         die("CSRF token validation failed");
     }
-    $sql = "SELECT * FROM " . DB_PREFIX . "_plugins WHERE active ='1'";
+    $sql = "SELECT * FROM flintmancms_plugins WHERE active ='1'";
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {
 
@@ -144,7 +144,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     $report->addOutputColumn('deactive', '', 'left');
     $active_plugins = $report->getListFromArray($active_plugins);
 
-    $sql = "SELECT * FROM " . DB_PREFIX . "_plugins WHERE active ='0'";
+    $sql = "SELECT * FROM flintmancms_plugins WHERE active ='0'";
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {
 

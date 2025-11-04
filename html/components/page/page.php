@@ -29,11 +29,11 @@ if (!isset($_GET['page_id'])) {
     $page_id = '1';
 } else {
     $page_id = scrub_input($_GET['page_id'], ['type' => 'int']);
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_group_links WHERE
+    $sql = sprintf("SELECT * FROM flintmancms_group_links WHERE
         type='page' AND type_id=%s", quote_smart($page_id));
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {
-        $sql2 = sprintf("SELECT * FROM " . DB_PREFIX . "_groups WHERE id=%s", quote_smart($data['group_id']));
+        $sql2 = sprintf("SELECT * FROM flintmancms_groups WHERE id=%s", quote_smart($data['group_id']));
         $result2 = $db->sql_query($sql2);
         $data2 = $db->sql_fetchrow($result2) or
                 $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -45,7 +45,7 @@ if (!isset($_GET['page_id'])) {
 }
 
 
-$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_pages WHERE id=%s", quote_smart($page_id));
+$sql = sprintf("SELECT * FROM flintmancms_pages WHERE id=%s", quote_smart($page_id));
 //Gets Page Info
 $result = $db->sql_query($sql);
 $data = $db->sql_fetchrow($result) or

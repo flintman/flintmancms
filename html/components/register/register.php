@@ -30,14 +30,14 @@ if (!$config['allow_login'])
 if (isset($_GET['active'])) {
     $hash = scrub_input($_GET['active'], ['type' => 'alphanum', 'max_length' => 64]);
     $username = scrub_input($_GET['id'], ['type' => 'alphanum', 'max_length' => 45]);
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_profile
+    $sql = sprintf("SELECT * FROM flintmancms_profile
             WHERE username=%s", quote_smart($username));
     $result = $db->sql_query($sql)
             or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
     $data = $db->sql_fetchrow($result);
 
     if ($data['hash'] === $hash) {
-        $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET active='1' WHERE id=%s",
+        $sql = sprintf("UPDATE flintmancms_profile SET active='1' WHERE id=%s",
                         quote_smart($data['id']));
         $result = $db->sql_query($sql)
                 or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -79,7 +79,7 @@ if (isset($_GET['active'])) {
         if (!isset($error)) {
             $password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
             $hash_code = md5(time() . $email . $username);
-            $sql = sprintf("INSERT INTO " . DB_PREFIX . "_profile VALUES('0',%s,%s,%s,'" . time() . "',
+            $sql = sprintf("INSERT INTO flintmancms_profile VALUES('0',%s,%s,%s,'" . time() . "',
                 %s,'0',%s)", quote_smart($username), quote_smart($password), quote_smart($email),
                             quote_smart($config['default_priv']), quote_smart($hash_code));
             $db->sql_query($sql)

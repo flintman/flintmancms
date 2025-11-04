@@ -24,7 +24,7 @@ if (!defined('IN_CMS')) {
 }
 $id = scrub_input($_SESSION['profile_id'], ['type' => 'int']);
 if (!isset($_POST['submit']) || !$_POST['submit']) {
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_profile
+    $sql = sprintf("SELECT * FROM flintmancms_profile
             WHERE id=%s", quote_smart($id));
     $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result)
@@ -42,14 +42,14 @@ if (!isset($_POST['submit']) || !$_POST['submit']) {
         $email = scrub_input($_POST['email'], ['type' => 'email']);
         if ($password != "" && $password == $password2) {
             $password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
-            $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET password=%s WHERE id=%s",
+            $sql = sprintf("UPDATE flintmancms_profile SET password=%s WHERE id=%s",
                             quote_smart($password), quote_smart($id));
             $result = $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
         } elseif ($password != "") {
             $errorMsg = PASSWORD_MISMATCH_TEXT;
         }
-        $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET email=%s WHERE id=%s",
+        $sql = sprintf("UPDATE flintmancms_profile SET email=%s WHERE id=%s",
                         quote_smart($email), quote_smart($id));
         $result = $db->sql_query($sql)
                 or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__;

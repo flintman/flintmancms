@@ -1,7 +1,5 @@
 <?php
 
-    Define("DB_PREFIX","flintmancms");
-
     Define("DB_NAME","flintmancms");
 
     Define("DB_USER","flintmancms");

@@ -133,7 +133,7 @@ function install_sql($folder) {
             }
             $sql .= $line;
             if (substr(trim($line), -1) == ';') {
-                $query = str_replace('`prefix', '`' . DB_PREFIX, $sql);
+                $query = str_replace('`prefix', '`flintmancms', $sql);
                 $db->sql_query($query) or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
                 $sql = '';
             }
@@ -150,15 +150,15 @@ function plugin_db_setup($folder) {
     global $db;
     $errorMsg = '';
     require_once (PLUGINS_PATH . $folder . '/variable.php');
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_plugins WHERE name=%s",
+    $sql = sprintf("SELECT * FROM flintmancms_plugins WHERE name=%s",
                     quote_smart($folder));
     $result = $db->sql_query($sql);
     $data = $db->sql_numrows($result);
     if ($data > 0) {
-        $sql = sprintf("UPDATE " . DB_PREFIX . "_plugins SET active='1' WHERE name=%s",
+        $sql = sprintf("UPDATE flintmancms_plugins SET active='1' WHERE name=%s",
                         quote_smart($folder));
     } else {
-        $sql = sprintf("INSERT INTO " . DB_PREFIX . "_plugins VALUES('0',%s,'1',%s)",
+        $sql = sprintf("INSERT INTO flintmancms_plugins VALUES('0',%s,'1',%s)",
                         quote_smart($folder), quote_smart($plugin_version));
     }
     $db->sql_query($sql) or
@@ -167,7 +167,7 @@ function plugin_db_setup($folder) {
     //Adding in Menu Items
     $url = 'index.php?n=plugins&p=' . $folder;
     $count = count_links('0');
-    $sql = sprintf("INSERT INTO " . DB_PREFIX . "_links VALUES('0',%s,%s,%s,'0','1','0')",
+    $sql = sprintf("INSERT INTO flintmancms_links VALUES('0',%s,%s,%s,'0','1','0')",
                     quote_smart(ucfirst($folder)), quote_smart($url), quote_smart($count));
     $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line "
             . __LINE__ . " Of " . __FILE__;
@@ -188,7 +188,7 @@ function deactivate_plugins($id, $name, $delete_tables) {
         $count = count($plugin_db_tables);
         if ($count > '0') {
             while ($x < $count) {
-                $sql = "DROP TABLE " . DB_PREFIX . "_" . $plugin_db_tables[$x];
+                $sql = "DROP TABLE flintmancms_" . $plugin_db_tables[$x];
                 $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line "
                         . __LINE__ . " Of " . __FILE__;
                 $x++;
@@ -196,12 +196,12 @@ function deactivate_plugins($id, $name, $delete_tables) {
         }
     }
 
-    $sql = sprintf("UPDATE " . DB_PREFIX . "_plugins SET active='0' WHERE id=%s",
+    $sql = sprintf("UPDATE flintmancms_plugins SET active='0' WHERE id=%s",
                     quote_smart($id));
     $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line "
             . __LINE__ . " Of " . __FILE__;
     $url = 'index.php?n=plugins&p=' . $name;
-    $sql = sprintf("DELETE FROM " . DB_PREFIX . "_links WHERE link=%s",
+    $sql = sprintf("DELETE FROM flintmancms_links WHERE link=%s",
                     quote_smart($url));
     $db->sql_query($sql)
             or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -224,7 +224,7 @@ function activate_plugins($name, $id=0) {
     // echo "Checking for required database tables...<br>";
     if ($count > '0') {
         while ($x < $count) {
-            $table_name = DB_PREFIX . "_" . $plugin_db_tables[$x];
+            $table_name = "flintmancms_" . $plugin_db_tables[$x];
             $check_sql = "SHOW TABLES LIKE '" . $table_name . "'";
             $result = $db->sql_query($check_sql);
             if ($db->sql_numrows($result) > 0) {

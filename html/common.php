@@ -55,7 +55,7 @@ if (!$db->db_connect_id) {
 
 //Gets Config Data
 global $config;
-$sql = "SELECT * FROM " . DB_PREFIX . "_config";
+$sql = "SELECT * FROM flintmancms_config";
 $result = $db->sql_query($sql);
 while ($data = $db->sql_fetchrow($result)) {
     $config[$data['name']] = $data['value'];
@@ -69,7 +69,7 @@ foreach (glob($language_directory) as $filename)
     include $filename;
 }
 
-$sql = "SELECT * FROM " .DB_PREFIX. "_version ORDER BY version_number DESC";
+$sql = "SELECT * FROM flintmancms_version ORDER BY version_number DESC";
 $result = $db->sql_query($sql);
 $data = $db->sql_fetchrow($result);
 

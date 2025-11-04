@@ -26,17 +26,17 @@ FlintmanCMS uses a **secure and battle-tested** approach to prevent SQL injectio
 
 ```php
 // Single parameter
-$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_table WHERE id=%s",
+$sql = sprintf("SELECT * FROM flintmancms_table WHERE id=%s",
     quote_smart($id));
 
 // Multiple parameters
-$sql = sprintf("INSERT INTO " . DB_PREFIX . "_users (name, email, status) VALUES (%s, %s, %s)",
+$sql = sprintf("INSERT INTO flintmancms_users (name, email, status) VALUES (%s, %s, %s)",
     quote_smart($name),
     quote_smart($email),
     quote_smart($status));
 
 // UPDATE
-$sql = sprintf("UPDATE " . DB_PREFIX . "_table SET name=%s, email=%s WHERE id=%s",
+$sql = sprintf("UPDATE flintmancms_table SET name=%s, email=%s WHERE id=%s",
     quote_smart($name),
     quote_smart($email),
     quote_smart($id));
@@ -75,13 +75,13 @@ $sql = "DELETE FROM users WHERE id=" . $id;
 
 ### ✅ CORRECT - Always Use quote_smart():
 ```php
-$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_users WHERE id=%s",
+$sql = sprintf("SELECT * FROM flintmancms_users WHERE id=%s",
     quote_smart($id));
 
-$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_users WHERE name=%s",
+$sql = sprintf("SELECT * FROM flintmancms_users WHERE name=%s",
     quote_smart($name));
 
-$sql = sprintf("DELETE FROM " . DB_PREFIX . "_users WHERE id=%s",
+$sql = sprintf("DELETE FROM flintmancms_users WHERE id=%s",
     quote_smart($id));
 ```
 
@@ -94,27 +94,27 @@ For **new code**, you can optionally use the prepared statement wrapper:
 ```php
 // Single parameter
 $result = $db->sql_prepare(
-    "SELECT * FROM " . DB_PREFIX . "_users WHERE id = ?",
+    "SELECT * FROM flintmancms_users WHERE id = ?",
     [$id]
 );
 $data = $result->fetch_assoc();
 
 // Multiple parameters
 $result = $db->sql_prepare(
-    "SELECT * FROM " . DB_PREFIX . "_users WHERE email = ? AND status = ?",
+    "SELECT * FROM flintmancms_users WHERE email = ? AND status = ?",
     [$email, $status]
 );
 
 // INSERT
 $result = $db->sql_prepare(
-    "INSERT INTO " . DB_PREFIX . "_users (name, email) VALUES (?, ?)",
+    "INSERT INTO flintmancms_users (name, email) VALUES (?, ?)",
     [$name, $email]
 );
 $new_id = $db->sql_nextid();
 
 // UPDATE
 $result = $db->sql_prepare(
-    "UPDATE " . DB_PREFIX . "_users SET name = ?, email = ? WHERE id = ?",
+    "UPDATE flintmancms_users SET name = ?, email = ? WHERE id = ?",
     [$name, $email, $id]
 );
 ```

@@ -63,7 +63,7 @@ function count_links($sublink) {
     global $db;
     //Gets total number of menu items
     $count = 1;
-     $result = $db->sql_query("SELECT * FROM " . DB_PREFIX . "_links WHERE sub_link = '$sublink'");
+     $result = $db->sql_query("SELECT * FROM flintmancms_links WHERE sub_link = '$sublink'");
 
     While ($data = $db->sql_fetchrow($result)) {
         $count++;
@@ -211,7 +211,7 @@ function scrub_input($value = "", $options = false) {
 
 function update_config($value, $name) {
     global $db;
-    $sql = sprintf("UPDATE " . DB_PREFIX . "_config SET value=%s WHERE name=%s",
+    $sql = sprintf("UPDATE flintmancms_config SET value=%s WHERE name=%s",
                     quote_smart($value), quote_smart($name));
     $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line "
         . __LINE__ . " Of " . __FILE__;
@@ -221,7 +221,7 @@ function update_config($value, $name) {
 function check_menu($priv, $link_id) {
     global $db;
     $canview = 0;
-    $sql2 = sprintf("SELECT * FROM " . DB_PREFIX . "_group_links WHERE group_id=%s",
+    $sql2 = sprintf("SELECT * FROM flintmancms_group_links WHERE group_id=%s",
                     quote_smart($priv));
     $result2 = $db->sql_query($sql2);
     while ($data2 = $db->sql_fetchrow($result2)) {
@@ -243,7 +243,7 @@ function check_menu($priv, $link_id) {
 function getlinkID($type, $type_id) {
     global $db;
     if ($type == "plugins") {
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_plugins WHERE id=%s",
+        $sql = sprintf("SELECT * FROM flintmancms_plugins WHERE id=%s",
                         quote_smart($type_id));
         $result = $db->sql_query($sql);
         $data = $db->sql_fetchrow($result);
@@ -252,7 +252,7 @@ function getlinkID($type, $type_id) {
     } else {
         $link = 'index.php?n=page&page_id=' . $type_id;
     }
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_links WHERE link=%s",
+    $sql = sprintf("SELECT * FROM flintmancms_links WHERE link=%s",
                     quote_smart($link));
     $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result);

@@ -36,12 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$sql = "SELECT * FROM " . DB_PREFIX . "_logs ORDER by id DESC";
+$sql = "SELECT * FROM flintmancms_logs ORDER by id DESC";
 $result = $db->sql_query($sql);
 While ($data = $db->sql_fetchrow($result)) {
 
     if (isset($_POST[$data['id']])) {
-        $sql2 = sprintf("DELETE FROM " . DB_PREFIX . "_logs WHERE id=%s",
+        $sql2 = sprintf("DELETE FROM flintmancms_logs WHERE id=%s",
                         quote_smart($data['id']));
         $db->sql_query($sql2)
                 or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;

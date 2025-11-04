@@ -64,7 +64,6 @@
  *
  * 5. DATABASE:
  *    - Plugin tables use DB_PREFIX convention (e.g., flintmancms_helloworld_messages)
- *    - For FlintmanCMS, DB_PREFIX is "flintmancms"
  *    - All tables must be declared in $plugin_db_tables array in variable.php
  *    - In variable.php, list table names WITHOUT prefix (e.g., "helloworld_messages")
  *    - In install.sql, use FULL table names WITH prefix (e.g., flintmancms_helloworld_messages)

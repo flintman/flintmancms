@@ -88,7 +88,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
             $errorMsg = "Message cannot be empty";
         } else {
             // Insert into database
-            $sql = sprintf("INSERT INTO " . DB_PREFIX . "_helloworld_messages " .
+            $sql = sprintf("INSERT INTO flintmancms_helloworld_messages " .
                           "(message, author, created_date, active) VALUES (%s, %s, NOW(), %s)",
                           quote_smart($message),
                           quote_smart($author),
@@ -119,7 +119,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'edit') {
         $form_action = "admin.php?n=plugins&p=helloworld&action=edit&id=" . $id;
 
         // Load existing data
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_helloworld_messages WHERE id=%s",
+        $sql = sprintf("SELECT * FROM flintmancms_helloworld_messages WHERE id=%s",
                       quote_smart($id));
         $result = $db->sql_query($sql);
         $data = $db->sql_fetchrow($result);
@@ -163,7 +163,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'edit') {
         if (empty($message)) {
             $errorMsg = "Message cannot be empty";
         } else {
-            $sql = sprintf("UPDATE " . DB_PREFIX . "_helloworld_messages " .
+            $sql = sprintf("UPDATE flintmancms_helloworld_messages " .
                           "SET message=%s, author=%s, active=%s WHERE id=%s",
                           quote_smart($message),
                           quote_smart($author),
@@ -194,7 +194,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
         $form_action = "admin.php?n=plugins&p=helloworld&action=delete&id=" . $id;
 
         // Load message to show what will be deleted
-        $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_helloworld_messages WHERE id=%s",
+        $sql = sprintf("SELECT * FROM flintmancms_helloworld_messages WHERE id=%s",
                       quote_smart($id));
         $result = $db->sql_query($sql);
         $data = $db->sql_fetchrow($result);
@@ -220,7 +220,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
         if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
             die("CSRF token validation failed");
         }
-        $sql = sprintf("DELETE FROM " . DB_PREFIX . "_helloworld_messages WHERE id=%s",
+        $sql = sprintf("DELETE FROM flintmancms_helloworld_messages WHERE id=%s",
                       quote_smart($id));
         $result = $db->sql_query($sql);
 
@@ -244,7 +244,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'settings') {
         $form_action = "admin.php?n=plugins&p=helloworld&action=settings";
 
         // Load current settings
-        $sql = "SELECT * FROM " . DB_PREFIX . "_helloworld_settings";
+        $sql = "SELECT * FROM flintmancms_helloworld_settings";
         $result = $db->sql_query($sql);
         $settings = array();
         while ($row = $db->sql_fetchrow($result)) {
@@ -281,7 +281,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'settings') {
         );
 
         foreach ($settings_to_update as $name => $value) {
-            $sql = sprintf("UPDATE " . DB_PREFIX . "_helloworld_settings SET setting_value=%s WHERE setting_name=%s",
+            $sql = sprintf("UPDATE flintmancms_helloworld_settings SET setting_value=%s WHERE setting_name=%s",
                           quote_smart($value),
                           quote_smart($name));
             $db->sql_query($sql);
@@ -300,7 +300,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'settings') {
  * ======================================================================== */
 else {
     // Query all messages
-    $sql = "SELECT * FROM " . DB_PREFIX . "_helloworld_messages ORDER BY created_date DESC";
+    $sql = "SELECT * FROM flintmancms_helloworld_messages ORDER BY created_date DESC";
     $result = $db->sql_query($sql);
 
     // Build array for report table

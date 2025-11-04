@@ -55,7 +55,7 @@ if (!isset($_POST['submit'])) {
 
     // Setups groups as array for template
     $groups_options = array();
-    $sql = "SELECT * FROM " . DB_PREFIX . "_groups";
+    $sql = "SELECT * FROM flintmancms_groups";
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {
         $groups_options[] = array('id' => $data['id'], 'name' => $data['name']);
@@ -63,14 +63,14 @@ if (!isset($_POST['submit'])) {
 
     // Gets all the different pages and plugins as array for template
     $frt_page_options = array();
-    $sql = "SELECT * FROM " . DB_PREFIX . "_pages WHERE active='1'";
+    $sql = "SELECT * FROM flintmancms_pages WHERE active='1'";
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {
         $link = 'index.php?n=page&page_id=' . $data['id'];
         $name = ucfirst($data['title']);
         $frt_page_options[] = array('value' => $link, 'label' => $name);
     }
-    $sql = "SELECT * FROM " . DB_PREFIX . "_plugins WHERE active='1'";
+    $sql = "SELECT * FROM flintmancms_plugins WHERE active='1'";
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {
         $link = 'index.php?n=plugins&p=' . $data['name'];

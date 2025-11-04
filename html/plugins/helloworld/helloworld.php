@@ -54,20 +54,20 @@ $page_lvl = isset($page_lvl) ? $page_lvl : array();
 $p = isset($_GET['p']) ? scrub_input($_GET['p'], ['type' => 'alphanum', 'max_length' => 50]) : '';
 
 // Query to find this plugin's ID and permissions
-$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_plugins WHERE name=%s",
+$sql = sprintf("SELECT * FROM flintmancms_plugins WHERE name=%s",
                 quote_smart($p));
 $result = $db->sql_query($sql);
 $ids = $db->sql_fetchrow($result);
 
 // If plugin exists, check which groups can access it
 if ($ids) {
-    $sql2 = sprintf("SELECT * FROM " . DB_PREFIX . "_group_links WHERE type='plugins' AND type_id=%s",
+    $sql2 = sprintf("SELECT * FROM flintmancms_group_links WHERE type='plugins' AND type_id=%s",
                     quote_smart($ids['id']));
     $result = $db->sql_query($sql2);
 
     // Build array of allowed groups
     while ($data = $db->sql_fetchrow($result)) {
-        $sql3 = sprintf("SELECT * FROM " . DB_PREFIX . "_groups WHERE id=%s",
+        $sql3 = sprintf("SELECT * FROM flintmancms_groups WHERE id=%s",
                         quote_smart($data['group_id']));
         $result2 = $db->sql_query($sql3);
         $data2 = $db->sql_fetchrow($result2);
@@ -100,7 +100,7 @@ if ($action === 'view' && isset($_GET['id'])) {
     $id = scrub_input($_GET['id'], ['type' => 'int']);
 
     // Query for specific message
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_helloworld_messages WHERE id=%s AND active=1",
+    $sql = sprintf("SELECT * FROM flintmancms_helloworld_messages WHERE id=%s AND active=1",
                    quote_smart($id));
     $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result);
@@ -145,7 +145,7 @@ elseif ($action == 'add') {
         $new_author = scrub_input($_POST['author'], ['type' => 'alphanum', 'max_length' => 100]);
 
         if (!empty($new_message) && !empty($new_author)) {
-            $sql = sprintf("INSERT INTO " . DB_PREFIX . "_helloworld_messages (message, author, created_date, active) " .
+            $sql = sprintf("INSERT INTO flintmancms_helloworld_messages (message, author, created_date, active) " .
                           "VALUES (%s, %s, NOW(), 1)",
                           quote_smart($new_message),
                           quote_smart($new_author));
@@ -173,7 +173,7 @@ else {
     }
 
     // Query all active messages
-    $sql = "SELECT * FROM " . DB_PREFIX . "_helloworld_messages WHERE active=1 ORDER BY created_date DESC";
+    $sql = "SELECT * FROM flintmancms_helloworld_messages WHERE active=1 ORDER BY created_date DESC";
     $result = $db->sql_query($sql);
 
     // Check if we have any messages

@@ -29,15 +29,15 @@ $scriptAdd .= '<link rel="stylesheet" href="plugins/portfolio/scripts/thumbnailv
 
 $page_lvl = isset($page_lvl) ? $page_lvl : array();
 $p = isset($_GET['p']) ? scrub_input($_GET['p'], ['type' => 'alphanum', 'max_length' => 50]) : '';
-$sql = sprintf("SELECT * FROM " . DB_PREFIX . "_plugins WHERE name=%s",
+$sql = sprintf("SELECT * FROM flintmancms_plugins WHERE name=%s",
                 quote_smart($p));
 $result = $db->sql_query($sql);
 $ids = $db->sql_fetchrow($result);
-$sql2 = sprintf("SELECT * FROM " . DB_PREFIX . "_group_links WHERE type='plugins' AND type_id=%s",
+$sql2 = sprintf("SELECT * FROM flintmancms_group_links WHERE type='plugins' AND type_id=%s",
                 quote_smart($ids['id']));
 $result = $db->sql_query($sql2);
 while ($data = $db->sql_fetchrow($result)) {
-    $sql3 = sprintf("SELECT * FROM " . DB_PREFIX . "_groups WHERE id=%s",
+    $sql3 = sprintf("SELECT * FROM flintmancms_groups WHERE id=%s",
                     quote_smart($data['group_id']));
     $result2 = $db->sql_query($sql3);
     $data2 = $db->sql_fetchrow($result2)
@@ -52,7 +52,7 @@ $id = isset($_GET['id']) ? scrub_input($_GET['id'], ['type' => 'int']) : null;
 
 if (isset($_GET['action']) && $_GET['action'] == 'view') {
     $body = '<table width="100%"><tr>';
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio WHERE id=%s",
+    $sql = sprintf("SELECT * FROM flintmancms_portfolio_portfolio WHERE id=%s",
             quote_smart($id));
     $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result);
@@ -65,7 +65,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'view') {
     $title .='<br><font size="-2" color="blue"><a href="index.php?n=plugins&p=portfolio" class="button">Back</a><br>
 					Click Picture to Zoom</font>';
     $y = 1;
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_photos WHERE portfolio_id=%s",
+    $sql = sprintf("SELECT * FROM flintmancms_portfolio_photos WHERE portfolio_id=%s",
             quote_smart($id));
     $result2 = $db->sql_query($sql);
 
@@ -84,12 +84,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'view') {
     $body = '<table width="100%"><tr>';
 
     $title = 'Select Album below';
-    $sql = "SELECT * FROM " . DB_PREFIX . "_portfolio_portfolio";
+    $sql = "SELECT * FROM flintmancms_portfolio_portfolio";
     $result = $db->sql_query($sql);
     $y = 1;
 
     while ($data = $db->sql_fetchrow($result)) {
-        $sql2 = sprintf("SELECT * FROM " . DB_PREFIX . "_portfolio_photos WHERE portfolio_id=%s",
+        $sql2 = sprintf("SELECT * FROM flintmancms_portfolio_photos WHERE portfolio_id=%s",
                 quote_smart($data['id']));
         $result2 = $db->sql_query($sql2);
         $data2 = $db->sql_fetchrow($result2);

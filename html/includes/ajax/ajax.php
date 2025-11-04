@@ -23,7 +23,7 @@ require_once '../../common.php';
 
 if (isset($_GET['u'])) {
     $username = scrub_input($_GET['u'], ['type' => 'alphanum', 'max_length' => 45]);
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_profile WHERE username=%s",
+    $sql = sprintf("SELECT * FROM flintmancms_profile WHERE username=%s",
             quote_smart($username));
     $result = $db->sql_query($sql);
     $data = $db->sql_numrows();
@@ -35,7 +35,7 @@ if (isset($_GET['u'])) {
 }
 if (isset($_GET['e'])) {
     $email = scrub_input($_GET['e'], ['type' => 'email']);
-    $sql = sprintf("SELECT * FROM " . DB_PREFIX . "_profile WHERE email=%s",
+    $sql = sprintf("SELECT * FROM flintmancms_profile WHERE email=%s",
             quote_smart($email));
     $result = $db->sql_query($sql);
     $data = $db->sql_numrows();
