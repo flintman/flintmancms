@@ -85,6 +85,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             if ($groups !== null && $groups !== '') {
                 $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET username=%s,email=%s,permissions=%s WHERE id=%s",
                                 quote_smart($username), quote_smart($email), quote_smart($groups), quote_smart($id));
+
+                // SECURITY: If admin is changing their own permissions, regenerate session
+                if ($id == $_SESSION['profile_id']) {
+                    session_regenerate_id(true);
+                    $_SESSION['priv'] = $groups; // Update session with new permissions
+                }
             } else {
                 $sql = sprintf("UPDATE " . DB_PREFIX . "_profile SET username=%s,email=%s WHERE id=%s",
                                 quote_smart($username), quote_smart($email), quote_smart($id));

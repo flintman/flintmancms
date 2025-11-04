@@ -78,8 +78,13 @@ define('VERSION_NUMBER', $data['version_number']);
 
 $session_name = md5($config['site_name']);
 
-// Start session early for CSRF protection
+// Start session with security configurations (settings configured in php.ini via Dockerfile)
+// - session.cookie_httponly=1: Prevents JavaScript access to cookies (XSS protection)
+// - session.cookie_samesite=Strict: Prevents CSRF attacks
+// - session.use_strict_mode=1: Prevents session fixation
+// - session.cookie_secure: Set to 1 in production with HTTPS
 if (session_status() === PHP_SESSION_NONE) {
+    session_name($session_name);
     session_start();
 }
 

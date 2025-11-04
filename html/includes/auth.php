@@ -79,6 +79,9 @@ function login() {
             return 0;
         }
 
+        // SECURITY: Regenerate session ID on successful login to prevent session fixation
+        session_regenerate_id(true);
+
         // set user variables
         $_SESSION['username'] = $data['username'];
         $_SESSION['user_logged_in'] = 1;
