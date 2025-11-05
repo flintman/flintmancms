@@ -1,0 +1,2 @@
+# This file ensures the migrations directory is tracked by Git
+# Migration files (000001.sql, 000002.sql, etc.) go in this directory
