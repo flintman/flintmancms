@@ -47,6 +47,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         else {
             $name = '<input name="name" type="text" value="' . $data['name'] . '" maxlength="255" >';
         }
+        $description = '<input name="description" type="text" value="' . htmlspecialchars($data['description'] ?? '') . '" size="50" maxlength="255">';
 
         //Gets all pages to set privliges on
         $sql = "SELECT * FROM flintmancms_pages";
@@ -94,9 +95,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         }
         if ($_POST['submit'] == "Save") {
             $name = scrub_input($_POST['name'], ['max_length' => 100]);
+            $description = scrub_input($_POST['description'], ['max_length' => 255]);
             $id = scrub_input($_GET['id'], ['type' => 'int']);
             $sql = sprintf("UPDATE flintmancms_groups SET
-                    name=%s WHERE id=%s", quote_smart($name), quote_smart($id));
+                    name=%s, description=%s WHERE id=%s",
+                    quote_smart($name), quote_smart($description), quote_smart($id));
         $db->sql_query($sql)
             or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
             $sql = "SELECT * FROM flintmancms_pages";
@@ -153,9 +156,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     if (!isset($pages)) $pages = '';
     if (!isset($plugins)) $plugins = '';
     if (!isset($button)) $button = '';
+    if (!isset($description)) $description = '';
     $smarty->assign(
         array(
             'name' => $name,
+            'description' => $description,
             'pages' => $pages,
             'plugins' => $plugins,
             'button' => $button
@@ -166,6 +171,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
     if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=groups&action=add";
         $name = '<input name="name" type="text" size="45" maxlength="255">';
+        $description = '<input name="description" type="text" size="50" maxlength="255">';
         $group_back = '<a href="admin.php?n=groups" class="button">' . BACK_TEXT . '</a>';
         $button = '<input type="submit" value="' . SAVE_TEXT . '" name="submit" class="button">';
 
@@ -192,7 +198,9 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
         }
         if ($_POST['submit'] == "Save") {
             $name = scrub_input($_POST['name'], ['max_length' => 100]);
-            $sql = sprintf("INSERT INTO flintmancms_groups (id, name) VALUES('0',%s)", quote_smart($name));
+            $description = scrub_input($_POST['description'], ['max_length' => 255]);
+            $sql = sprintf("INSERT INTO flintmancms_groups (id, name, description) VALUES('0',%s,%s)",
+                quote_smart($name), quote_smart($description));
 
         $db->sql_query($sql)
             or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
