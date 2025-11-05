@@ -188,7 +188,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
                 $window = 0;
 
             $count = count_links($sublink);
-            $sql = sprintf("INSERT INTO flintmancms_links VALUES('0',%s,%s,%s,%s,%s,%s)",
+            $sql = sprintf("INSERT INTO flintmancms_links (id, name, link, active, new_window, link_order, sub_link) VALUES('0',%s,%s,%s,%s,%s,%s)",
                             quote_smart($name), quote_smart($url), quote_smart($active), quote_smart($window),
                             quote_smart($count), quote_smart($sublink));
 

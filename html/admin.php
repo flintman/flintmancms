@@ -25,7 +25,7 @@ extract($_GET);
 
 $p = isset($_GET['p']) ? scrub_input($_GET['p'], ['type' => 'alphanum', 'max_length' => 50]) : '';
 //Checks is logged in
-if ($_SESSION['user_logged_in'] != 1) {
+if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] != 1) {
     $errorMsg = LOGIN_TEXT;
     include(BASE_PATH . 'header.php');
 } else {

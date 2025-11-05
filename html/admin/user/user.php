@@ -39,7 +39,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     $data = $db->sql_fetchrow($result)
         or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
         $form_action = "admin.php?n=user&action=edit&id=$id";
-        $username = '<input name="username" type="text" value="' . $data['username'] . '" size="15" maxlength="45"">';
+        $user_username = '<input name="username" type="text" value="' . $data['username'] . '" size="15" maxlength="45"">';
         $password = '<input name="password" type="password"  size="15" >';
         $password2 = '<input name="password2" type="password"  size="15">';
         $email = '<input name="email" type="text" size="15" value="' . $data['email'] . '" maxlength="45">';
@@ -105,7 +105,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             array(
                 'form_action' => $form_action,
                 'form_name' => "user",
-                'username' => $username,
+                'user_username' => $user_username,
                 'password' => $password,
                 'password2' => $password2,
                 'email' => $email,
@@ -134,7 +134,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         }
         if ($error_add == 0) {
             $hashed_password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
-            $sql = sprintf("INSERT INTO flintmancms_profile
+            $sql = sprintf("INSERT INTO flintmancms_profile (id, username, password, email, sign_date, permissions, active, hash)
                     VALUES('0',%s,%s,%s,'" . time () . "',%s,'1','')",
                             quote_smart($username), quote_smart($hashed_password), quote_smart($email),
                             quote_smart($groups));
@@ -156,7 +156,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         $smarty->display(TEMPLATES_PATH . $config['template'] . '/page.htm');
     } else {
         $form_action = "admin.php?n=user&action=add";
-        $username = '<input name="username" type="text" size="15" maxlength="45"  onkeyup="check_username(this.value)">';
+        $user_username = '<input name="username" type="text" size="15" maxlength="45"  onkeyup="check_username(this.value)">';
         $password = '<input name="password" type="password"  size="15" >';
         $password2 = '<input name="password2" type="password"  size="15" onkeyup="check_password(this.value)">';
 
@@ -177,7 +177,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                 array(
                     'form_action' => $form_action,
                     'form_name' => "register",
-                    'username' => $username,
+                    'user_username' => $user_username,
                     'password' => $password,
                     'password2' => $password2,
                     'email' => $email,

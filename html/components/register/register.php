@@ -72,15 +72,15 @@ if (isset($_GET['active'])) {
         if ($email == "" || $username == "" || $password == "" || $password2 == "" || $password != $password2) {
             $error = 1;
         }
-        if ($code != $_SESSION['vercode']){
+        if (!isset($_SESSION['vercode']) || $code != $_SESSION['vercode']){
             $error = 1;
             $errorMsg = ERROR_CODE;
         }
         if (!isset($error)) {
             $password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
             $hash_code = md5(time() . $email . $username);
-            $sql = sprintf("INSERT INTO flintmancms_profile VALUES('0',%s,%s,%s,'" . time() . "',
-                %s,'0',%s)", quote_smart($username), quote_smart($password), quote_smart($email),
+            $sql = sprintf("INSERT INTO flintmancms_profile (id, username, password, email, sign_date, permissions, active, hash) VALUES('0',%s,%s,%s,'%s',%s,'0',%s)",
+                quote_smart($username), quote_smart($password), quote_smart($email), time(),
                             quote_smart($config['default_priv']), quote_smart($hash_code));
             $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -109,7 +109,7 @@ if (isset($_GET['active'])) {
                 array(
                     'username' => $username,
                     'on_submit' => 'onsubmit="return validate_reg();"',
-                    'code_text' => REG_CODE_TEXT. ' <img src="includes/createimg.php">',
+                    'code_text' => REG_CODE_TEXT. ' <img src="includes/createimg.php?sid=' . urlencode(session_id()) . '">',
                     'csrf_token' => generate_csrf_token()
                 )
         );

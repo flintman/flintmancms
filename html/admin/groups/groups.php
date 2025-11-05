@@ -113,7 +113,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                  $link_id = getlinkID('page', $data['id']);
                 if (isset($_POST['p' . $data['id']])) {
                     if (!$data_link)
-                        $sql3 = sprintf("INSERT INTO flintmancms_group_links
+                        $sql3 = sprintf("INSERT INTO flintmancms_group_links (id, group_id, type, type_id, link_id)
                                 VALUES('0',%s, 'page',%s,%s)",
                                         quote_smart($id), quote_smart($data['id']), quote_smart($link_id));
                 }else {
@@ -135,7 +135,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                 $link_id = getlinkID('plugins', $data['id']);
                 if (isset($_POST['pg' . $data['id']])) {
                     if (!$data_link)
-                        $sql3 = sprintf("INSERT INTO flintmancms_group_links
+                        $sql3 = sprintf("INSERT INTO flintmancms_group_links (id, group_id, type, type_id, link_id)
                                 VALUES('0',%s, 'plugins',%s,%s)", quote_smart($id), quote_smart($data['id']),
                                 quote_smart($link_id));
                 } else {

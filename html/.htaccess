@@ -57,6 +57,9 @@ Options -Indexes
 
 # Protect includes directory
 <IfModule mod_rewrite.c>
+    # Allow createimg.php for CAPTCHA and ajax.php for validation
+    RewriteCond %{REQUEST_URI} !^/includes/createimg\.php$
+    RewriteCond %{REQUEST_URI} !^/includes/ajax/ajax\.php$
     RewriteRule ^includes/ - [F,L]
     RewriteRule ^db_init/ - [F,L]
     RewriteRule ^templates_c/ - [F,L]

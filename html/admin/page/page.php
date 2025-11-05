@@ -138,7 +138,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
                 $active = 1;
             else
                 $active = 0;
-            $sql = sprintf("INSERT INTO flintmancms_pages VALUES('0',%s,%s,%s,%s)",
+            $sql = sprintf("INSERT INTO flintmancms_pages (id, title, context, active, show_title) VALUES('0',%s,%s,%s,%s)",
                             quote_smart($title), quote_smart($content), quote_smart($active), quote_smart($display));
             $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;
@@ -148,7 +148,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
     $url = $db->sql_nextid();
             $url = 'index.php?n=page&page_id=' . $url;
             $count = count_links('0');
-            $sql = sprintf("INSERT INTO flintmancms_links VALUES('0',%s,%s,%s,'0',%s,'0')",
+            $sql = sprintf("INSERT INTO flintmancms_links (id, name, link, active, link_order, sub_link, new_window) VALUES('0',%s,%s,%s,%s,'0','0')",
                             quote_smart($title), quote_smart($url), quote_smart($active), quote_smart($count));
             $db->sql_query($sql)
                     or $errorMsg = "ERROR: " . $db->sql_error()['message'] . " @ Line " . __LINE__ . " Of " . __FILE__;

@@ -40,7 +40,7 @@ class Mail {
 
     /**
      * Constructor - Initialize the Mail class
-     * 
+     *
      * @param string $server SMTP server hostname
      * @param string $username SMTP username
      * @param string $password SMTP password
@@ -59,7 +59,7 @@ class Mail {
         $this->port = (int)$port;
         $this->encryption = strtolower($encryption);
         $this->debug = $debug;
-        
+
         // Create new PHPMailer instance
         $this->phpmailer = new PHPMailer(true);
         $this->configureSMTP();
@@ -78,14 +78,14 @@ class Mail {
             $this->phpmailer->Password = $this->password;
             $this->phpmailer->Port = $this->port;
             $this->phpmailer->CharSet = 'UTF-8';
-            
+
             // Debug settings
             if ($this->debug) {
                 $this->phpmailer->SMTPDebug = SMTP::DEBUG_SERVER;
             } else {
                 $this->phpmailer->SMTPDebug = 0;
             }
-            
+
             // Set encryption
             switch ($this->encryption) {
                 case 'ssl':
@@ -100,10 +100,10 @@ class Mail {
                     $this->phpmailer->SMTPAutoTLS = false;
                     break;
             }
-            
+
             // Set default from address
             $this->phpmailer->setFrom($this->fromEmail, $this->fromName);
-            
+
         } catch (Exception $e) {
             $this->Error = "SMTP Configuration Error: " . $e->getMessage();
         }
@@ -111,7 +111,7 @@ class Mail {
 
     /**
      * Send an email
-     * 
+     *
      * @param string|array $to Recipient email address(es)
      * @param string $subject Email subject
      * @param string $message Email body (HTML or plain text)
@@ -130,7 +130,7 @@ class Mail {
             $this->phpmailer->clearBCCs();
             $this->phpmailer->clearAttachments();
             $this->phpmailer->clearReplyTos();
-            
+
             // Add recipients
             if (is_array($to)) {
                 foreach ($to as $email => $name) {
@@ -143,7 +143,7 @@ class Mail {
             } else {
                 $this->phpmailer->addAddress($to);
             }
-            
+
             // Add CC recipients
             if ($cc) {
                 if (is_array($cc)) {
@@ -158,7 +158,7 @@ class Mail {
                     $this->phpmailer->addCC($cc);
                 }
             }
-            
+
             // Add BCC recipients
             if ($bcc) {
                 if (is_array($bcc)) {
@@ -173,12 +173,12 @@ class Mail {
                     $this->phpmailer->addBCC($bcc);
                 }
             }
-            
+
             // Set reply-to
             if ($replyTo) {
                 $this->phpmailer->addReplyTo($replyTo);
             }
-            
+
             // Add attachments
             if (!empty($attachments)) {
                 foreach ($attachments as $file) {
@@ -191,20 +191,20 @@ class Mail {
                     }
                 }
             }
-            
+
             // Content
             $this->phpmailer->isHTML($isHTML);
             $this->phpmailer->Subject = $subject;
             $this->phpmailer->Body = $message;
-            
+
             // If HTML, create plain text version
             if ($isHTML) {
                 $this->phpmailer->AltBody = strip_tags($message);
             }
-            
+
             $this->phpmailer->send();
             return true;
-            
+
         } catch (Exception $e) {
             $this->Error = "Message could not be sent. Mailer Error: {$this->phpmailer->ErrorInfo}";
             return false;
@@ -213,7 +213,7 @@ class Mail {
 
     /**
      * Simple email sending method (backward compatibility)
-     * 
+     *
      * @param string $to Recipient email address
      * @param string $subject Email subject
      * @param string $message Email body
@@ -225,7 +225,7 @@ class Mail {
 
     /**
      * Test SMTP connection
-     * 
+     *
      * @return array Array with 'success' (bool) and 'message' (string)
      */
     public function testConnection() {
@@ -245,7 +245,7 @@ class Mail {
 
     /**
      * Get the last error message
-     * 
+     *
      * @return string Error message
      */
     public function printError() {
@@ -254,7 +254,7 @@ class Mail {
 
     /**
      * Set debug mode
-     * 
+     *
      * @param bool $debug Enable/disable debug mode
      */
     public function setDebug($debug = true) {
@@ -264,7 +264,7 @@ class Mail {
 
     /**
      * Set character encoding
-     * 
+     *
      * @param string $charset Character encoding (default: UTF-8)
      */
     public function setCharset($charset = 'UTF-8') {
@@ -273,7 +273,7 @@ class Mail {
 
     /**
      * Override the default from address for this instance
-     * 
+     *
      * @param string $email From email address
      * @param string $name From name (optional)
      */

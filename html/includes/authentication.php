@@ -18,6 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * ************************************************************************* */
 
+// Check if user session exists
+if (!isset($_SESSION['priv'])) {
+    $errorMsg = "You Dont Have Permission to View this page";
+    return;
+}
+
 $sql = sprintf("SELECT * FROM flintmancms_groups WHERE id=%s",
                 quote_smart($_SESSION['priv']));
 $result = $db->sql_query($sql);

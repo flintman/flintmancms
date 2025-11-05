@@ -1,2 +1,16 @@
-<div id="admin_title">{$head}</div>
-{$content}
+<div class="admin-section">
+    <h1 class="page-title">{ADMIN_LOGS_HEADER|default:"System Logs"}</h1>
+
+    <form action="{$form_action}" method="post">
+        <input type="hidden" name="csrf_token" value="{$csrf_token}">
+
+        <div class="logs-content">
+            {$content}
+        </div>
+
+        <div class="form-actions" style="margin-top: 1rem;">
+            {$logs_back}
+            {$button}
+        </div>
+    </form>
+</div>

@@ -44,7 +44,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         }
         $date = $_POST['date_taken'];
         $job_name = $_POST['job_name'];
-        $sql = sprintf("INSERT INTO flintmancms_portfolio_portfolio VALUES('0',%s,%s)",
+        $sql = sprintf("INSERT INTO flintmancms_portfolio_portfolio (id, name, date_taken) VALUES('0',%s,%s)",
                 quote_smart($job_name), quote_smart($date));
         $result = $db->sql_query($sql);
         if (!$result) {
@@ -76,12 +76,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
         $db->sql_query($sql);
         header("Location: admin.php?n=plugins&p=portfolio");
     }
-    } elseif (isset($_GET['action']) && $_GET['action'] == 'del') {
+} elseif (isset($_GET['action']) && $_GET['action'] == 'photo') {
     $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit']) || !$_POST['submit']) {
         $form_action = "admin.php?n=plugins&p=portfolio&action=photo&id=" . $id . "";
 
-        $content .= '<label for="picfile">Select Image (JPG, PNG, or GIF, max 5MB):</label><br>';
+        $content .= '<label for="picfile">Select Image (JPG, PNG, or GIF, max 10MB):</label><br>';
         $content .= '<input type="file" name="picfile" id="picfile" accept="image/jpeg,image/png,image/gif" required><br><br>';
         $content .= '<input type="submit" value="Save" name="submit" class="button">';
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'Save') {
@@ -90,8 +90,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
             die("CSRF token validation failed");
         }
 
-        // Validate uploaded file
-        $validation = validate_upload($_FILES['picfile'], ['image/jpeg', 'image/png', 'image/gif'], 5242880);
+        // Validate uploaded file (max 10MB)
+        $validation = validate_upload($_FILES['picfile'], ['image/jpeg', 'image/png', 'image/gif'], 10485760);
 
         if (!$validation['valid']) {
             $errorMsg = "Upload failed: " . $validation['error'];
@@ -110,7 +110,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
                     // Set secure file permissions (read-only for web server)
                     chmod($uploadfile, 0644);
 
-                    $sql = sprintf("INSERT INTO flintmancms_portfolio_photos VALUES('0',%s,%s)",
+                    $sql = sprintf("INSERT INTO flintmancms_portfolio_photos (id, portfolio_id, photo_name) VALUES('0',%s,%s)",
                             quote_smart($id), quote_smart($filename));
                     $db->sql_query($sql);
                     header("Location: admin.php?n=plugins&p=portfolio");

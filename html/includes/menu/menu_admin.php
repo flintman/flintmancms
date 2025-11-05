@@ -12,7 +12,7 @@ $config_sub = array(
 
 $menu[] = array('text' => ADMIN_MENU_EXIT_ADMIN, 'link' => 'index.php', 'new_window' => 0);
 
-if ($_SESSION['priv'] == "1") {
+if (isset($_SESSION['priv']) && $_SESSION['priv'] == "1") {
     $menu[] = array('text' => ADMIN_MENU_ADMIN_HOME, 'link' => 'admin.php', 'new_window' => 0);
     $menu[] = array(
         'text' => ADMIN_MENU_CONFIGURE,
