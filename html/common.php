@@ -116,6 +116,68 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Session validation function
+function validate_session() {
+    // Get configuration from environment variables with defaults
+    $max_lifetime = (int)(getenv('SESSION_MAX_LIFETIME') ?: 86400);  // 24 hours default
+    $inactivity_timeout = (int)(getenv('SESSION_INACTIVITY_TIMEOUT') ?: 7200);  // 2 hours default
+    $refresh_interval = (int)(getenv('SESSION_REFRESH_INTERVAL') ?: 3600);  // 1 hour default
+
+    // Create session fingerprint on first access
+    if (!isset($_SESSION['fingerprint'])) {
+        $_SESSION['fingerprint'] = hash('sha256',
+            ($_SERVER['HTTP_USER_AGENT'] ?? 'unknown') .
+            ($_SERVER['REMOTE_ADDR'] ?? 'unknown')
+        );
+        $_SESSION['created'] = time();
+        $_SESSION['last_activity'] = time();
+    }
+
+    // Verify fingerprint matches current request
+    $current_fingerprint = hash('sha256',
+        ($_SERVER['HTTP_USER_AGENT'] ?? 'unknown') .
+        ($_SERVER['REMOTE_ADDR'] ?? 'unknown')
+    );
+
+    if ($_SESSION['fingerprint'] !== $current_fingerprint) {
+        // Session hijacking detected
+        session_destroy();
+        session_start();
+        die("Session validation failed. Please log in again.");
+    }
+
+    // Check session age (maximum lifetime)
+    if (time() - $_SESSION['created'] > $max_lifetime) {
+        session_destroy();
+        session_start();
+        header("Location: index.php?n=login&msg=session_expired");
+        exit;
+    }
+
+    // Check for inactivity timeout
+    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $inactivity_timeout) {
+        session_destroy();
+        session_start();
+        header("Location: index.php?n=login&msg=session_timeout");
+        exit;
+    }
+
+    // Update last activity timestamp
+    $_SESSION['last_activity'] = time();
+
+    // Regenerate session ID periodically to prevent session fixation
+    if (!isset($_SESSION['last_refresh']) ||
+        (time() - $_SESSION['last_refresh']) > $refresh_interval) {
+        session_regenerate_id(true);
+        $_SESSION['last_refresh'] = time();
+    }
+}
+
+// Validate session for logged-in users
+if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] == 1) {
+    validate_session();
+}
+
 $scriptAdd = '';
 
 //Setups page lvls

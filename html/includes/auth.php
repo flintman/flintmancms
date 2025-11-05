@@ -88,6 +88,16 @@ function login() {
         $_SESSION['profile_id'] = $data['id'];
         $_SESSION['priv'] = $data['permissions'];
         $_SESSION['vercode'] = '';
+
+        // Initialize session security fingerprint and timestamps
+        $_SESSION['fingerprint'] = hash('sha256',
+            ($_SERVER['HTTP_USER_AGENT'] ?? 'unknown') .
+            ($_SERVER['REMOTE_ADDR'] ?? 'unknown')
+        );
+        $_SESSION['created'] = time();
+        $_SESSION['last_activity'] = time();
+        $_SESSION['last_refresh'] = time();
+
         return 1;
     }
     return 0;
@@ -102,15 +112,24 @@ function logout() {
         $db->sql_query($update_sql);
     }
 
-    // unset the session and remove all cookies
-    unset($_SESSION['initiated']);
-    unset($_SESSION['username']);
-    unset($_SESSION['profile_id']);
-    unset($_SESSION['user_logged_in']);
-    unset($_SESSION['priv']);
-    unset($_SESSION['vercode']);
+    // Completely destroy the session
+    $_SESSION = array();
+
+    // Delete session cookie
+    if (isset($_COOKIE[session_name()])) {
+        setcookie(session_name(), '', time() - 3600, '/');
+    }
+
+    // Remove remember me cookies
     setcookie('username', '', time() - 2629743);
     setcookie('remember_token', '', time() - 2629743);
+
+    // Destroy session data on server
+    session_destroy();
+
+    // Start fresh session for anonymous user
+    session_start();
+    session_regenerate_id(true);
 
     $_SESSION['initiated'] = true;
     $_SESSION['username'] = 'Anonymous';
