@@ -237,7 +237,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
     );
 }
 
-} elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
+elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
     $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=groups&action=delete&id=" . $id . "";
