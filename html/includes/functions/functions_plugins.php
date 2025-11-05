@@ -23,7 +23,85 @@ if (!defined('IN_CMS')) {
     die("ERROR - Hacking attempt");
 }
 
-function unzip($src_file, $dest_dir=false, $create_zip_name_dir=true, $overwrite=true) {
+/**
+ * Scan plugin folders and auto-register any new plugins as disabled
+ * This allows plugins to be added via git pull, FTP, or zip extraction
+ * without requiring manual database insertion during upload
+ */
+function sync_plugins_from_folders() {
+    global $db;
+
+    // First, clean up database entries that don't have corresponding folders
+    $sql = "SELECT id, name FROM flintmancms_plugins";
+    $result = $db->sql_query($sql);
+    $plugins_to_delete = array();
+
+    while ($row = $db->sql_fetchrow($result)) {
+        $plugin_folder = PLUGINS_PATH . $row['name'];
+        $variable_file = $plugin_folder . '/variable.php';
+
+        // If folder or variable.php doesn't exist, mark for deletion
+        if (!is_dir($plugin_folder) || !file_exists($variable_file)) {
+            $plugins_to_delete[] = $row['id'];
+        }
+    }
+
+    // Free the result before running delete queries
+    $db->sql_freeresult($result);
+
+    // Now delete the marked plugins
+    foreach ($plugins_to_delete as $plugin_id) {
+        $delete_sql = sprintf("DELETE FROM flintmancms_plugins WHERE id=%s", quote_smart($plugin_id));
+        $db->sql_query($delete_sql);
+    }
+
+    // Get list of existing plugins in database (after cleanup)
+    $sql = "SELECT name FROM flintmancms_plugins";
+    $result = $db->sql_query($sql);
+    $existing_plugins = array();
+    while ($row = $db->sql_fetchrow($result)) {
+        $existing_plugins[] = $row['name'];
+    }
+
+    // Free the result before scanning folders
+    $db->sql_freeresult($result);
+
+    // Scan plugins directory for folders
+    $plugin_folders = glob(PLUGINS_PATH . '*', GLOB_ONLYDIR);
+
+    foreach ($plugin_folders as $folder_path) {
+        $folder_name = basename($folder_path);
+
+        // Skip if already in database
+        if (in_array($folder_name, $existing_plugins)) {
+            continue;
+        }
+
+        // Check if plugin has required variable.php file
+        $variable_file = $folder_path . '/variable.php';
+        if (!file_exists($variable_file)) {
+            continue;
+        }
+
+        // Clear any previous plugin variables
+        unset($plugin_version, $plugin_description, $plugin_name, $plugin_folder, $plugin_db_tables);
+
+        // Load plugin variables to get version
+        require_once($variable_file);
+        $version = isset($plugin_version) ? $plugin_version : '1.0.0';
+
+        // Insert plugin as disabled (active=0)
+        // IMPORTANT: Use $folder_name (the actual folder name), not $plugin_name (the display name)
+        // Use INSERT IGNORE to prevent duplicates if plugin somehow exists
+        $sql = sprintf(
+            "INSERT IGNORE INTO flintmancms_plugins (id, name, active, version) VALUES (0, %s, '0', %s)",
+            quote_smart($folder_name),
+            quote_smart($version)
+        );
+
+        $db->sql_query($sql);
+    }
+}function unzip($src_file, $dest_dir=false, $create_zip_name_dir=true, $overwrite=true) {
 
     if (function_exists("zip_open")) {
 
@@ -150,6 +228,12 @@ function plugin_db_setup($folder) {
     global $db;
     $errorMsg = '';
     require_once (PLUGINS_PATH . $folder . '/variable.php');
+
+    // Ensure plugin_name is set, fallback to capitalized folder name
+    if (!isset($plugin_name)) {
+        $plugin_name = ucfirst($folder);
+    }
+
     $sql = sprintf("SELECT * FROM flintmancms_plugins WHERE name=%s",
                     quote_smart($folder));
     $result = $db->sql_query($sql);
@@ -158,7 +242,8 @@ function plugin_db_setup($folder) {
         $sql = sprintf("UPDATE flintmancms_plugins SET active='1' WHERE name=%s",
                         quote_smart($folder));
     } else {
-        $sql = sprintf("INSERT INTO flintmancms_plugins VALUES('0',%s,'1',%s)",
+        // Use explicit column names to avoid column count mismatch
+        $sql = sprintf("INSERT INTO flintmancms_plugins (name, active, version) VALUES(%s,'1',%s)",
                         quote_smart($folder), quote_smart($plugin_version));
     }
     $db->sql_query($sql) or
@@ -167,8 +252,9 @@ function plugin_db_setup($folder) {
     //Adding in Menu Items
     $url = 'index.php?n=plugins&p=' . $folder;
     $count = count_links('0');
-    $sql = sprintf("INSERT INTO flintmancms_links VALUES('0',%s,%s,%s,'0','1','0')",
-                    quote_smart(ucfirst($folder)), quote_smart($url), quote_smart($count));
+    // Use explicit column names to avoid column count mismatch with timestamp columns
+    $sql = sprintf("INSERT INTO flintmancms_links (name, link, link_order, sub_link, active, new_window) VALUES(%s,%s,%s,'0','1','0')",
+                    quote_smart($plugin_name), quote_smart($url), quote_smart($count));
     $db->sql_query($sql) or $errorMsg = "ERROR: " . $db->sql_error(). " @ Line "
             . __LINE__ . " Of " . __FILE__;
 

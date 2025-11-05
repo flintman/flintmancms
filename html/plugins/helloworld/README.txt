@@ -40,7 +40,13 @@
  * HOW PLUGINS WORK IN FLINTMANCMS
  * ============================================================================
  *
- * 1. ACTIVATION:
+ * 1. INSTALLATION:
+ *    - Copy the plugin folder to html/plugins/
+ *    - The system automatically discovers it on next page load
+ *    - Plugin appears in admin as "Inactive" - ready to activate
+ *    - No zip upload or manual database entries required!
+ *
+ * 2. ACTIVATION:
  *    - When a plugin is activated, the system:
  *      a) Reads variable.php to get table names and metadata
  *      b) Checks if required tables exist
@@ -48,25 +54,31 @@
  *      d) Adds a menu link to the navigation
  *      e) Records activation in the _plugins table
  *
- * 2. FRONTEND ACCESS:
+ * 3. FRONTEND ACCESS:
  *    - Users access the plugin via: index.php?n=plugins&p=helloworld
  *    - The main file plugins/plugins.php routes to helloworld.php
  *    - helloworld.php handles display logic and user interactions
  *
- * 3. ADMIN ACCESS:
+ * 4. ADMIN ACCESS:
  *    - Admins access via: admin.php?n=plugins&p=helloworld
  *    - Routes to admin/admin.php for CRUD operations
  *    - Uses template/page.htm for rendering the admin interface
  *
- * 4. AUTHENTICATION:
+ * 5. AUTHENTICATION:
  *    - Plugins can check user permissions using authentication.php
  *    - The $page_lvl array controls who can access plugin features
  *
- * 5. DATABASE:
+ * 6. DATABASE:
  *    - Plugin tables use DB_PREFIX convention (e.g., flintmancms_helloworld_messages)
  *    - All tables must be declared in $plugin_db_tables array in variable.php
  *    - In variable.php, list table names WITHOUT prefix (e.g., "helloworld_messages")
  *    - In install.sql, use FULL table names WITH prefix (e.g., flintmancms_helloworld_messages)
+ *
+ * 7. AUTO-DISCOVERY:
+ *    - The system scans html/plugins/ folder on each admin plugin page load
+ *    - New plugin folders are automatically registered as inactive
+ *    - Missing plugin folders are automatically removed from database
+ *    - This enables Git-friendly workflow: just pull/push plugin folders!
  *
  * ============================================================================
  * INTEGRATION WITH CMS

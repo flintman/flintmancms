@@ -1,22 +1,21 @@
 
 
-<form action="{$form_action}"  enctype="multipart/form-data" method="post" >
-<input type="hidden" name="csrf_token" value="{$csrf_token}">
-    <div>
-        {$add}<br><br>
-        {$save_button}
-        <center><b>{ADMIN_PLUGINS_ACTIVE_TEXT}</b></center>
-        <p>
-            {$active_plugins}
-        </p>
-        <center><b>{ADMIN_PLUGINS_INACTIVE_TEXT}</b></center>
 
-        <p>
-            {$inactive_plugins}
-        </p>
 
-        {$content}<br><br>
+<div>
+    <p><strong>To add a new plugin:</strong> Copy the plugin folder to <code>html/plugins/</code> and refresh this page. The plugin will automatically appear in the inactive list below.</p>
 
-        {$page_back}&nbsp;&nbsp;&nbsp;&nbsp; {$button}
-    </div>
-</form><br />
+    <center><b>{ADMIN_PLUGINS_ACTIVE_TEXT}</b></center>
+    <p>
+        {$active_plugins}
+    </p>
+    <center><b>{ADMIN_PLUGINS_INACTIVE_TEXT}</b></center>
+
+    <p>
+        {$inactive_plugins}
+    </p>
+
+    {$content}<br><br>
+
+    {$plugins_back}
+</div><br />

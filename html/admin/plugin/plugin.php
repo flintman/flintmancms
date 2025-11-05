@@ -32,42 +32,7 @@ $active_plugins = array();
 $inactive_plugins = array();
 $content = '';
 
-if (isset($_GET['action']) && $_GET['action'] == 'add') {
-
-    if (is_writable(PLUGINS_PATH)) {
-        $content = ADMIN_PLUGINS_WRITE_TEXT.'<br>';
-    } else {
-        $content = ADMIN_PLUGINS_NOT_WRITE_TEXT.'<br>';
-    }
-
-    if (extension_loaded('zip')) {
-        $pZipSupport = True;
-
-        if (!isset($_POST['submit'])) {
-
-        } elseif ($_POST['submit'] == 'Save') {
-            // Verify CSRF token
-            if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
-                die("CSRF token validation failed");
-            }
-            // unzip file
-            $reply = unzip($_FILES['zipfile']['tmp_name'], PLUGINS_PATH, true, false);
-
-            // execute SQL file
-            $foldername = substr($_FILES['zipfile']['name'], 0, -4);
-
-            If ($reply) {
-                activate_plugins($foldername);
-
-                $content .= ADMIN_PLUGINS_ALL_SET_TEXT;
-            } else {
-                $content .=ADMIN_PLUGINS_ISSUES_TEXT;
-            }
-        } else {
-            $content .= ADMIN_PLUGINS_ZIP_TEXT;
-        }
-    }
-} elseif (isset($_GET['action']) && $_GET['action'] == 'active') {
+if (isset($_GET['action']) && $_GET['action'] == 'active') {
     $id = scrub_input($_GET['id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=plugin&action=active&id=" . $id . "";
@@ -119,21 +84,47 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     if (isset($_POST['submit']) && (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token']))) {
         die("CSRF token validation failed");
     }
+
+    // Auto-discover plugins from folders and add to database if not present
+    sync_plugins_from_folders();
+
     $sql = "SELECT * FROM flintmancms_plugins WHERE active ='1'";
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {
 
-        require_once(PLUGINS_PATH . $data['name'] . '/variable.php');
+        $variable_file = PLUGINS_PATH . $data['name'] . '/variable.php';
+
+        // Check if the plugin folder and variable.php file exist
+        if (!file_exists($variable_file)) {
+            // Plugin folder doesn't exist or is misconfigured - skip it
+            continue;
+        }
+
+        // Clear any previous plugin variables to avoid conflicts
+        unset($plugin_name, $plugin_description, $plugin_version, $plugin_folder, $plugin_db_tables);
+
+        // Use include() instead of require_once() to allow reloading the same file
+        include($variable_file);
+
+        // Verify required variables are set
+        if (!isset($plugin_name) || !isset($plugin_description) || !isset($plugin_version)) {
+            // Variable file didn't set required variables - skip this plugin
+            continue;
+        }
 
         $description = "<center>" . $plugin_description . " <br>" .VERSION_TEXT. $plugin_version . "</center>";
         array_push($active_plugins, array(
-            'name' => ucfirst($data['name']),
+            'name' => $plugin_name,  // Use the display name from variable.php
             'descrption' => $description,
             'deactive' => '<a href="admin.php?n=plugin&action=active&id=' . $data['id'] . '">'.UNINSTALL_TEXT.'</a>',
             'config' => '<a href="admin.php?n=plugins&p=' . $data['name'] . '">Configure</a>'
 
         ));
     }
+
+    // Free the result before the next query
+    $db->sql_freeresult($result);
+
     $report->clearOutputColumns();
     $report->setMainAttributes('width="100%" cellpadding="0" cellspacing="0" border="1"');
     $report->setFieldHeadingAttributes('class="header"');
@@ -148,15 +139,37 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {
 
-        require_once(PLUGINS_PATH . $data['name'] . '/variable.php');
+        $variable_file = PLUGINS_PATH . $data['name'] . '/variable.php';
+
+        // Check if the plugin folder and variable.php file exist
+        if (!file_exists($variable_file)) {
+            // Plugin folder doesn't exist or is misconfigured - skip it
+            continue;
+        }
+
+        // Clear any previous plugin variables to avoid conflicts
+        unset($plugin_name, $plugin_description, $plugin_version, $plugin_folder, $plugin_db_tables);
+
+        // Use include() instead of require_once() to allow reloading the same file
+        include($variable_file);
+
+        // Verify required variables are set
+        if (!isset($plugin_name) || !isset($plugin_description) || !isset($plugin_version)) {
+            // Variable file didn't set required variables - skip this plugin
+            continue;
+        }
 
         $description = "<center>" . $plugin_description . " <br>".VERSION_TEXT . $plugin_version . "</center>";
         array_push($inactive_plugins, array(
-            'name' => ucfirst($data['name']),
+            'name' => $plugin_name,  // Use the display name from variable.php
             'descrption' => $description,
             'deactive' => '<a href="admin.php?n=plugin&action=active&id=' . $data['id'] . '">'.INSTALL_TEXT.'</a>'
         ));
     }
+
+    // Free the result
+    $db->sql_freeresult($result);
+
     $report->clearOutputColumns();
     $report->setMainAttributes('width="100%" cellpadding="0" cellspacing="0" border="1"');
     $report->setFieldHeadingAttributes('class="header"');
@@ -166,19 +179,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     $report->addOutputColumn('deactive', '', 'left');
     $inactive_plugins = $report->getListFromArray($inactive_plugins);
 
-    $form_action = "admin.php?n=plugin&action=add";
-    $add = ADMIN_PLUGINS_ZIP_TEXT.'<br>
-                        <input type="file" name="zipfile" />';
-    $save_button ='<input type="submit" name="submit" value="'.SAVE_TEXT.'" class="button" />';
     $plugins_back ='<a href="admin.php" class="button">'.BACK_TEXT.'</a>';
 
     $smarty->assign(
             array(
                 'active_plugins' => $active_plugins,
                 'inactive_plugins' => $inactive_plugins,
-                'save_button' => $save_button,
-                'plugins_back'=> $plugins_back,
-                'add' => $add
+                'plugins_back'=> $plugins_back
             )
     );
 }
