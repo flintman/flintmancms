@@ -27,6 +27,10 @@ if (!defined('IN_ADMIN_CMS')) {
 array_push($page_lvl, "Admin");
 include(INCLUDES_PATH . 'authentication.php');
 
+// Load Parsedown for rendering Markdown
+require_once(INCLUDES_PATH . 'Parsedown.php');
+$Parsedown = new Parsedown();
+
 //Version Checking
 
 $current_version = VERSION_NUMBER;
@@ -106,14 +110,31 @@ $version_changes = '<table width="100%" border="1" cellpadding="5">';
 
 $filename = array();
 
-$filename = glob("docs/version_changes/*.txt");
+$filename = glob("docs/version_changes/*.md");
 arsort($filename);
-//Pulls all text files in this folder and displays
+$first = true;
+//Pulls all markdown files in this folder and displays
 foreach ($filename as $key => $val) {
     $file = $filename[$key];
-    $contents = file($file);
-    $content = implode($contents);
-    $version_changes .= nl2br($content).' <br><br>';
+    $contents = file_get_contents($file);
+    $html = $Parsedown->text($contents);
+
+    if ($first) {
+        // Show the latest version expanded
+        $version_changes .= $html . '<br><br>';
+        $first = false;
+    } else {
+        // Make older versions collapsible
+        $version_id = 'version_' . $key;
+        // Extract version number from first heading
+        preg_match('/<h1[^>]*>(.*?)<\/h1>/', $html, $matches);
+        $version_title = isset($matches[1]) ? $matches[1] : basename($file, '.md');
+
+        $version_changes .= '<details style="margin-bottom: 10px;">
+            <summary style="cursor: pointer; font-weight: bold; padding: 5px;">' . $version_title . '</summary>
+            <div style="padding: 10px;">' . $html . '</div>
+        </details>';
+    }
 }
 
 $version_changes .= '</table>';
