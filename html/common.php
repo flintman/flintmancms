@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * ************************************************************************* */
 
+define('SITE_VERSION','2.0.0');
+
 // Security Headers - Set before any output
 if (!headers_sent()) {
     // Prevent clickjacking attacks
@@ -55,7 +57,6 @@ define('TEMPLATES_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'templates' .
 define('ADMIN_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR);
 define('FUNCTIONS_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'functions' . DIRECTORY_SEPARATOR);
 define('BASE_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
-define('SITE_VERSION','1.0.3');
 
 // Class includes
 require_once(ADMIN_PATH . 'config.php');
