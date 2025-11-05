@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * ************************************************************************* */
 
-define('SITE_VERSION','2.0.0');
+define('SITE_VERSION','2.0.1');
 
 // Security Headers - Set before any output
 if (!headers_sent()) {
