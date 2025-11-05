@@ -17,9 +17,17 @@ RUN docker-php-ext-install mysqli \
 RUN echo "session.cookie_httponly=1" > /usr/local/etc/php/conf.d/session-security.ini \
 	&& echo "session.cookie_samesite=Strict" >> /usr/local/etc/php/conf.d/session-security.ini \
 	&& echo "session.use_strict_mode=1" >> /usr/local/etc/php/conf.d/session-security.ini \
-	&& echo "session.cookie_secure=0" >> /usr/local/etc/php/conf.d/session-security.ini
+    && echo "session.cookie_secure=${ENABLE_HSTS:-0}" >> /usr/local/etc/php/conf.d/session-security.ini
 
-# Note: Set session.cookie_secure=1 when using HTTPS in production
+# Note: Set ENABLE_HSTS=1 environment variable when using HTTPS in production
+
+# Enable Apache modules for security headers and performance
+RUN a2enmod headers rewrite expires deflate
+
+# Configure Apache security settings
+RUN echo "ServerTokens Prod" >> /etc/apache2/conf-available/security.conf \
+    && echo "ServerSignature Off" >> /etc/apache2/conf-available/security.conf \
+    && echo "TraceEnable Off" >> /etc/apache2/conf-available/security.conf
 
 COPY docker-entrypoint-init.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint-init.sh

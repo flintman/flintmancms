@@ -18,6 +18,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * ************************************************************************* */
 
+// Security Headers - Set before any output
+if (!headers_sent()) {
+    // Prevent clickjacking attacks
+    header("X-Frame-Options: SAMEORIGIN");
+
+    // Prevent MIME type sniffing
+    header("X-Content-Type-Options: nosniff");
+
+    // XSS Protection for legacy browsers
+    header("X-XSS-Protection: 1; mode=block");
+
+    // Referrer Policy - control information sent in referrer header
+    header("Referrer-Policy: strict-origin-when-cross-origin");
+
+    // Remove PHP version information
+    header_remove("X-Powered-By");
+
+    // Content Security Policy - adjust as needed for your requirements
+    // Note: 'unsafe-inline' and 'unsafe-eval' are needed for TinyMCE and Smarty templates
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self';");
+
+    // HSTS - HTTP Strict Transport Security (only when ENABLE_HSTS=true and using HTTPS)
+    $enableHSTS = getenv('ENABLE_HSTS');
+    if ($enableHSTS === 'true' || $enableHSTS === '1') {
+        header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
+    }
+}
+
 //setup of directorys
 define('PLUGINS_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR);
 define('COMPONENTS_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR);
