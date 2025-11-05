@@ -3,9 +3,13 @@ services:
     build: .
     container_name: apache-php-flintmancms
     environment:
-      MYSQL_DATABASE: flintmancms
-      MYSQL_USER: flintmancms
-      MYSQL_PASSWORD: rs*HL7&2XQdML$5N5kgs
+      # Pass environment variables to PHP
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASS: ${MYSQL_PASSWORD}
+      DB_HOST: db
+    env_file:
+      - .env
     volumes:
       - ./html/:/var/www/html
     ports:
@@ -18,10 +22,12 @@ services:
     image: mysql:8.0
     container_name: mysql-db-flintmancms
     environment:
-      MYSQL_ROOT_PASSWORD: 8WoZrdILiqkJD5@5Gob$
-      MYSQL_DATABASE: flintmancms
-      MYSQL_USER: flintmancms
-      MYSQL_PASSWORD: rs*HL7&2XQdML$5N5kgs
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    env_file:
+      - .env
     volumes:
       - ./mysql:/var/lib/mysql
       - ./db_init/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
@@ -33,7 +39,9 @@ services:
      environment:
        PMA_HOST: db
        PMA_USER: root
-       PMA_PASSWORD: 8WoZrdILiqkJD5@5Gob$
+       PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+     env_file:
+       - .env
      ports:
        - "8081:80"
      depends_on:

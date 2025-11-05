@@ -1,2 +1,8 @@
+# MySQL Data Directory
 mysql/
+
+# Smarty Compiled Templates
 html/templates_c/
+
+# Environment Variables (NEVER COMMIT THESE!)
+.env
