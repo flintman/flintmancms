@@ -18,20 +18,52 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * ************************************************************************* */
 
-//Pulls all text files in this folder and displays
-$string = '';
-foreach (glob("admin/help/*.txt") as $filename) {
-    $file = $filename;
-    $contents = file($file);
-    $content = implode($contents);
-    $string .= nl2br($content).' <br><br>';
+// Load Parsedown library for Markdown parsing
+require_once(INCLUDES_PATH . 'Parsedown.php');
+
+// Initialize Parsedown
+$parsedown = new Parsedown();
+$parsedown->setSafeMode(true); // Prevent XSS in markdown
+
+// Find all Markdown files in help directory
+$helpContent = '';
+$markdownFiles = glob("admin/help/*.md");
+
+// Sort files naturally (01-file.md, 02-file.md, etc.)
+natsort($markdownFiles);
+
+// Process each Markdown file
+foreach ($markdownFiles as $filename) {
+    if (file_exists($filename)) {
+        $markdown = file_get_contents($filename);
+        $html = $parsedown->text($markdown);
+
+        // Add section wrapper for styling
+        $helpContent .= '<div class="help-section">' . $html . '</div>';
+        $helpContent .= '<hr class="help-divider">';
+    }
+}
+
+// Remove last divider
+$helpContent = rtrim($helpContent, '<hr class="help-divider">');
+
+// Fallback to old .txt files if no Markdown files found
+if (empty($helpContent)) {
+    $helpContent = '<div class="help-notice">⚠️ Help files are being updated. Please check back soon.</div>';
+
+    // Try loading old txt files as fallback
+    foreach (glob("admin/help/*.txt") as $filename) {
+        $contents = file($filename);
+        $content = implode($contents);
+        $helpContent .= '<div class="help-legacy">' . nl2br(htmlspecialchars($content)) . '</div>';
+    }
 }
 
 $smarty->assign(
-        array(
-            'head' => ADMIN_HELP_TEXT,
-            'help' => $string,
-        )
+    array(
+        'head' => ADMIN_HELP_TEXT,
+        'content' => $helpContent,
+    )
 );
 
 //

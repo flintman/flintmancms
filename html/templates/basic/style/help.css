@@ -1,0 +1,181 @@
+/* FlintmanCMS Help Section Styling - Basic Theme */
+
+.help-container {
+    max-width: 95%;
+    font-family: Arial, sans-serif;
+}
+
+.help-section {
+    margin-bottom: 1.5em;
+    padding: 1em;
+    background: #e8e8e8;
+    border: 1px solid #999;
+    line-height: 1.5;
+}
+
+.help-section h1 {
+    color: #222;
+    font-size: 1.6em;
+    margin: 0 0 0.5em 0;
+    padding-bottom: 0.3em;
+    border-bottom: 2px solid #444;
+}
+
+.help-section h2 {
+    color: #333;
+    font-size: 1.3em;
+    margin: 1.2em 0 0.6em 0;
+    padding-left: 0.5em;
+    border-left: 3px solid #444;
+}
+
+.help-section h3 {
+    color: #444;
+    font-size: 1.1em;
+    margin: 1em 0 0.5em 0;
+}
+
+.help-section p {
+    margin: 0.6em 0;
+    color: #222;
+}
+
+.help-section ul, .help-section ol {
+    margin: 0.8em 0;
+    padding-left: 1.5em;
+}
+
+.help-section li {
+    margin: 0.4em 0;
+    color: #222;
+}
+
+.help-section code {
+    background: #d8d8d8;
+    padding: 1px 4px;
+    border: 1px solid #aaa;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    color: #a00;
+}
+
+.help-section pre {
+    background: #2a2a2a;
+    color: #eee;
+    padding: 0.8em;
+    border: 1px solid #555;
+    overflow-x: auto;
+    margin: 0.8em 0;
+    font-size: 0.85em;
+}
+
+.help-section pre code {
+    background: none;
+    border: none;
+    color: #eee;
+    padding: 0;
+}
+
+.help-section blockquote {
+    background: #fff8dc;
+    border-left: 3px solid #d68000;
+    margin: 0.8em 0;
+    padding: 0.6em 1em;
+    font-style: italic;
+    color: #444;
+}
+
+.help-section blockquote p {
+    margin: 0.2em 0;
+}
+
+.help-section strong {
+    color: #000;
+    font-weight: bold;
+}
+
+.help-section a {
+    color: #004a99;
+    text-decoration: underline;
+}
+
+.help-section a:hover {
+    color: #002255;
+}
+
+.help-section hr {
+    border: none;
+    border-top: 1px solid #999;
+    margin: 1.5em 0;
+}
+
+.help-divider {
+    border: none;
+    border-top: 1px dashed #bbb;
+    margin: 2em 0;
+}
+
+/* Tables */
+.help-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8em 0;
+    border: 1px solid #ccc;
+}
+
+.help-section table th {
+    background: #666;
+    color: white;
+    padding: 0.6em;
+    text-align: left;
+    font-weight: bold;
+    border: 1px solid #555;
+}
+
+.help-section table td {
+    padding: 0.6em;
+    border: 1px solid #ddd;
+}
+
+.help-section table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Notice boxes */
+.help-notice {
+    background: #fff9c4;
+    border: 1px solid #fbc02d;
+    padding: 0.8em 1em;
+    margin: 0.8em 0;
+    color: #333;
+}
+
+.help-legacy {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 1em;
+    margin: 0.8em 0;
+    font-family: monospace;
+    font-size: 0.9em;
+    white-space: pre-wrap;
+}
+
+/* Responsive - collapse on smaller screens */
+@media (max-width: 768px) {
+    .help-section {
+        padding: 0.8em;
+    }
+
+    .help-section h1 {
+        font-size: 1.4em;
+    }
+
+    .help-section h2 {
+        font-size: 1.2em;
+    }
+
+    .help-section pre {
+        padding: 0.6em;
+        font-size: 0.8em;
+    }
+}
