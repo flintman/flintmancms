@@ -30,7 +30,7 @@ else
 //Setup the Scripts
 $scripts = '';
 
-$scripts .='<script type="text/javascript" src="includes/tiny_mce/tiny_mce.js"></script>';
+$scripts .='<script type="text/javascript" src="includes/editor/tiny_mce.js"></script>';
 $scripts .='<script type="text/javascript" src="includes/ajax/register_validate.js"></script>';
 $scripts .= '<script type="text/javascript">
 	tinyMCE.init({
@@ -57,7 +57,7 @@ $scripts .= '<script type="text/javascript">
 </script>';
 
 $scripts .= $scriptAdd;
-$tooltips = '<script type="text/javascript" src="includes/scripts/tooltips.js"></script>';
+$tooltips = '<script type="text/javascript" src="includes/js/tooltips.js"></script>';
 
 $login_data = isset($login_data) ? $login_data : '';
 $register_link = isset($register_link) ? $register_link : '';

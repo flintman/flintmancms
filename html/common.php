@@ -68,7 +68,7 @@ require_once(INCLUDES_PATH . 'smarty-5.6.0/libs/Smarty.class.php');
 require_once(INCLUDES_PATH . 'PHPMailer/src/Exception.php');
 require_once(INCLUDES_PATH . 'PHPMailer/src/PHPMailer.php');
 require_once(INCLUDES_PATH . 'PHPMailer/src/SMTP.php');
-require_once(INCLUDES_PATH . 'scripts/email.php');
+require_once(INCLUDES_PATH . 'js/email.php');
 
 // reports for all data listing
 $report = new ReportList;

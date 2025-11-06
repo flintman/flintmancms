@@ -55,12 +55,18 @@ Options -Indexes
     Deny from all
 </FilesMatch>
 
-# Protect includes directory
+# Protect sensitive PHP files in includes directory
+<FilesMatch "^(mysql|authentication|auth|report|Parsedown)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect specific includes subdirectories
 <IfModule mod_rewrite.c>
-    # Allow createimg.php for CAPTCHA and ajax.php for validation
-    RewriteCond %{REQUEST_URI} !^/includes/createimg\.php$
-    RewriteCond %{REQUEST_URI} !^/includes/ajax/ajax\.php$
-    RewriteRule ^includes/ - [F,L]
+    RewriteRule ^includes/functions/ - [F,L]
+    RewriteRule ^includes/menu/ - [F,L]
+    RewriteRule ^includes/PHPMailer/ - [F,L]
+    RewriteRule ^includes/smarty-5\.6\.0/ - [F,L]
     RewriteRule ^db_init/ - [F,L]
     RewriteRule ^templates_c/ - [F,L]
 </IfModule>
