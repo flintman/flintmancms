@@ -6,3 +6,8 @@ html/templates_c/
 
 # Environment Variables (NEVER COMMIT THESE!)
 .env
+
+# Maintenance plugin images (keep .htaccess and index.html only)
+html/plugins/maintenance/images/*
+!html/plugins/maintenance/images/.htaccess
+!html/plugins/maintenance/images/index.html
