@@ -39,13 +39,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     $data = $db->sql_fetchrow($result)
         or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
         $form_action = "admin.php?n=user&action=edit&id=$id";
-        $user_username = '<input name="username" type="text" value="' . $data['username'] . '" size="15" maxlength="45"">';
-        $password = '<input name="password" type="password"  size="15" >';
-        $password2 = '<input name="password2" type="password"  size="15">';
-        $email = '<input name="email" type="text" size="15" value="' . $data['email'] . '" maxlength="45">';
+        $user_username = '<input name="username" type="text" value="' . $data['username'] . '" size="15" maxlength="45" class="form-control">';
+        $password = '<input name="password" type="password" size="15" class="form-control">';
+        $password2 = '<input name="password2" type="password" size="15" class="form-control">';
+        $email = '<input name="email" type="text" size="15" value="' . $data['email'] . '" maxlength="45" class="form-control">';
 
         //Setups groups
-        $groups = '<select name="groups">';
+        $groups = '<select name="groups" class="form-control">';
         $sql2 = "SELECT * FROM flintmancms_groups";
         $result2 = $db->sql_query($sql2);
         While ($data2 = $db->sql_fetchrow($result2)) {
@@ -156,12 +156,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         $smarty->display(TEMPLATES_PATH . $config['template'] . '/page.htm');
     } else {
         $form_action = "admin.php?n=user&action=add";
-        $user_username = '<input name="username" type="text" size="15" maxlength="45"  onkeyup="check_username(this.value)">';
-        $password = '<input name="password" type="password"  size="15" >';
-        $password2 = '<input name="password2" type="password"  size="15" onkeyup="check_password(this.value)">';
+        $user_username = '<input name="username" type="text" size="15" maxlength="45" class="form-control" onkeyup="check_username(this.value)">';
+        $password = '<input name="password" type="password" size="15" class="form-control">';
+        $password2 = '<input name="password2" type="password" size="15" class="form-control" onkeyup="check_password(this.value)">';
 
         //Setups groups
-        $groups = '<select name="groups">';
+        $groups = '<select name="groups" class="form-control">';
         $sql = "SELECT * FROM flintmancms_groups";
         $result = $db->sql_query($sql);
         While ($data = $db->sql_fetchrow($result)) {
@@ -171,7 +171,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         }
         $groups .= '</select>';
 
-        $email = '<input name="email" type="text" size="15" maxlength="45"  onkeyup="check_email(this.value)">';
+        $email = '<input name="email" type="text" size="15" maxlength="45" class="form-control" onkeyup="check_email(this.value)">';
         $send = '<input type="submit" id="button" class="button" name="submit" value="Send">';
         $smarty->assign(
                 array(

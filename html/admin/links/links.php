@@ -76,7 +76,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         else
             $newwindow = '<input type="checkbox" name="window" value="1" checked>';
 
-        $link_sub = '<select name="sublink">';
+        $link_sub = '<select name="sublink" class="form-control">';
         $sql2 = "SELECT * FROM flintmancms_links";
         $link_sub .= "<option value='0'></option>";
         $result2 = $db->sql_query($sql2);
@@ -90,8 +90,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         }
         $link_sub .='</select>';
 
-        $link_name = '<input name="name" type="text" SIZE=45 value="' . $data['name'] . '">';
-        $link_link = '<input name="url" type="text" SIZE=45  value="' . $data['link'] . '">';
+        $link_name = '<input name="name" type="text" SIZE=45 value="' . $data['name'] . '" class="form-control">';
+        $link_link = '<input name="url" type="text" SIZE=45  value="' . $data['link'] . '" class="form-control">';
         $link_back = '<a href="admin.php?n=links" class="button">' . BACK_TEXT . '</a>';
         $button = '<input type="submit" value="' . SAVE_TEXT . '" name="submit" class="button">';
 
@@ -140,10 +140,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
         $form_action = "admin.php?n=links&action=add";
 
         $active_link = '<input type="checkbox" name="active" value="1">';
-        $link_name = '<input type="text" SIZE=45 name="name" >';
-        $link_link = '<input name="url" SIZE=45 type="text">';
+        $link_name = '<input type="text" SIZE=45 name="name" class="form-control">';
+        $link_link = '<input name="url" SIZE=45 type="text" class="form-control">';
         $newwindow = '<input type="checkbox" name="window" value="1">';
-        $link_sub = '<select name="sublink">';
+        $link_sub = '<select name="sublink" class="form-control">';
         $sql = "SELECT * FROM flintmancms_links";
         $link_sub .= "<option value='0'></option>";
         $result = $db->sql_query($sql);

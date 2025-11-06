@@ -45,9 +45,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         if ($id == "2")
             $name = $data['name'] . '<input name="name" type="hidden" value="' . $data['name'] . '" maxlength="255" >';
         else {
-            $name = '<input name="name" type="text" value="' . $data['name'] . '" maxlength="255" >';
+            $name = '<input name="name" type="text" value="' . $data['name'] . '" maxlength="255" class="form-control">';
         }
-        $description = '<input name="description" type="text" value="' . htmlspecialchars($data['description'] ?? '') . '" size="50" maxlength="255">';
+        $description = '<input name="description" type="text" value="' . htmlspecialchars($data['description'] ?? '') . '" size="50" maxlength="255" class="form-control">';
 
         //Gets all pages to set privliges on
         $sql = "SELECT * FROM flintmancms_pages";
@@ -170,8 +170,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
 elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
     if (!isset($_POST['submit'])) {
         $form_action = "admin.php?n=groups&action=add";
-        $name = '<input name="name" type="text" size="45" maxlength="255">';
-        $description = '<input name="description" type="text" size="50" maxlength="255">';
+        $name = '<input name="name" type="text" size="45" maxlength="255" class="form-control">';
+        $description = '<input name="description" type="text" size="50" maxlength="255" class="form-control">';
         $group_back = '<a href="admin.php?n=groups" class="button">' . BACK_TEXT . '</a>';
         $button = '<input type="submit" value="' . SAVE_TEXT . '" name="submit" class="button">';
 
@@ -238,6 +238,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
     $smarty->assign(
             array(
                 'name' => $name,
+                'description' => $description,
                 'pages' => $pages,
                 'plugins' => $plugins,
                 'button' => $button

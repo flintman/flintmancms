@@ -51,8 +51,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             $display_title = '<input type="checkbox" name="display" value="1" checked>';
 
 
-        $page_title = '<input name="title" type="text"  value="' . $data['title'] . '" maxlength="255" >';
-        $page_content = '<textarea name="page_text" cols="80" rows="20" style="width:100%">' . $data['context'] . '</textarea>';
+        $page_title = '<input name="title" type="text"  value="' . $data['title'] . '" maxlength="255" class="form-control">';
+        $page_content = '<textarea name="page_text" cols="80" rows="20" style="width:100%" class="form-control">' . $data['context'] . '</textarea>';
         $toggle = "<a href=\"javascript:toggleEditor('page_text');\">".ADMIN_PAGE_REMOVE_TEXT."</a>";
         $page_back = '<a href="admin.php?n=page" class="button">'.BACK_TEXT.'</a>';
         $button = '<input type="submit" value="'.SAVE_TEXT.'" name="submit" class="button">';
@@ -103,8 +103,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
 
         $active_page = '<input type="checkbox" name="active" value="1">';
         $display_title = '<input type="checkbox" name="display" value="1">';
-        $page_title = '<input name="title" type="text" SIZE=45 maxlength="255">';
-        $page_content = '<textarea name="content" cols="60" rows="20" wrap="PHYSICAL" ></textarea>';
+        $page_title = '<input name="title" type="text" SIZE=45 maxlength="255" class="form-control">';
+        $page_content = '<textarea name="content" cols="60" rows="20" wrap="PHYSICAL" class="form-control"></textarea>';
         $toggle = "<a href=\"javascript:toggleEditor('page_text');\">".ADMIN_PAGE_REMOVE_TEXT."</a>";
         $page_back = '<a href="admin.php?n=page" class="button">'.BACK_TEXT.'</a>';
         $button = '<input type="submit" value="'.SAVE_TEXT.'" name="submit" class="button">';
