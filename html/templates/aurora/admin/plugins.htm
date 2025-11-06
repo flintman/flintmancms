@@ -9,6 +9,12 @@
     <p>
         {$inactive_plugins}
     </p>
+    {if $form_action}
+    <form action="{$form_action}" method="POST">
+    {/if}
     {$content}<br><br>
+    {if $form_action}
+    </form>
+    {/if}
     {$plugins_back}
 </div><br />

@@ -55,7 +55,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'active') {
                             ".ADMIN_PLUGINS_TABLE_INFO_TEXT."</div>
                     </td>
                     <td class='pluginheader2'>
-			<select  name='delete_tables'>
+			<select  name='delete_tables' class='form-control'>
 			<option value='1'>".YES_TEXT."</option>
 			<option value='0'>".NO_TEXT."</option>
 			</select>
@@ -68,7 +68,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'active') {
                 </table>";
         }
          $content .= '<input type="hidden" value="' . $data['name'] . '" name="name">';
+         $content .= '<input type="hidden" name="csrf_token" value="' . generate_csrf_token() . '">';
     } elseif (isset($_POST['submit'])) {
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            die("CSRF token validation failed");
+        }
         $name = $_POST['name'];
         $delete_tables = $_POST['delete_tables'];
         $id = $_GET['id'];
