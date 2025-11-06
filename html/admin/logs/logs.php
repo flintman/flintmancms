@@ -64,7 +64,7 @@ $report->addOutputColumn('error', 'Error', 'center');
 $report->addOutputColumn('time', 'Time', 'left');
 $report->addOutputColumn('check', '', 'left');
 $content = $report->getListFromArray($logs);
-$button = '<input type="submit" value="'.DELETE_TEXT.'" name="submit" class="button">';
+$button = '<input type="submit" value="'.DELETE_TEXT.'" name="submit" class="button" onclick="return confirm(\'Are you sure you want to delete the selected logs?\');">';
 $logs_back ='<a href="admin.php" class="button">'.BACK_TEXT.'</a>';
 
 $smarty->assign(
