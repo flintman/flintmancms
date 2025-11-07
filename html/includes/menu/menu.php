@@ -9,14 +9,6 @@ $menu[] = array(
     'new_window' => 0
 );
 
-if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in']) {
-    $menu[] = array(
-        'text' => PROFILE_TEXT,
-        'link' => 'index.php?n=profile' . $config['add_link'],
-        'new_window' => 0
-    );
-}
-
 $sql = "SELECT * FROM flintmancms_links WHERE sub_link='0' ORDER BY `link_order` ASC";
 $result = $db->sql_query($sql);
 while ($data = $db->sql_fetchrow($result)) {

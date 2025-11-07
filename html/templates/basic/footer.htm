@@ -36,6 +36,7 @@
                     {if $allow_login}
                         {if $is_logged_in}
                             {WELCOME_TEXT} {$username} <br>
+                            <a href="index.php?n=profile">{PROFILE_TEXT}</a> |
                             <a href="index.php?n=logout">{LOGOUT_TEXT}</a>
                         {else}
                             <form action="index.php" method="POST">
