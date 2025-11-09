@@ -1,0 +1,27 @@
+<div class='padder'>
+    <form action="index.php?n=profile" name="user" method="POST" {$on_submit}>
+        <input type="hidden" name="csrf_token" value="{$csrf_token}">
+        <table width="100%">
+            <tr>
+                <td>{ADMIN_USER_USERNAME_TEXT}</td>
+                <td><input name="username" type="text" size="15" maxlength="45" value="{$username}" readonly class="form-control"></td>
+            </tr>
+            <tr>
+                <td>{ADMIN_USER_EMAIL_TEXT}</td>
+                <td><input name="email" type="text" size="15" maxlength="45" value="{$email}" onkeyup="check_email(this.value)" class="form-control"><b id="email"></b></td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>{ADMIN_USER_ONLY_CHANGE_TEXT}</b></td>
+            </tr>
+            <tr>
+                <td>{ADMIN_USER_PASSWORD_TEXT}</td>
+                <td><input name="password" type="password" size="15" class="form-control"></td>
+            </tr>
+            <tr>
+                <td>{ADMIN_USER_PASSWORD_TWO_TEXT}</td>
+                <td><input name="password2" type="password" size="15" onkeyup="check_password(this.value)" class="form-control"><b id="pass"></b></td>
+            </tr>
+        </table>
+        <input type="submit" id="button" name="submit" value="Send" class="btn btn-primary">
+    </form>
+</div><br />

@@ -1,0 +1,32 @@
+<svg width="200" height="80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="80" fill="#003d7a"/>
+
+  <!-- Truck illustration -->
+  <g transform="translate(10, 15)">
+    <!-- Truck cabin -->
+    <rect x="0" y="15" width="25" height="25" fill="#ff6b35" rx="2"/>
+    <rect x="3" y="18" width="8" height="8" fill="#ffffff" opacity="0.8"/>
+
+    <!-- Truck cargo box -->
+    <rect x="25" y="10" width="45" height="30" fill="#ffc107" rx="2"/>
+    <line x1="35" y1="10" x2="35" y2="40" stroke="#003d7a" stroke-width="2"/>
+    <line x1="50" y1="10" x2="50" y2="40" stroke="#003d7a" stroke-width="2"/>
+
+    <!-- Wheels -->
+    <circle cx="15" cy="43" r="5" fill="#2c3e50"/>
+    <circle cx="15" cy="43" r="3" fill="#6c757d"/>
+    <circle cx="35" cy="43" r="5" fill="#2c3e50"/>
+    <circle cx="35" cy="43" r="3" fill="#6c757d"/>
+    <circle cx="60" cy="43" r="5" fill="#2c3e50"/>
+    <circle cx="60" cy="43" r="3" fill="#6c757d"/>
+  </g>
+
+  <!-- Company text -->
+  <text x="100" y="45" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#ffffff">
+    TRUCK CO
+  </text>
+  <text x="100" y="62" font-family="Arial, sans-serif" font-size="10" fill="#ffc107">
+    LEASING &amp; RENTALS
+  </text>
+</svg>

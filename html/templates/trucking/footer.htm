@@ -1,0 +1,64 @@
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <p>Leading provider of commercial truck and trailer leasing solutions across North America.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="admin.php">{ADMIN_TEXT}</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>📞 1-800-TRUCK-US</p>
+                    <p>✉️ info@truckinglease.com</p>
+                    <p>📍 Your Location Here</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="disclaimer">
+                    {$disclamer}
+                </div>
+                <div class="footer-credit">
+                    <p>&copy; {$smarty.now|date_format:"%Y"} {$title_text}. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const root = document.documentElement;
+
+        // Check for saved theme preference or default to 'light'
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        root.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', function() {
+            const theme = root.getAttribute('data-theme');
+            const newTheme = theme === 'light' ? 'dark' : 'light';
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileMenuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            mobileMenuToggle.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

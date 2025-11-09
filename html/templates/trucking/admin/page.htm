@@ -1,0 +1,32 @@
+<form action="{$form_action}" method="post" >
+    <input type="hidden" name="csrf_token" value="{$csrf_token}">
+    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td><div id="admin_title">{$head}</div></td>
+        </tr>
+        <tr>
+            <td valign="top" >
+                <table width="100%" border="0" cellspacing="1" cellpadding="3" >
+                {if isset($smarty.get.action) && ($smarty.get.action == 'add' || $smarty.get.action == 'edit')}
+                        <tr>
+                            <td width="200" ><strong><span >{ADMIN_PAGE_ACTIVE_TEXT}</span></strong></td>
+                            <td >{$active_page}</td>
+                        </tr>
+                        <tr>
+                            <td ><strong><span >{ADMIN_PAGE_DISPLAY_TEXT}</span></strong></td>
+                            <td >{$display_title}</td>
+                        </tr>
+                        <tr>
+                            <td ><strong><span >{ADMIN_PAGE_ENTER_TEXT}</span></strong></td>
+                            <td >{$page_title}</td>
+                        </tr>
+                {/if}
+                </table>
+                {$page_content}<br>{$toggle}
+            </td></tr>
+    </table>
+    {$content}<br><br>
+
+    {$page_back}&nbsp;&nbsp;&nbsp;&nbsp; {$button}
+</form>
+
