@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {$javascript}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="{$meta_tags}">
+    <meta name="description" content="{$home_page}">
+    <title>{$title_text}</title>
+    <link rel="stylesheet" type="text/css" href="templates/cannabis/style/style.css">
+    <link rel="stylesheet" type="text/css" href="templates/cannabis/style/menu.css">
+</head>
+<body>
+    <!-- DO NOT REMOVE OR YOU RISK BREAKING TOOLTIPS -->
+    <div id="dhtmltooltip"></div>
+    {$tooltips}
+    <!-- END TOOLTIP CODE -->
+
+    <!-- Animated leaf background -->
+    <div class="leaf-background">
+        <div class="leaf leaf-1">🍃</div>
+        <div class="leaf leaf-2">🍃</div>
+        <div class="leaf leaf-3">🍃</div>
+    </div>
+
+    <!-- Top Info Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-content">
+                <div class="info-items">
+                    <span class="info-item">🌿 Premium Quality</span>
+                    <span class="info-item">✓ Lab Tested</span>
+                    <span class="info-item">📍 Multiple Locations</span>
+                </div>
+                {if $allow_login && $is_logged_in}
+                <div class="user-welcome">
+                    <span>🌱 Welcome back, {$username}</span>
+                </div>
+                {/if}
+            </div>
+        </div>
+    </div>
+
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-image">
+                        <img src="templates/cannabis/images/logo.png" alt="{$title_text}" class="company-logo">
+                    </div>
+                    <div class="logo-text">
+                        <h1 class="site-title">{$title_text}</h1>
+                        <p class="tagline">Natural Wellness & Premium Products</p>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-menu" id="navMenu">
+                {foreach from=$menu item=menuitem}
+                <li class="nav-item{if isset($menuitem.submenu) && $menuitem.submenu|@count > 0} has-submenu{/if}">
+                    <a href="{$menuitem.link}"{if $menuitem.new_window} target="_blank"{/if} class="nav-link">{$menuitem.text}</a>
+                    {if isset($menuitem.submenu) && $menuitem.submenu|@count > 0}
+                    <ul class="submenu">
+                        {foreach from=$menuitem.submenu item=subitem}
+                        <li class="submenu-item">
+                            <a href="{$subitem.link}"{if $subitem.new_window} target="_blank"{/if} class="submenu-link">{$subitem.text}</a>
+                        </li>
+                        {/foreach}
+                    </ul>
+                    {/if}
+                </li>
+                {/foreach}
+                {if $allow_login}
+                    {if $is_logged_in}
+                    <li class="nav-item user-menu">
+                        <a href="#" class="nav-link user-link">🌿 {$username}</a>
+                        <ul class="submenu">
+                            <li class="submenu-item"><a href="index.php?n=profile#scroll" class="submenu-link">{PROFILE_TEXT}</a></li>
+                            <li class="submenu-item"><a href="index.php?n=logout" class="submenu-link">{LOGOUT_TEXT}</a></li>
+                        </ul>
+                    </li>
+                    {else}
+                    <li class="nav-item">
+                        <a href="index.php?n=register" class="nav-link nav-register">Join Us</a>
+                    </li>
+                    <li class="nav-item login-form-nav">
+                        <form action="index.php" method="POST" class="nav-login-form">
+                            <input type="hidden" name="csrf_token" value="{$csrf_token}">
+                            <div class="nav-form-group">
+                                <label class="nav-label">Username:</label>
+                                <input name="username" type="text" class="form-control nav-input" required>
+                            </div>
+                            <div class="nav-form-group">
+                                <label class="nav-label">Password:</label>
+                                <input name="password" type="password" class="form-control nav-input" required>
+                            </div>
+                            <label class="nav-remember">
+                                <input type="checkbox" name="autologin" checked="checked">
+                                <span>{REMEMBER_ME_TEXT}</span>
+                            </label>
+                            <button type="submit" name="login" class="btn btn-primary nav-login-btn">Login</button>
+                        </form>
+                    </li>
+                    {/if}
+                {/if}
+            </ul>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="content-wrapper">
+                <div class="main-content">

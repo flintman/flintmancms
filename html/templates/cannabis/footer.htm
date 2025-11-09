@@ -1,0 +1,74 @@
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="leaf-divider">🍃 🍃 🍃</div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🌿 About Us</h3>
+                    <p>Your trusted source for premium cannabis products and wellness solutions.</p>
+                    <p class="disclaimer-note">21+ Only • Medical Card Accepted</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.php">🏠 Home</a></li>
+                        <li><a href="admin.php">⚙️ {ADMIN_TEXT}</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>📧 info@example.com</p>
+                    <p>📞 1-800-420-HERB</p>
+                    <p>📍 Your Location</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="disclaimer">
+                    {$disclamer}
+                </div>
+                <div class="footer-credit">
+                    <p>&copy; 2025 {$title_text}. All Rights Reserved.</p>
+                    <p class="age-restriction">⚠️ Must be 21+ to enter</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        {literal}
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const root = document.documentElement;
+
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        root.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', function() {
+            const theme = root.getAttribute('data-theme');
+            const newTheme = theme === 'light' ? 'dark' : 'light';
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Mobile Menu
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileMenuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            mobileMenuToggle.classList.toggle('active');
+        });
+
+        // Floating leaf animation
+        const leaves = document.querySelectorAll('.leaf');
+        leaves.forEach((leaf, index) => {
+            leaf.style.animationDelay = `${index * 2}s`;
+        });
+        {/literal}
+    </script>
+</body>
+</html>

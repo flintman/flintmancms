@@ -1,0 +1,26 @@
+<svg width="80" height="80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="40" cy="40" r="38" fill="#ffffff" stroke="#7cb342" stroke-width="2"/>
+
+  <!-- Cannabis leaf -->
+  <g transform="translate(40, 40)">
+    <!-- Center leaf -->
+    <path d="M 0,-25 Q 2,-15 0,0 Q -2,-15 0,-25" fill="#4a7c2c"/>
+
+    <!-- Left leaves -->
+    <path d="M -8,-20 Q -12,-12 -8,-5 Q -6,-12 -8,-20" fill="#2d5016"/>
+    <path d="M -15,-15 Q -18,-8 -14,-3 Q -12,-8 -15,-15" fill="#2d5016"/>
+    <path d="M -18,-8 Q -20,-2 -16,0 Q -14,-3 -18,-8" fill="#2d5016"/>
+
+    <!-- Right leaves -->
+    <path d="M 8,-20 Q 12,-12 8,-5 Q 6,-12 8,-20" fill="#2d5016"/>
+    <path d="M 15,-15 Q 18,-8 14,-3 Q 12,-8 15,-15" fill="#2d5016"/>
+    <path d="M 18,-8 Q 20,-2 16,0 Q 14,-3 18,-8" fill="#2d5016"/>
+
+    <!-- Stem -->
+    <path d="M 0,0 L 0,8 Q -1,10 -2,12 L 2,12 Q 1,10 0,8 Z" fill="#5d4037"/>
+  </g>
+
+  <!-- Highlights -->
+  <circle cx="40" cy="40" r="38" fill="none" stroke="#9ccc65" stroke-width="1" opacity="0.5"/>
+</svg>
