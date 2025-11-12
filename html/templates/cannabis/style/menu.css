@@ -285,7 +285,7 @@
 
 @media (max-width: 1024px) {
     .login-form-nav {
-        display: none;
+        display: flex;
     }
 }
 
