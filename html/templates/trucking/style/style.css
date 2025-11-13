@@ -238,6 +238,25 @@ a:hover {
     display: none;
 }
 
+/* Make List.js search inputs match theme form controls */
+.user-search-bar,
+input.search {
+    display: inline-block;
+    width: auto;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-primary);
+}
+
+/* Make the search box full-width within content areas */
+.main-content .user-search-bar,
+.main-content input.search {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
 /* Main Content */
 .site-main {
     padding: 2rem 0;

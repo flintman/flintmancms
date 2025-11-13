@@ -130,15 +130,50 @@ if (isset($_GET['action']) && $_GET['action'] == 'active') {
     // Free the result before the next query
     $db->sql_freeresult($result);
 
-    $report->clearOutputColumns();
-    $report->setMainAttributes('width="100%" cellpadding="0" cellspacing="0" border="1"');
-    $report->setFieldHeadingAttributes('class="header"');
-    $report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-    $report->addOutputColumn('name', '', 'left');
-    $report->addOutputColumn('config', '', 'left');
-    $report->addOutputColumn('descrption', '', 'left');
-    $report->addOutputColumn('deactive', '', 'left');
-    $active_plugins = $report->getListFromArray($active_plugins);
+    // Build HTML table for active plugins (List.js)
+    $active_plugins_html = '<div id="active-plugins-list">
+        <input class="search user-search-bar form-control" placeholder="Search active plugins..." />
+        <table id="active-plugins-table" class="listjs-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th class="sort" data-sort="name">Name</th>
+                    <th>Configure</th>
+                    <th class="sort" data-sort="descrption">Description</th>
+                    <th>Uninstall</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+';
+    foreach ($active_plugins as $row) {
+        $active_plugins_html .= '<tr>' .
+            '<td class="name">' . htmlspecialchars($row['name']) . '</td>' .
+            '<td>' . $row['config'] . '</td>' .
+            '<td class="descrption">' . $row['descrption'] . '</td>' .
+            '<td>' . $row['deactive'] . '</td>' .
+            '</tr>';
+    }
+    $active_plugins_html .= '</tbody></table>';
+    $active_plugins_html .= '<div id="active-plugins-pagination"><ul class="pagination"></ul></div></div>';
+    $active_plugins_html .= '<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        var pluginsList = document.getElementById("active-plugins-list");
+        if (pluginsList) {
+            var options = {
+                valueNames: ["name", "descrption"],
+                pagination: true,
+                page: 10,
+                searchClass: "search",
+                listClass: "list",
+            };
+            var listObj = new List("active-plugins-list", options);
+            var pagDiv = document.getElementById("active-plugins-pagination");
+            var pagList = pluginsList.getElementsByClassName("pagination")[0];
+            if (pagDiv && pagList) {
+                pagDiv.appendChild(pagList);
+            }
+        }
+    });
+    </script>';
 
     $sql = "SELECT * FROM flintmancms_plugins WHERE active ='0'";
     $result = $db->sql_query($sql);
@@ -175,21 +210,55 @@ if (isset($_GET['action']) && $_GET['action'] == 'active') {
     // Free the result
     $db->sql_freeresult($result);
 
-    $report->clearOutputColumns();
-    $report->setMainAttributes('width="100%" cellpadding="0" cellspacing="0" border="1"');
-    $report->setFieldHeadingAttributes('class="header"');
-    $report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-    $report->addOutputColumn('name', '', 'left');
-    $report->addOutputColumn('descrption', '', 'left');
-    $report->addOutputColumn('deactive', '', 'left');
-    $inactive_plugins = $report->getListFromArray($inactive_plugins);
+    // Build HTML table for inactive plugins (List.js)
+    $inactive_plugins_html = '<div id="inactive-plugins-list">
+        <input class="search user-search-bar form-control" placeholder="Search inactive plugins..." />
+        <table id="inactive-plugins-table" class="listjs-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th class="sort" data-sort="name">Name</th>
+                    <th>Description</th>
+                    <th>Install</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+';
+    foreach ($inactive_plugins as $row) {
+        $inactive_plugins_html .= '<tr>' .
+            '<td class="name">' . htmlspecialchars($row['name']) . '</td>' .
+            '<td class="descrption">' . $row['descrption'] . '</td>' .
+            '<td>' . $row['deactive'] . '</td>' .
+            '</tr>';
+    }
+    $inactive_plugins_html .= '</tbody></table>';
+    $inactive_plugins_html .= '<div id="inactive-plugins-pagination"><ul class="pagination"></ul></div></div>';
+    $inactive_plugins_html .= '<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        var pluginsList = document.getElementById("inactive-plugins-list");
+        if (pluginsList) {
+            var options = {
+                valueNames: ["name", "descrption"],
+                pagination: true,
+                page: 10,
+                searchClass: "search",
+                listClass: "list",
+            };
+            var listObj = new List("inactive-plugins-list", options);
+            var pagDiv = document.getElementById("inactive-plugins-pagination");
+            var pagList = pluginsList.getElementsByClassName("pagination")[0];
+            if (pagDiv && pagList) {
+                pagDiv.appendChild(pagList);
+            }
+        }
+    });
+    </script>';
 
     $plugins_back ='<a href="admin.php" class="button">'.BACK_TEXT.'</a>';
 
     $smarty->assign(
             array(
-                'active_plugins' => $active_plugins,
-                'inactive_plugins' => $inactive_plugins,
+                'active_plugins' => $active_plugins_html,
+                'inactive_plugins' => $inactive_plugins_html,
                 'plugins_back'=> $plugins_back
             )
     );

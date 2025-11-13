@@ -178,14 +178,22 @@ elseif ($action === 'units') {
     $body .= '<div class="back-link"><a href="index.php?n=plugins&p=maintenance">← Back to Dashboard</a></div>';
 
     if ($db->sql_numrows($result) > 0) {
-        $body .= '<table class="units-table">';
+        // Prepare valueNames for List.js (unit_id plus each question answer key)
+        $unitsValueNames = array('unit_id');
+        foreach ($display_questions as $q) {
+            $unitsValueNames[] = 'answer_' . $q['id'];
+        }
+
+        $body .= '<div id="units-list">';
+        $body .= '<input class="search user-search-bar form-control" placeholder="Search ' . htmlspecialchars($unit_label) . 's..." />';
+        $body .= '<table class="units-table listjs-table">';
         $body .= '<thead><tr>';
-        $body .= '<th>Unit ID</th>';
+        $body .= '<th class="sort" data-sort="unit_id">Unit ID</th>';
         foreach ($display_questions as $q) {
             $body .= '<th>' . htmlspecialchars($q['label'] ?? '') . '</th>';
         }
         $body .= '<th>Actions</th>';
-        $body .= '</tr></thead><tbody>';
+        $body .= '</tr></thead><tbody class="list">';
 
         while ($row = $db->sql_fetchrow($result)) {
             // Fetch answers for this unit
@@ -198,11 +206,11 @@ elseif ($action === 'units') {
             }
 
             $body .= '<tr>';
-            $body .= '<td>' . htmlspecialchars($row['unit_id']) . '</td>';
+            $body .= '<td class="unit_id">' . htmlspecialchars($row['unit_id']) . '</td>';
 
             foreach ($display_questions as $q) {
                 $value = $answers[$q['id']] ?? '';
-                $body .= '<td>' . htmlspecialchars($value) . '</td>';
+                $body .= '<td class="answer_' . $q['id'] . '">' . htmlspecialchars($value) . '</td>';
             }
 
             $body .= '<td>';
@@ -211,7 +219,19 @@ elseif ($action === 'units') {
             $body .= '</tr>';
         }
 
-        $body .= '</tbody></table>';
+    $body .= '</tbody></table>';
+    $body .= '<div class="list-pagination"><ul class="pagination"></ul></div>';
+    $body .= '</div>';
+
+    // Initialize List.js for units
+    $body .= '<script>';
+    $body .= 'document.addEventListener("DOMContentLoaded", function() {';
+    $body .= 'if (typeof List !== "undefined" && document.getElementById("units-list")) {';
+    $body .= 'var valueNames = ' . json_encode($unitsValueNames) . ';';
+    $body .= 'new List("units-list", { valueNames: valueNames, pagination: true, page: 10, searchClass: "search", listClass: "list" });';
+    $body .= '}';
+    $body .= '});';
+    $body .= '</script>';
     } else {
         $body .= '<p>No ' . htmlspecialchars($unit_label) . 's found.</p>';
     }
@@ -379,28 +399,44 @@ elseif ($action === 'view_unit' || $action === 'viewunit') {
             $body .= '<h2>Maintenance History</h2>';
 
             if ($db->sql_numrows($result) > 0) {
-                $body .= '<table class="maintenance-table">';
+                // Build maintenance list wrapper for List.js
+                $body .= '<div id="maintenance-list">';
+                $body .= '<input class="search user-search-bar form-control" placeholder="Search maintenance records..." />';
+                $body .= '<table class="maintenance-table listjs-table">';
                 $body .= '<thead><tr>';
-                $body .= '<th>Date</th>';
-                $body .= '<th>Type of Service</th>';
+                $body .= '<th class="sort" data-sort="date">Date</th>';
+                $body .= '<th class="sort" data-sort="type_of_service">Type of Service</th>';
                 $body .= '<th>Description</th>';
-                $body .= '<th>Cost</th>';
-                $body .= '<th>Performed By</th>';
+                $body .= '<th class="sort" data-sort="cost">Cost</th>';
+                $body .= '<th class="sort" data-sort="performed_by">Performed By</th>';
                 $body .= '<th>Actions</th>';
-                $body .= '</tr></thead><tbody>';
+                $body .= '</tr></thead><tbody class="list">';
 
                 while ($row = $db->sql_fetchrow($result)) {
                     $body .= '<tr>';
-                    $body .= '<td>' . date('M d, Y', strtotime($row['performed_at'])) . '</td>';
-                    $body .= '<td>' . htmlspecialchars($row['type_of_service']) . '</td>';
-                    $body .= '<td>' . htmlspecialchars(substr($row['description'], 0, 50)) . '...</td>';
-                    $body .= '<td>$' . number_format($row['costs_of_parts'], 2) . '</td>';
-                    $body .= '<td>' . htmlspecialchars($row['performed_by']) . '</td>';
+                    $body .= '<td class="date">' . date('M d, Y', strtotime($row['performed_at'])) . '</td>';
+                    $body .= '<td class="type_of_service">' . htmlspecialchars($row['type_of_service']) . '</td>';
+                    $body .= '<td class="description">' . htmlspecialchars(substr($row['description'], 0, 50)) . '...</td>';
+                    $body .= '<td class="cost">$' . number_format($row['costs_of_parts'], 2) . '</td>';
+                    $body .= '<td class="performed_by">' . htmlspecialchars($row['performed_by']) . '</td>';
                     $body .= '<td><a href="index.php?n=plugins&p=maintenance&action=viewrecord&record_id=' . $row['id'] . '" class="btn btn-small">View Details</a></td>';
                     $body .= '</tr>';
                 }
 
                 $body .= '</tbody></table>';
+                $body .= '<div class="list-pagination"><ul class="pagination"></ul></div>';
+                $body .= '</div>';
+
+                // Initialize List.js for maintenance records
+                $maintenanceValueNames = array('date', 'type_of_service', 'description', 'cost', 'performed_by');
+                $body .= '<script>';
+                $body .= 'document.addEventListener("DOMContentLoaded", function() {';
+                $body .= 'if (typeof List !== "undefined" && document.getElementById("maintenance-list")) {';
+                $body .= 'var mNames = ' . json_encode($maintenanceValueNames) . ';';
+                $body .= 'new List("maintenance-list", { valueNames: mNames, pagination: true, page: 10, searchClass: "search", listClass: "list" });';
+                $body .= '}';
+                $body .= '});';
+                $body .= '</script>';
             } else {
                 $body .= '<p>No maintenance records yet.</p>';
             }

@@ -211,13 +211,48 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'add') {
         }
     }
 
-    $report->setMainAttributes('width="100%" cellpadding="0" cellspacing="0" border="0"');
-    $report->setFieldHeadingAttributes('class="header"');
-    $report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-    $report->addOutputColumn('name', 'Name', 'left');
-    $report->addOutputColumn('edit', '', 'left');
-    $report->addOutputColumn('del', '', 'left');
-    $content = $report->getListFromArray($pages);
+    // Build HTML table for List.js
+    $content = '<div id="pages-list">
+        <input class="search user-search-bar form-control" placeholder="Search pages..." />
+        <table id="pages-table" class="listjs-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th class="sort" data-sort="name">Name</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+';
+    foreach ($pages as $row) {
+        $content .= '<tr>' .
+            '<td class="name">' . htmlspecialchars($row['name']) . '</td>' .
+            '<td>' . $row['edit'] . '</td>' .
+            '<td>' . (isset($row['del']) ? $row['del'] : '') . '</td>' .
+            '</tr>';
+    }
+    $content .= '</tbody></table>';
+    $content .= '<div id="pages-pagination"><ul class="pagination"></ul></div></div>';
+    $content .= '<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        var pagesList = document.getElementById("pages-list");
+        if (pagesList) {
+            var options = {
+                valueNames: ["name"],
+                pagination: true,
+                page: 10,
+                searchClass: "search",
+                listClass: "list",
+            };
+            var listObj = new List("pages-list", options);
+            var pagDiv = document.getElementById("pages-pagination");
+            var pagList = pagesList.getElementsByClassName("pagination")[0];
+            if (pagDiv && pagList) {
+                pagDiv.appendChild(pagList);
+            }
+        }
+    });
+    </script>';
     $page_back ='<a href="admin.php" class="button">'.BACK_TEXT.'</a>';
     $button ='<a href="admin.php?n=page&action=add" class="button">'.ADMIN_PAGE_ADD_TEXT.'</a>';
 

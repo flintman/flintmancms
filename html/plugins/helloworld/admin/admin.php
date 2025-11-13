@@ -303,7 +303,7 @@ else {
     $sql = "SELECT * FROM flintmancms_helloworld_messages ORDER BY created_date DESC";
     $result = $db->sql_query($sql);
 
-    // Build array for report table
+    // Build array for table
     $messages = array();
     while ($data = $db->sql_fetchrow($result)) {
         array_push($messages, array(
@@ -317,27 +317,67 @@ else {
         ));
     }
 
-    // Generate report table
-    $report->setMainAttributes('width="100%" cellpadding="0" cellspacing="0" border="0"');
-    $report->setFieldHeadingAttributes('class="header"');
-    $report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-    $report->addOutputColumn('id', 'ID', 'left', 50);
-    $report->addOutputColumn('message', 'Message', 'left');
-    $report->addOutputColumn('author', 'Author', 'left', 150);
-    $report->addOutputColumn('date', 'Date', 'left', 150);
-    $report->addOutputColumn('active', 'Active', 'center', 80);
-    $report->addOutputColumn('edit', 'Edit', 'center', 80);
-    $report->addOutputColumn('delete', 'Delete', 'center', 80);
-
-    // Get the generated table
-    $content = $report->getListFromArray($messages);
-
-    // Add action buttons
+    // Build HTML table for List.js
     $content = '<div style="margin-bottom: 1rem;">' .
                '<a href="admin.php?n=plugins&p=helloworld&action=add" class="btn btn-primary">Add New Message</a> ' .
                '<a href="admin.php?n=plugins&p=helloworld&action=settings" class="button">Settings</a> ' .
                '<a href="index.php?n=plugins&p=helloworld" class="button" target="_blank">View Frontend</a>' .
-               '</div>' . $content;
+               '</div>';
+    $content .= '<div id="helloworld-list">
+        <input class="search user-search-bar form-control" placeholder="Search messages..." />
+        <table id="helloworld-table" class="listjs-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th class="sort" data-sort="id">ID</th>
+                    <th class="sort" data-sort="message">Message</th>
+                    <th class="sort" data-sort="author">Author</th>
+                    <th class="sort" data-sort="date">Date</th>
+                    <th class="sort" data-sort="active">Active</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+';
+    foreach ($messages as $row) {
+        $content .= '<tr>' .
+            '<td class="id">' . $row['id'] . '</td>' .
+            '<td class="message">' . htmlspecialchars($row['message']) . '</td>' .
+            '<td class="author">' . htmlspecialchars($row['author']) . '</td>' .
+            '<td class="date">' . $row['date'] . '</td>' .
+            '<td class="active">' . $row['active'] . '</td>' .
+            '<td>' . $row['edit'] . '</td>' .
+            '<td>' . $row['delete'] . '</td>' .
+            '</tr>';
+    }
+    $content .= '</tbody></table>';
+    $content .= '<div id="helloworld-pagination"><ul class="pagination"></ul></div></div>';
+    $content .= '<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        var hwList = document.getElementById("helloworld-list");
+        if (hwList) {
+            var options = {
+                valueNames: ["id", "message", "author", "date", "active"],
+                page: 10,
+                searchClass: "search",
+                listClass: "list",
+                pagination: [{
+                    innerWindow: 2,
+                    left: 1,
+                    right: 1,
+                    paginationClass: "pagination",
+                    item: "<li><a class=\"page\" href=\"#\"></a></li>"
+                }]
+            };
+            var listObj = new List("helloworld-list", options);
+            var pagDiv = document.getElementById("helloworld-pagination");
+            var pagList = hwList.getElementsByClassName("pagination")[0];
+            if (pagDiv && pagList) {
+                pagDiv.appendChild(pagList);
+            }
+        }
+    });
+    </script>';
 }
 
 /* ========================================================================

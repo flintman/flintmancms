@@ -90,7 +90,6 @@
  * - $config      : Site configuration array
  * - $_SESSION    : User session data (including permissions)
  * - $errorMsg    : Error message variable (if errors occur)
- * - $report      : Report generator class for tables
  *
  * AVAILABLE FUNCTIONS (from includes):
  * - scrub_input()    : Sanitize user input

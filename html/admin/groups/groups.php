@@ -299,13 +299,49 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
         }
     }
 
-    $report->setMainAttributes('width="450px" cellpadding="0" cellspacing="0" border="0"');
-    $report->setFieldHeadingAttributes('class="header"');
-    $report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-    $report->addOutputColumn('name', 'Name', 'left');
-    $report->addOutputColumn('edit', '', 'left');
-    $report->addOutputColumn('del', '', 'left');
-    $content .= $report->getListFromArray($groups);
+    // Build HTML table for List.js
+    $content .= '<div id="groups-list">
+    <input class="search user-search-bar form-control" placeholder="Search groups..." />
+        <table id="groups-table" class="listjs-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th class="sort" data-sort="name">Name
+                    </th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+';
+    foreach ($groups as $row) {
+        $content .= '<tr>' .
+            '<td class="name">' . $row['name'] . '</td>' .
+            '<td>' . (isset($row['edit']) ? $row['edit'] : '') . '</td>' .
+            '<td>' . (isset($row['del']) ? $row['del'] : '') . '</td>' .
+            '</tr>';
+    }
+    $content .= '</tbody></table>';
+    $content .= '<div id="groups-pagination"><ul class="pagination"></ul></div></div>';
+    $content .= '<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        var groupsList = document.getElementById("groups-list");
+        if (groupsList) {
+            var options = {
+                valueNames: ["name"],
+                pagination: true,
+                page: 10,
+                searchClass: "search",
+                listClass: "list",
+            };
+            var listObj = new List("groups-list", options);
+            var pagDiv = document.getElementById("groups-pagination");
+            var pagList = groupsList.getElementsByClassName("pagination")[0];
+            if (pagDiv && pagList) {
+                pagDiv.appendChild(pagList);
+            }
+        }
+    });
+    </script>';
     $group_back .= '<a href="admin.php" class="button">' . BACK_TEXT . '</a>';
     $button = '<a href="admin.php?n=groups&action=add" class="button">' . ADMIN_GROUP_ADD_TEXT . '</a>';
     $smarty->assign(

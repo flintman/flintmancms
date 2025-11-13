@@ -258,14 +258,50 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
         }
     }
 
-    $report->setMainAttributes('width="100%" cellpadding="0" cellspacing="0" border="0"');
-    $report->setFieldHeadingAttributes('class="header"');
-    $report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-    $report->addOutputColumn('name', USERNAME_TEXT, 'left');
-    $report->addOutputColumn('edit', EDIT_TEXT, 'left');
-    $report->addOutputColumn('del', DELETE_TEXT, 'left');
-    $report->addOutputColumn('state', STATE_TEXT, 'left');
-    $content = $report->getListFromArray($user_array);
+    // Build HTML table for List.js
+    $content = '<div id="user-list">
+        <input class="search user-search-bar form-control" placeholder="Search users" />
+        <table id="user-table" class="listjs-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th class="sort" data-sort="name">' . USERNAME_TEXT . '</th>
+                    <th>' . EDIT_TEXT . '</th>
+                    <th>' . DELETE_TEXT . '</th>
+                    <th class="sort" data-sort="state">' . STATE_TEXT . '</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+';
+    foreach ($user_array as $row) {
+        $content .= '<tr>' .
+            '<td class="name">' . $row['name'] . '</td>' .
+            '<td>' . $row['edit'] . '</td>' .
+            '<td>' . (isset($row['del']) ? $row['del'] : '') . '</td>' .
+            '<td class="state">' . (isset($row['state']) ? $row['state'] : '') . '</td>' .
+            '</tr>';
+    }
+    $content .= '</tbody></table>';
+    $content .= '<div id="user-pagination"><ul class="pagination"></ul></div></div>';
+    $content .= '<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        var userList = document.getElementById("user-list");
+        if (userList) {
+            var options = {
+                valueNames: ["name", "state"],
+                pagination: true,
+                page: 10,
+                searchClass: "search",
+                listClass: "list",
+            };
+            var listObj = new List("user-list", options);
+            var pagDiv = document.getElementById("user-pagination");
+            var pagList = userList.getElementsByClassName("pagination")[0];
+            if (pagDiv && pagList) {
+                pagDiv.appendChild(pagList);
+            }
+        }
+    });
+    </script>';
     $user_back = '<a href="admin.php" class="button">' . BACK_TEXT . '</a>';
     $button = '<a href="admin.php?n=user&action=add" class="button">' . ADMIN_USER_ADD_TEXT . '</a>';
 
@@ -276,6 +312,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             )
     );
 }
+
 
 $smarty->assign(
         array(

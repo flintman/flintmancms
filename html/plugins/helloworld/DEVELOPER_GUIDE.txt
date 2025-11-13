@@ -253,12 +253,6 @@ Delete:
   - Step 1: Display confirmation
   - Step 2: Perform deletion, redirect
 
-REPORT CLASS:
-  $report->setMainAttributes('width="100%"');
-  $report->addOutputColumn('field', 'Label', 'align', 'width');
-  $report->display($data_array);
-  $content = $report->showReport();
-
 ---
 
 template/page.htm
@@ -474,13 +468,6 @@ Create an array of data, use Report class:
           'delete' => '<a href="...&action=delete&id=' . $row['id'] . '">Delete</a>'
       ));
   }
-
-  $report->addOutputColumn('id', 'ID', 'left');
-  $report->addOutputColumn('name', 'Name', 'left');
-  $report->addOutputColumn('edit', '', 'center');
-  $report->addOutputColumn('delete', '', 'center');
-  $report->display($items);
-  $content = $report->showReport();
 
 ADD:
   if (!isset($_POST['submit'])) {

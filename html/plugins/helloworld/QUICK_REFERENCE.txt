@@ -129,16 +129,6 @@ $smarty->assign('body', $html_content);
 $smarty->assign('form_action', $form_action);
 $smarty->assign('content', $admin_content);
 
-REPORT TABLE:
-------------
-$items = array();
-$report->setMainAttributes('width="100%"');
-$report->setFieldHeadingAttributes('class="header"');
-$report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-$report->addOutputColumn('id', 'ID', 'left', 50);
-$report->addOutputColumn('name', 'Name', 'left');
-$content = $report->getListFromArray($items);
-
 COMMON CSS CLASSES:
 ------------------
 .btn, .btn-primary     - Primary action button
@@ -223,7 +213,39 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
 } elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
     // Delete logic
 } else {
-    // List with Report class
+    // List with List.js table pattern
+    $rows = array(); // Build your array of rows
+    $content = '<div id="table-list">';
+    $content .= '<input class="search user-search-bar form-control" placeholder="Search..." />';
+    $content .= '<table id="table" class="listjs-table" style="width:100%;border-collapse:collapse;">';
+    $content .= '<thead><tr>';
+    $content .= '<th class="sort" data-sort="field1">Field 1</th>';
+    $content .= '<th class="sort" data-sort="field2">Field 2</th>';
+    $content .= '<th>Edit</th>';
+    $content .= '<th>Delete</th>';
+    $content .= '</tr></thead><tbody class="list">';
+    foreach ($rows as $row) {
+        $content .= '<tr>';
+        $content .= '<td class="field1">' . htmlspecialchars($row['field1']) . '</td>';
+        $content .= '<td class="field2">' . htmlspecialchars($row['field2']) . '</td>';
+        $content .= '<td>' . $row['edit'] . '</td>';
+        $content .= '<td>' . $row['delete'] . '</td>';
+        $content .= '</tr>';
+    }
+    $content .= '</tbody></table></div>';
+    $content .= '<div id="table-pagination"></div>';
+    $content .= '<script>window.addEventListener("DOMContentLoaded", function() {';
+    $content .= 'var list = document.getElementById("table-list");';
+    $content .= 'if (list) {';
+    $content .= 'var options = {';
+    $content .= 'valueNames: ["field1", "field2"],';
+    $content .= 'page: 10,';
+    $content .= 'pagination: [{innerWindow: 2, left: 1, right: 1, paginationClass: "pagination", item: "<li><a class=\\"page\\" href=\\"#\\"></a></li>"}]';
+    $content .= '};';
+    $content .= 'var listObj = new List("table-list", options);';
+    $content .= 'var pagDiv = document.getElementById("table-pagination");';
+    $content .= 'var pagList = list.getElementsByClassName("pagination")[0];';
+    $content .= 'if (pagDiv && pagList) {pagDiv.appendChild(pagList);}}});</script>';
 }
 
 $smarty->assign('form_action', $form_action);

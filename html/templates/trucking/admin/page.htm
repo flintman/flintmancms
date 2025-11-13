@@ -4,10 +4,10 @@
         <tr>
             <td><div id="admin_title">{$head}</div></td>
         </tr>
+        {if isset($smarty.get.action) && ($smarty.get.action == 'add' || $smarty.get.action == 'edit')}
         <tr>
             <td valign="top" >
                 <table width="100%" border="0" cellspacing="1" cellpadding="3" >
-                {if isset($smarty.get.action) && ($smarty.get.action == 'add' || $smarty.get.action == 'edit')}
                         <tr>
                             <td width="200" ><strong><span >{ADMIN_PAGE_ACTIVE_TEXT}</span></strong></td>
                             <td >{$active_page}</td>
@@ -20,10 +20,11 @@
                             <td ><strong><span >{ADMIN_PAGE_ENTER_TEXT}</span></strong></td>
                             <td >{$page_title}</td>
                         </tr>
-                {/if}
+
                 </table>
                 {$page_content}<br>{$toggle}
             </td></tr>
+        {/if}
     </table>
     {$content}<br><br>
 

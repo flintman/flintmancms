@@ -166,15 +166,58 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
             'del' => '<a href="admin.php?n=plugins&p=portfolio&action=delete&id=' . $data['id'] . '"> Delete </a>'
         ));
     }
-    $report->setMainAttributes('width="100%" cellpadding="0" cellspacing="0" border="0"');
-    $report->setFieldHeadingAttributes('class="header"');
-    $report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-    $report->addOutputColumn('id', 'Id', 'left');
-    $report->addOutputColumn('name', 'Name', 'left');
-    $report->addOutputColumn('edit', '', 'left');
-    $report->addOutputColumn('photo', '', 'center');
-    $report->addOutputColumn('del', '', 'left');
-    $content = $report->getListFromArray($photo);
+    // Build HTML table for List.js
+    $content = '<div id="portfolio-list">
+    <input class="search user-search-bar form-control" placeholder="Search albums..." />
+        <table id="portfolio-table" class="listjs-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th class="sort" data-sort="id">Id</th>
+                    <th class="sort" data-sort="name">Name</th>
+                    <th>Edit</th>
+                    <th>Add Photos</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+';
+    foreach ($photo as $row) {
+        $content .= '<tr>' .
+            '<td class="id">' . $row['id'] . '</td>' .
+            '<td class="name">' . htmlspecialchars($row['name']) . '</td>' .
+            '<td>' . $row['edit'] . '</td>' .
+            '<td>' . $row['photo'] . '</td>' .
+            '<td>' . $row['del'] . '</td>' .
+            '</tr>';
+    }
+    $content .= '</tbody></table>';
+    $content .= '<div id="portfolio-pagination"><ul class="pagination"></ul></div></div>';
+    $content .= '<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        var pfList = document.getElementById("portfolio-list");
+        if (pfList) {
+            var options = {
+                valueNames: ["id", "name"],
+                page: 10,
+                searchClass: "search",
+                listClass: "list",
+                pagination: [{
+                    innerWindow: 2,
+                    left: 1,
+                    right: 1,
+                    paginationClass: "pagination",
+                    item: "<li><a class=\"page\" href=\"#\"></a></li>"
+                }]
+            };
+            var listObj = new List("portfolio-list", options);
+            var pagDiv = document.getElementById("portfolio-pagination");
+            var pagList = pfList.getElementsByClassName("pagination")[0];
+            if (pagDiv && pagList) {
+                pagDiv.appendChild(pagList);
+            }
+        }
+    });
+    </script>';
     $content .='<br><br><br><a href="admin.php" class="button">Back</a>&nbsp;&nbsp;&nbsp;';
     $content .='<a href="admin.php?n=plugins&p=portfolio&action=add" class="button">Add a Album to Portfolio</a><br>';
 }

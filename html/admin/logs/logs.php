@@ -55,23 +55,58 @@ While ($data = $db->sql_fetchrow($result)) {
         ));
     }
 }
-
-$report->setMainAttributes('width="450px" cellpadding="0" cellspacing="0" border="0"');
-$report->setFieldHeadingAttributes('class="header"');
-$report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-$report->addOutputColumn('id', 'Name', 'left');
-$report->addOutputColumn('error', 'Error', 'center');
-$report->addOutputColumn('time', 'Time', 'left');
-$report->addOutputColumn('check', '', 'left');
-$content = $report->getListFromArray($logs);
-$button = '<input type="submit" value="'.DELETE_TEXT.'" name="submit" class="button" onclick="return confirm(\'Are you sure you want to delete the selected logs?\');">';
-$logs_back ='<a href="admin.php" class="button">'.BACK_TEXT.'</a>';
+    // Build HTML table for List.js
+    $content = '<form method="post" action="admin.php?n=logs" id="logs-form">';
+    $content .= '<div id="logs-list">
+        <input class="search user-search-bar form-control" placeholder="Search logs..." />
+        <table id="logs-table" class="listjs-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th class="sort" data-sort="id">ID</th>
+                    <th class="sort" data-sort="error">Error</th>
+                    <th class="sort" data-sort="time">Time</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+    ';
+    foreach ($logs as $row) {
+        $content .= '<tr>' .
+            '<td class="id">' . $row['id'] . '</td>' .
+            '<td class="error">' . htmlspecialchars($row['error']) . '</td>' .
+            '<td class="time">' . $row['time'] . '</td>' .
+            '<td>' . $row['check'] . '</td>' .
+            '</tr>';
+    }
+    $content .= '</tbody></table>';
+    $content .= '<div id="logs-pagination"><ul class="pagination"></ul></div></div>';
+    $content .= '<script>
+        window.addEventListener("DOMContentLoaded", function() {
+            var logsListContainer = document.getElementById("logs-list");
+            var options = {
+                valueNames: ["id", "error", "time"],
+                pagination: true,
+                page: 10,
+                searchClass: "search",
+                listClass: "list"
+            };
+            var listObj = new List("logs-list", options);
+            var pagDiv = document.getElementById("logs-pagination");
+            var pagList = logsListContainer.getElementsByClassName("pagination")[0];
+            if (pagDiv && pagList) {
+                pagDiv.appendChild(pagList);
+            }
+        });
+    </script>';
+    $button = '<input type="submit" value="'.DELETE_TEXT.'" name="submit" class="button" onclick="return confirm(\'Are you sure you want to delete the selected logs?\');">';
+    $logs_back ='<a href="admin.php" class="button">'.BACK_TEXT.'</a>';
+    $content .= $button;
+    $content .= '</form>';
 
 $smarty->assign(
         array(
             'form_action' => "admin.php?n=logs",
             'content' => $content,
-            'button' => $button,
             'logs_back' => $logs_back
         )
 );

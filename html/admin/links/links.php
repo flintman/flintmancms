@@ -36,29 +36,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
 
     $link_id = scrub_input($_GET['link_id'], ['type' => 'int']);
     if (!isset($_POST['submit'])) {
-        $sql = sprintf("SELECT * FROM flintmancms_links WHERE sub_link=%s ORDER BY `link_order`",
-                        quote_smart($link_id));
-        $result = $db->sql_query($sql)
-                or $errorMsg = "ERROR: " . $db->sql_error() . " @ Line " . __LINE__ . " Of " . __FILE__;
-        While ($data = $db->sql_fetchrow($result)) {
-            array_push($links, array(
-                'name' => $data['name'],
-                'up' => '<a href="admin.php?n=links&action=up&link_id=' . $data['id'] . '&order=' . $data['link_order'] . '&sublink=' . $link_id . '&e=y">' . UP_TEXT . '</a>',
-                'down' => '<a href="admin.php?n=links&action=down&link_id=' . $data['id'] . '&order=' . $data['link_order'] . '&sublink=' . $link_id . '&e=y">' . DOWN_TEXT . '</a>',
-                'edit' => '<a href="admin.php?n=links&action=edit&link_id=' . $data['id'] . '">' . EDIT_TEXT . '</a>',
-                'del' => '<a href="admin.php?n=links&action=delete&link_id=' . $data['id'] . '">' . DELETE_TEXT . '</a>'
-            ));
-        }
-        $report->setMainAttributes('width="450px" cellpadding="0" cellspacing="0" border="0"');
-        $report->setFieldHeadingAttributes('class="header"');
-        $report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-        $report->addOutputColumn('name', 'Name', 'left');
-        $report->addOutputColumn('up', '', 'left');
-        $report->addOutputColumn('down', '', 'left');
-        $report->addOutputColumn('edit', '', 'left');
-        $report->addOutputColumn('del', '', 'left');
-        $content = $report->getListFromArray($links);
-
         $sql = sprintf("SELECT * FROM flintmancms_links WHERE id =%s",
                         quote_smart($link_id));
         $result = $db->sql_query($sql);
@@ -298,15 +275,52 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
         ));
     }
 
-    $report->setMainAttributes('width="450px" cellpadding="0" cellspacing="0" border="0"');
-    $report->setFieldHeadingAttributes('class="header"');
-    $report->setRowAttributes('class="row1"', 'class="row2"', 'rowHover');
-    $report->addOutputColumn('name', 'Name', 'left');
-    $report->addOutputColumn('up', '', 'left');
-    $report->addOutputColumn('down', '', 'left');
-    $report->addOutputColumn('edit', '', 'left');
-    $report->addOutputColumn('del', '', 'left');
-    $content = $report->getListFromArray($links);
+    // Build HTML table for List.js
+    $content = '<div id="links-list">
+    <input class="search user-search-bar form-control" placeholder="Search links..." />
+        <table id="links-table" class="listjs-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th class="sort" data-sort="name">Name</th>
+                    <th>Up</th>
+                    <th>Down</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+';
+    foreach ($links as $row) {
+        $content .= '<tr>' .
+            '<td class="name">' . htmlspecialchars($row['name']) . '</td>' .
+            '<td>' . $row['up'] . '</td>' .
+            '<td>' . $row['down'] . '</td>' .
+            '<td>' . $row['edit'] . '</td>' .
+            '<td>' . $row['del'] . '</td>' .
+            '</tr>';
+    }
+    $content .= '</tbody></table>';
+    $content .= '<div id="links-pagination"><ul class="pagination"></ul></div></div>';
+    $content .= '<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        var linksList = document.getElementById("links-list");
+        if (linksList) {
+            var options = {
+                valueNames: ["name"],
+                pagination: true,
+                page: 10,
+                searchClass: "search",
+                listClass: "list",
+            };
+            var listObj = new List("links-list", options);
+            var pagDiv = document.getElementById("links-pagination");
+            var pagList = linksList.getElementsByClassName("pagination")[0];
+            if (pagDiv && pagList) {
+                pagDiv.appendChild(pagList);
+            }
+        }
+    });
+    </script>';
     $link_back = '<a href="admin.php" class="button">' . BACK_TEXT . '</a>';
     $button = '<a href="admin.php?n=links&action=add" class="button">' . ADMIN_LINK_ADD_TEXT . '</a>';
     $smarty->assign(

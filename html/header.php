@@ -32,11 +32,12 @@ $scripts = '';
 
 $scripts .='<script type="text/javascript" src="includes/editor/tiny_mce.js"></script>';
 $scripts .='<script type="text/javascript" src="includes/ajax/register_validate.js"></script>';
+$scripts .= '<script src="includes/js/list.min.js"></script>';
 $scripts .= '<script type="text/javascript">
 	tinyMCE.init({
 		mode : "textareas",
 		theme : "advanced",
-                plugins : "pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave",
+                plugins : "pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,autosave",
 
 		// Theme options
 		theme_advanced_buttons1 : "justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
