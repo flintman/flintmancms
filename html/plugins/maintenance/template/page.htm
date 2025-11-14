@@ -107,47 +107,83 @@
             </form>
         </div>
 
-        <!-- Existing Units List -->
+        <!-- Existing Units List (searchable, sortable, paginated via List.js) -->
         <div class="questions-list">
             <h3>Existing {$unit_label}s</h3>
             {if $units}
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>{$unit_label} ID</th>
+            <div id="units-list-admin">
+                <div class="list-controls" style="margin-bottom:12px; display:flex; gap:10px; align-items:center;">
+                    <input class="search form-control" placeholder="Search {$unit_label}s..." />
+                    <div style="margin-left:auto">
+                        <small class="search-count"></small>
+                    </div>
+                </div>
+
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th class="sort" data-sort="unit_id">{$unit_label} ID</th>
+                            {foreach from=$questions item=q}
+                            <th class="sort" data-sort="q_{$q.id}">{$q.label}</th>
+                            {/foreach}
+                            <th class="sort" data-sort="status">Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                    {foreach from=$units item=unit}
+                    <tr class="{if $unit.archived}archived-row{/if}">
+                        <td><strong><span class="unit_id">{$unit.unit_id}</span></strong></td>
                         {foreach from=$questions item=q}
-                        <th>{$q.label}</th>
+                        <td><span class="q_{$q.id}">{$unit.answers[$q.id]|default:'-'}</span></td>
                         {/foreach}
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <td><span class="status">{if $unit.archived}Archived{else}Active{/if}</span></td>
+                        <td>
+                            <button onclick="editUnit(this, {$unit.id}, {$unit.unit_id}, {$unit.archived})" class="btn-small maintenance-btn-small">Edit</button>
+                            {if $unit.archived}
+                            <form method="post" style="display:inline;">
+                                <input type="hidden" name="equipment_id" value="{$unit.id}" />
+                                <button type="submit" name="unarchive_unit" class="btn-small maintenance-btn-small" onclick="return confirm('Unarchive this unit?')">Unarchive</button>
+                            </form>
+                            {else}
+                            <form method="post" style="display:inline;">
+                                <input type="hidden" name="equipment_id" value="{$unit.id}" />
+                                <button type="submit" name="archive_unit" class="btn-small btn-danger maintenance-btn-small maintenance-btn-danger" onclick="return confirm('Archive this unit?')">Archive</button>
+                            </form>
+                            {/if}
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                {foreach from=$units item=unit}
-                <tr class="{if $unit.archived}archived-row{/if}">
-                    <td><strong>{$unit.unit_id}</strong></td>
-                    {foreach from=$questions item=q}
-                    <td>{$unit.answers[$q.id]|default:'-'}</td>
                     {/foreach}
-                    <td>{if $unit.archived}Archived{else}Active{/if}</td>
-                    <td>
-                        <button onclick="editUnit(this, {$unit.id}, {$unit.unit_id}, {$unit.archived})" class="btn-small maintenance-btn-small">Edit</button>
-                        {if $unit.archived}
-                        <form method="post" style="display:inline;">
-                            <input type="hidden" name="equipment_id" value="{$unit.id}" />
-                            <button type="submit" name="unarchive_unit" class="btn-small maintenance-btn-small" onclick="return confirm('Unarchive this unit?')">Unarchive</button>
-                        </form>
-                        {else}
-                        <form method="post" style="display:inline;">
-                            <input type="hidden" name="equipment_id" value="{$unit.id}" />
-                            <button type="submit" name="archive_unit" class="btn-small btn-danger maintenance-btn-small maintenance-btn-danger" onclick="return confirm('Archive this unit?')">Archive</button>
-                        </form>
-                        {/if}
-                    </td>
-                </tr>
-                {/foreach}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+
+                <div style="margin-top:12px; display:flex; justify-content:flex-end;">
+                    <ul class="pagination"></ul>
+                </div>
+            </div>
+
+            <script>
+            (function(){
+                var container = document.getElementById('units-list-admin');
+                if (!container || typeof List === 'undefined') return;
+
+                var valueNames = [
+                    'unit_id',
+                    {foreach from=$questions item=q}'q_{$q.id}',{/foreach}
+                    'status'
+                ];
+
+                try {
+                    var unitsList = new List('units-list-admin', {
+                        valueNames: valueNames,
+                        page: 10,
+                        pagination: true
+                    });
+                } catch (e) {
+                    console.warn('List.js init failed for units list', e);
+                }
+            })();
+            </script>
             {else}
             <p>No {$unit_label}s found.</p>
             {/if}
