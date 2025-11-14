@@ -45,8 +45,9 @@
     <div class="units-section">
         <h2>Manage {$unit_label}s</h2>
 
-        <!-- Add New Unit Form -->
-        <div class="add-question-form">
+        <!-- Add New Unit Form (collapsed by default) -->
+        <button type="button" id="toggleAddUnit" class="btn maintenance-btn maintenance-btn-primary" aria-expanded="false">Add {$unit_label}</button>
+        <div id="addUnitForm" class="add-question-form collapse" aria-hidden="true">
             <h3>Add New {$unit_label}</h3>
             <form method="post" action="{$admin_url}&admin_action=units&type={$unit_type}">
                 <div class="form-group">
@@ -102,6 +103,7 @@
                 {/if}
 
                 <button type="submit" name="add_unit" class="btn btn-primary maintenance-btn maintenance-btn-primary">Add {$unit_label}</button>
+                <button type="button" id="cancelAddUnit" class="btn maintenance-btn" onclick="closeAddUnitForm()">Cancel</button>
             </form>
         </div>
 
@@ -129,7 +131,7 @@
                     {/foreach}
                     <td>{if $unit.archived}Archived{else}Active{/if}</td>
                     <td>
-                        <button onclick="editUnit({$unit.id}, {$unit.unit_id}, {$unit.archived})" class="btn-small maintenance-btn-small">Edit</button>
+                        <button onclick="editUnit(this, {$unit.id}, {$unit.unit_id}, {$unit.archived})" class="btn-small maintenance-btn-small">Edit</button>
                         {if $unit.archived}
                         <form method="post" style="display:inline;">
                             <input type="hidden" name="equipment_id" value="{$unit.id}" />
@@ -223,8 +225,9 @@
     <div class="questions-section">
         <h2>Manage Questions for {$unit_label}</h2>
 
-        <!-- Add New Question Form -->
-        <div class="add-question-form">
+        <!-- Add New Question Form (collapsed by default) -->
+        <button type="button" id="toggleAddQuestion" class="btn maintenance-btn maintenance-btn-primary" aria-expanded="false">Add Question</button>
+        <div id="addQuestionForm" class="add-question-form collapse" aria-hidden="true">
             <h3>Add New Question</h3>
             <form method="post" action="{$admin_url}&admin_action=questions&type={$unit_type}">
                 <div class="form-group">
@@ -250,6 +253,7 @@
                     <input type="number" name="position" class="form-control" value="{count($questions) + 1}" required />
                 </div>
                 <button type="submit" name="add_question" class="btn btn-primary maintenance-btn maintenance-btn-primary">Add Question</button>
+                <button type="button" id="cancelAddQuestion" class="btn maintenance-btn" onclick="closeAddQuestionForm()">Cancel</button>
             </form>
         </div>
 
@@ -335,11 +339,14 @@
 </div>
 
 <script>
-// Show/hide options field based on question type
-document.getElementById('question-type').addEventListener('change', function() {
-    var optionsGroup = document.getElementById('options-group');
-    optionsGroup.style.display = (this.value === 'multi_choice') ? 'block' : 'none';
-});
+// Show/hide options field based on question type (guarded)
+var _questionType = document.getElementById('question-type');
+if (_questionType) {
+    _questionType.addEventListener('change', function() {
+        var optionsGroup = document.getElementById('options-group');
+        if (optionsGroup) optionsGroup.style.display = (this.value === 'multi_choice') ? 'block' : 'none';
+    });
+}
 
 function editQuestion(id, label, type, options, position) {
     document.getElementById('edit-id').value = id;
@@ -358,24 +365,33 @@ function closeEditModal() {
     document.getElementById('edit-modal').style.display = 'none';
 }
 
-document.getElementById('edit-type').addEventListener('change', function() {
-    var editOptionsGroup = document.getElementById('edit-options-group');
-    editOptionsGroup.style.display = (this.value === 'multi_choice') ? 'block' : 'none';
-});
+var _editType = document.getElementById('edit-type');
+if (_editType) {
+    _editType.addEventListener('change', function() {
+        var editOptionsGroup = document.getElementById('edit-options-group');
+        if (editOptionsGroup) editOptionsGroup.style.display = (this.value === 'multi_choice') ? 'block' : 'none';
+    });
+}
 </script>
 
 <script>
-function editUnit(id, unitId, archived) {
+function editUnit(buttonElem, id, unitId, archived) {
+    var row = null;
+    if (buttonElem && buttonElem.closest) {
+        row = buttonElem.closest('tr');
+    }
+
     // Populate form
-    document.getElementById('edit_equipment_id').value = id;
-    document.getElementById('edit_unit_id').value = unitId;
+    var equipmentIdEl = document.getElementById('edit_equipment_id');
+    var unitIdEl = document.getElementById('edit_unit_id');
+    if (equipmentIdEl) equipmentIdEl.value = id;
+    if (unitIdEl) unitIdEl.value = unitId;
 
     // Get answers from the table row
     {if $questions}
     {foreach from=$questions item=q}
     var answerField = document.getElementById('edit_answer_{$q.id}');
-    if (answerField) {
-        var row = event.target.closest('tr');
+    if (answerField && row) {
         var cells = row.getElementsByTagName('td');
         // Find the cell index for this question (skip unit_id column)
         var cellIndex = {$q@index} + 1;
@@ -388,12 +404,90 @@ function editUnit(id, unitId, archived) {
     {/if}
 
     // Show modal
-    document.getElementById('editUnitModal').style.display = 'block';
-    window.scrollTo(0, document.getElementById('editUnitModal').offsetTop);
+    var editModal = document.getElementById('editUnitModal');
+    if (editModal) {
+        editModal.style.display = 'block';
+        window.scrollTo(0, editModal.offsetTop);
+    }
 }
 
 function closeEditUnit() {
     document.getElementById('editUnitModal').style.display = 'none';
 }
+</script>
+
+<script>
+// Toggle Add Unit form (collapsed by default)
+(function() {
+    var toggle = document.getElementById('toggleAddUnit');
+    var form = document.getElementById('addUnitForm');
+    if (!toggle || !form) return;
+
+    function setCollapsedState(shown) {
+        if (shown) {
+            form.classList.add('show');
+            form.setAttribute('aria-hidden', 'false');
+            toggle.setAttribute('aria-expanded', 'true');
+            toggle.textContent = 'Collapse Add {$unit_label}';
+            // focus first input/select inside form
+            var firstInput = form.querySelector('input,textarea,select');
+            if (firstInput) try { firstInput.focus(); } catch (e) {}
+        } else {
+            form.classList.remove('show');
+            form.setAttribute('aria-hidden', 'true');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.textContent = 'Add {$unit_label}';
+        }
+    }
+
+    toggle.addEventListener('click', function() {
+        var isShown = form.classList.toggle('show');
+        setCollapsedState(isShown);
+    });
+
+    // Expose close function for Cancel button
+    window.closeAddUnitForm = function() {
+        setCollapsedState(false);
+    };
+
+    // Ensure initial collapsed state
+    setCollapsedState(false);
+})();
+</script>
+
+<script>
+// Toggle Add Question form (collapsed by default)
+(function() {
+    var toggleQ = document.getElementById('toggleAddQuestion');
+    var formQ = document.getElementById('addQuestionForm');
+    if (!toggleQ || !formQ) return;
+
+    function setCollapsedStateQ(shown) {
+        if (shown) {
+            formQ.classList.add('show');
+            formQ.setAttribute('aria-hidden', 'false');
+            toggleQ.setAttribute('aria-expanded', 'true');
+            toggleQ.textContent = 'Collapse Add Question';
+            var firstInput = formQ.querySelector('input,textarea,select');
+            if (firstInput) try { firstInput.focus(); } catch (e) {}
+        } else {
+            formQ.classList.remove('show');
+            formQ.setAttribute('aria-hidden', 'true');
+            toggleQ.setAttribute('aria-expanded', 'false');
+            toggleQ.textContent = 'Add Question';
+        }
+    }
+
+    toggleQ.addEventListener('click', function() {
+        var isShown = formQ.classList.toggle('show');
+        setCollapsedStateQ(isShown);
+    });
+
+    window.closeAddQuestionForm = function() {
+        setCollapsedStateQ(false);
+    };
+
+    setCollapsedStateQ(false);
+})();
 </script>
 

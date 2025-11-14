@@ -643,6 +643,14 @@
     color: var(--text-primary, #333);
 }
 
+/* Simple collapse helper used by admin forms (collapsed by default) */
+.collapse {
+    display: none;
+}
+.collapse.show {
+    display: block;
+}
+
 .questions-list {
     margin-top: 30px;
 }
