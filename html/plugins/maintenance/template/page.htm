@@ -18,24 +18,24 @@
     <div class="config-section">
         <h2>Plugin Configuration</h2>
         <form method="post" action="{$admin_url}&admin_action=config">
-            <div class="form-group">
-                <label>Primary Unit Label:</label>
-                <input type="text" name="primary_unit" value="{$primary_label}" required />
-            </div>
-            <div class="form-group">
+                <div class="form-group">
+                	<label>Primary Unit Label:</label>
+                	<input type="text" name="primary_unit" value="{$primary_label}" class="form-control" required />
+            	</div>
+            	<div class="form-group">
                 <label>Secondary Unit Label:</label>
-                <input type="text" name="secondary_unit" value="{$secondary_label}" required />
+                <input type="text" name="secondary_unit" value="{$secondary_label}" class="form-control" required />
             </div>
             <div class="form-group">
                 <label>Columns to Show:</label>
-                <select name="columns_to_show">
+                <select name="columns_to_show" class="form-control">
                     <option value="2" {if $columns_to_show == 2}selected{/if}>2</option>
                     <option value="3" {if $columns_to_show == 3}selected{/if}>3</option>
                     <option value="4" {if $columns_to_show == 4}selected{/if}>4</option>
                     <option value="5" {if $columns_to_show == 5}selected{/if}>5</option>
                 </select>
             </div>
-            <button type="submit" name="update_config" class="btn btn-primary">Save Configuration</button>
+            <button type="submit" name="update_config" class="btn btn-primary maintenance-btn maintenance-btn-primary">Save Configuration</button>
         </form>
     </div>
     {/if}
@@ -52,7 +52,7 @@
                 <div class="form-group">
                     {if $unit_type == 'secondary' && $primary_units}
                     <label>Primary ID:</label>
-                    <select name="unit_id" required>
+                    <select name="unit_id" class="form-control" required>
                         <option value="">-- Select Primary Unit --</option>
                         {foreach from=$primary_units item=pu}
                         <option value="{$pu.unit_id}">{$pu.unit_id}</option>
@@ -60,7 +60,7 @@
                     </select>
                     {else}
                     <label>{$unit_label} ID:</label>
-                    <input type="number" name="unit_id" required />
+                    <input type="number" name="unit_id" class="form-control" required />
                     {/if}
                 </div>
 
@@ -70,22 +70,22 @@
                 <div class="form-group">
                     <label>{$q.label}:</label>
                     {if $q.type == 'text'}
-                    <textarea name="answer_{$q.id}" rows="3"></textarea>
+                    <textarea name="answer_{$q.id}" rows="3" class="form-control"></textarea>
                     {elseif $q.type == 'number'}
-                    <input type="number" name="answer_{$q.id}" step="0.01" />
+                    <input type="number" name="answer_{$q.id}" class="form-control" step="0.01" />
                     {elseif $q.type == 'date'}
-                    <input type="date" name="answer_{$q.id}" />
+                    <input type="date" name="answer_{$q.id}" class="form-control" />
                     {elseif $q.type == 'multi_choice'}
                     {* If this is secondary units and it's the first question, show primary units dropdown *}
                     {if $unit_type == 'secondary' && $q@first && $primary_units}
-                    <select name="answer_{$q.id}">
+                    <select name="answer_{$q.id}" class="form-control">
                         <option value="">-- Select Primary Unit --</option>
                         {foreach from=$primary_units item=pu}
                         <option value="{$pu.unit_id}">Unit {$pu.unit_id}</option>
                         {/foreach}
                     </select>
                     {else}
-                    <select name="answer_{$q.id}">
+                    <select name="answer_{$q.id}" class="form-control">
                         <option value="">-- Select --</option>
                         {if $q.options_array}
                         {foreach from=$q.options_array item=opt}
@@ -95,13 +95,13 @@
                     </select>
                     {/if}
                     {else}
-                    <input type="text" name="answer_{$q.id}" />
+                    <input type="text" name="answer_{$q.id}" class="form-control" />
                     {/if}
                 </div>
                 {/foreach}
                 {/if}
 
-                <button type="submit" name="add_unit" class="btn btn-primary">Add {$unit_label}</button>
+                <button type="submit" name="add_unit" class="btn btn-primary maintenance-btn maintenance-btn-primary">Add {$unit_label}</button>
             </form>
         </div>
 
@@ -129,16 +129,16 @@
                     {/foreach}
                     <td>{if $unit.archived}Archived{else}Active{/if}</td>
                     <td>
-                        <button onclick="editUnit({$unit.id}, {$unit.unit_id}, {$unit.archived})" class="btn-small">Edit</button>
+                        <button onclick="editUnit({$unit.id}, {$unit.unit_id}, {$unit.archived})" class="btn-small maintenance-btn-small">Edit</button>
                         {if $unit.archived}
                         <form method="post" style="display:inline;">
                             <input type="hidden" name="equipment_id" value="{$unit.id}" />
-                            <button type="submit" name="unarchive_unit" class="btn-small" onclick="return confirm('Unarchive this unit?')">Unarchive</button>
+                            <button type="submit" name="unarchive_unit" class="btn-small maintenance-btn-small" onclick="return confirm('Unarchive this unit?')">Unarchive</button>
                         </form>
                         {else}
                         <form method="post" style="display:inline;">
                             <input type="hidden" name="equipment_id" value="{$unit.id}" />
-                            <button type="submit" name="archive_unit" class="btn-small btn-danger" onclick="return confirm('Archive this unit?')">Archive</button>
+                            <button type="submit" name="archive_unit" class="btn-small btn-danger maintenance-btn-small maintenance-btn-danger" onclick="return confirm('Archive this unit?')">Archive</button>
                         </form>
                         {/if}
                     </td>
@@ -156,12 +156,12 @@
             <div class="add-question-form">
                 <h3>Edit {$unit_label}</h3>
                 <form method="post" action="{$admin_url}&admin_action=units&type={$unit_type}">
-                    <input type="hidden" name="equipment_id" id="edit_equipment_id" />
+                        <input type="hidden" name="equipment_id" id="edit_equipment_id" />
 
                     <div class="form-group">
                         {if $unit_type == 'secondary' && $primary_units}
                         <label>Primary ID:</label>
-                        <select name="unit_id" id="edit_unit_id" required>
+                        <select name="unit_id" id="edit_unit_id" class="form-control" required>
                             <option value="">-- Select Primary Unit --</option>
                             {foreach from=$primary_units item=pu}
                             <option value="{$pu.unit_id}">{$pu.unit_id}</option>
@@ -169,7 +169,7 @@
                         </select>
                         {else}
                         <label>{$unit_label} ID:</label>
-                        <input type="number" name="unit_id" id="edit_unit_id" required />
+                        <input type="number" name="unit_id" id="edit_unit_id" class="form-control" required />
                         {/if}
                     </div>
 
@@ -181,20 +181,20 @@
                         {if $q.type == 'text'}
                         <textarea name="answer_{$q.id}" id="edit_answer_{$q.id}" rows="3"></textarea>
                         {elseif $q.type == 'number'}
-                        <input type="number" name="answer_{$q.id}" id="edit_answer_{$q.id}" step="0.01" />
+                        <input type="number" name="answer_{$q.id}" id="edit_answer_{$q.id}" class="form-control" step="0.01" />
                         {elseif $q.type == 'date'}
-                        <input type="date" name="answer_{$q.id}" id="edit_answer_{$q.id}" />
+                        <input type="date" name="answer_{$q.id}" id="edit_answer_{$q.id}" class="form-control" />
                         {elseif $q.type == 'multi_choice'}
                         {* If this is secondary units and it's the first question, show primary units dropdown *}
                         {if $unit_type == 'secondary' && $q@first && $primary_units}
-                        <select name="answer_{$q.id}" id="edit_answer_{$q.id}">
+                        <select name="answer_{$q.id}" id="edit_answer_{$q.id}" class="form-control">
                             <option value="">-- Select Primary Unit --</option>
                             {foreach from=$primary_units item=pu}
                             <option value="{$pu.unit_id}">Unit {$pu.unit_id}</option>
                             {/foreach}
                         </select>
                         {else}
-                        <select name="answer_{$q.id}" id="edit_answer_{$q.id}">
+                        <select name="answer_{$q.id}" id="edit_answer_{$q.id}" class="form-control">
                             <option value="">-- Select --</option>
                             {if $q.options_array}
                             {foreach from=$q.options_array item=opt}
@@ -204,14 +204,14 @@
                         </select>
                         {/if}
                         {else}
-                        <input type="text" name="answer_{$q.id}" id="edit_answer_{$q.id}" />
+                        <input type="text" name="answer_{$q.id}" id="edit_answer_{$q.id}" class="form-control" />
                         {/if}
                     </div>
                     {/foreach}
                     {/if}
 
-                    <button type="submit" name="edit_unit" class="btn btn-primary">Update {$unit_label}</button>
-                    <button type="button" onclick="closeEditUnit()" class="btn">Cancel</button>
+                    <button type="submit" name="edit_unit" class="btn btn-primary maintenance-btn maintenance-btn-primary">Update {$unit_label}</button>
+                    <button type="button" onclick="closeEditUnit()" class="btn maintenance-btn">Cancel</button>
                 </form>
             </div>
         </div>
@@ -229,11 +229,11 @@
             <form method="post" action="{$admin_url}&admin_action=questions&type={$unit_type}">
                 <div class="form-group">
                     <label>Label:</label>
-                    <input type="text" name="label" required />
+                    <input type="text" name="label" class="form-control" required />
                 </div>
                 <div class="form-group">
                     <label>Type:</label>
-                    <select name="type" id="question-type">
+                    <select name="type" id="question-type" class="form-control">
                         <option value="string">Text (Short)</option>
                         <option value="text">Text (Long)</option>
                         <option value="number">Number</option>
@@ -243,13 +243,13 @@
                 </div>
                 <div class="form-group" id="options-group" style="display:none;">
                     <label>Options (comma-separated):</label>
-                    <input type="text" name="options" placeholder="Option1,Option2,Option3" />
+                    <input type="text" name="options" class="form-control" placeholder="Option1,Option2,Option3" />
                 </div>
                 <div class="form-group">
                     <label>Position:</label>
-                    <input type="number" name="position" value="{count($questions) + 1}" required />
+                    <input type="number" name="position" class="form-control" value="{count($questions) + 1}" required />
                 </div>
-                <button type="submit" name="add_question" class="btn btn-primary">Add Question</button>
+                <button type="submit" name="add_question" class="btn btn-primary maintenance-btn maintenance-btn-primary">Add Question</button>
             </form>
         </div>
 
@@ -273,8 +273,8 @@
                     <td>
                         <form method="post" style="display:inline;">
                             <input type="hidden" name="id" value="{$q.id}" />
-                            <button type="submit" name="move_up" class="btn-small">↑</button>
-                            <button type="submit" name="move_down" class="btn-small">↓</button>
+                            <button type="submit" name="move_up" class="btn-small maintenance-btn-small">↑</button>
+                            <button type="submit" name="move_down" class="btn-small maintenance-btn-small">↓</button>
                         </form>
                         {$q.position}
                     </td>
@@ -282,10 +282,10 @@
                     <td>{$q.type}</td>
                     <td>{$q.options|default:'-'}</td>
                     <td>
-                        <button onclick="editQuestion({$q.id}, '{$q.label|escape}', '{$q.type}', '{$q.options|escape}', {$q.position})" class="btn-small">Edit</button>
+                        <button onclick="editQuestion({$q.id}, '{$q.label|escape}', '{$q.type}', '{$q.options|escape}', {$q.position})" class="btn-small maintenance-btn-small">Edit</button>
                         <form method="post" style="display:inline;" onsubmit="return confirm('Delete this question? All answers will be lost!');">
                             <input type="hidden" name="id" value="{$q.id}" />
-                            <button type="submit" name="delete_question" class="btn-small btn-danger">Delete</button>
+                            <button type="submit" name="delete_question" class="btn-small btn-danger maintenance-btn-small maintenance-btn-danger">Delete</button>
                         </form>
                     </td>
                 </tr>
@@ -305,11 +305,11 @@
                     <input type="hidden" name="id" id="edit-id" />
                     <div class="form-group">
                         <label>Label:</label>
-                        <input type="text" name="label" id="edit-label" required />
+                        <input type="text" name="label" id="edit-label" class="form-control" required />
                     </div>
                     <div class="form-group">
                         <label>Type:</label>
-                        <select name="type" id="edit-type">
+                        <select name="type" id="edit-type" class="form-control">
                             <option value="string">Text (Short)</option>
                             <option value="text">Text (Long)</option>
                             <option value="number">Number</option>
@@ -319,14 +319,14 @@
                     </div>
                     <div class="form-group" id="edit-options-group" style="display:none;">
                         <label>Options (comma-separated):</label>
-                        <input type="text" name="options" id="edit-options" />
+                        <input type="text" name="options" id="edit-options" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label>Position:</label>
-                        <input type="number" name="position" id="edit-position" required />
+                        <input type="number" name="position" id="edit-position" class="form-control" required />
                     </div>
-                    <button type="submit" name="edit_question" class="btn btn-primary">Save Changes</button>
-                    <button type="button" onclick="closeEditModal()" class="btn">Cancel</button>
+                    <button type="submit" name="edit_question" class="btn btn-primary maintenance-btn maintenance-btn-primary">Save Changes</button>
+                    <button type="button" onclick="closeEditModal()" class="btn maintenance-btn">Cancel</button>
                 </form>
             </div>
         </div>

@@ -116,15 +116,17 @@ if ($action === 'dashboard') {
     // Primary units block
     $body .= '<div class="dashboard-card">';
     $body .= '<h3>' . htmlspecialchars($primary_label) . 's</h3>';
-    $body .= '<p class="count">' . $primary_count . '</p>';
-    $body .= '<a href="index.php?n=plugins&p=maintenance&action=units&type=primary" class="btn">View All</a>';
+    // Add theme-friendly classes so counts inherit theme styles if present
+    $body .= '<p class="count stat-number">' . $primary_count . '</p>';
+    // Use both common button classes so theme styles apply (button, btn, btn-primary)
+    $body .= '<a href="index.php?n=plugins&p=maintenance&action=units&type=primary" class="button btn btn-primary">View All</a>';
     $body .= '</div>';
 
     // Secondary units block
     $body .= '<div class="dashboard-card">';
     $body .= '<h3>' . htmlspecialchars($secondary_label) . 's</h3>';
-    $body .= '<p class="count">' . $secondary_count . '</p>';
-    $body .= '<a href="index.php?n=plugins&p=maintenance&action=units&type=secondary" class="btn">View All</a>';
+    $body .= '<p class="count stat-number">' . $secondary_count . '</p>';
+    $body .= '<a href="index.php?n=plugins&p=maintenance&action=units&type=secondary" class="button btn btn-primary">View All</a>';
     $body .= '</div>';
 
     // Recent records block
@@ -350,32 +352,32 @@ elseif ($action === 'view_unit' || $action === 'viewunit') {
 
             // Add Maintenance Form (Collapsible)
             $body .= '<div class="add-maintenance-form">';
-            $body .= '<button type="button" class="btn btn-secondary toggle-form" onclick="document.getElementById(\'maintenanceForm\').style.display = document.getElementById(\'maintenanceForm\').style.display === \'none\' ? \'block\' : \'none\';">+ Add Maintenance Record</button>';
+            $body .= '<button type="button" class="button btn btn-secondary maintenance-btn maintenance-btn-secondary toggle-form" onclick="document.getElementById(\'maintenanceForm\').style.display = document.getElementById(\'maintenanceForm\').style.display === \'none\' ? \'block\' : \'none\';">+ Add Maintenance Record</button>';
             $body .= '<div id="maintenanceForm" style="display: none; margin-top: 15px;">';
             $body .= '<h2>Add Maintenance Record</h2>';
             $body .= '<form method="POST" action="index.php?n=plugins&p=maintenance&action=viewunit&unit_id=' . $unit['id'] . '&level=' . $equipment_level . '" enctype="multipart/form-data">';
             $body .= '<div class="form-group">';
             $body .= '<label>Type of Service:</label>';
-            $body .= '<input type="text" name="type_of_service" required />';
+            $body .= '<input type="text" name="type_of_service" class="form-control" required />';
             $body .= '</div>';
             $body .= '<div class="form-group">';
             $body .= '<label>Description:</label>';
-            $body .= '<textarea name="description" rows="4" class="no-editor" style="width: 100%; padding: 8px;"></textarea>';
+            $body .= '<textarea name="description" rows="4" class="no-editor form-control"></textarea>';
             $body .= '</div>';
             $body .= '<div class="form-group">';
             $body .= '<label>Cost of Parts ($):</label>';
-            $body .= '<input type="number" name="costs_of_parts" step="0.01" min="0" value="0.00" />';
+            $body .= '<input type="number" name="costs_of_parts" class="form-control" step="0.01" min="0" value="0.00" />';
             $body .= '</div>';
             $body .= '<div class="form-group">';
             $body .= '<label>Date Performed:</label>';
-            $body .= '<input type="date" name="performed_at" required />';
+            $body .= '<input type="date" name="performed_at" class="form-control" required />';
             $body .= '</div>';
             $body .= '<div class="form-group">';
             $body .= '<label>Photos:</label>';
-            $body .= '<input type="file" name="photos[]" multiple accept="image/*" />';
+            $body .= '<input type="file" name="photos[]" class="form-control" multiple accept="image/*" />';
             $body .= '</div>';
-            $body .= '<button type="submit" name="add_maintenance" value="1" class="btn btn-primary">Add Record</button> ';
-            $body .= '<button type="button" class="btn btn-secondary" onclick="document.getElementById(\'maintenanceForm\').style.display = \'none\';">Cancel</button>';
+            $body .= '<button type="submit" name="add_maintenance" value="1" class="btn btn-primary maintenance-btn maintenance-btn-primary">Add Record</button> ';
+            $body .= '<button type="button" class="btn btn-secondary maintenance-btn maintenance-btn-secondary" onclick="document.getElementById(\'maintenanceForm\').style.display = \'none\';">Cancel</button>';
             $body .= '</form>';
             $body .= '</div>';
             $body .= '</div>';

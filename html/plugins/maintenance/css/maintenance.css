@@ -48,11 +48,12 @@
 .dashboard-card .count {
     font-size: 3em;
     font-weight: bold;
-    color: var(--primary-color, #007bff);
+    /* Let the active site/theme determine the color */
+    color: inherit;
     margin: 10px 0;
 }
 
-.dashboard-card .btn {
+.dashboard-card .maintenance-btn {
     display: inline-block;
     padding: 10px 20px;
     background: var(--primary-color, #007bff);
@@ -63,7 +64,7 @@
     transition: background 0.2s;
 }
 
-.dashboard-card .btn:hover {
+.dashboard-card .maintenance-btn:hover {
     background: var(--primary-hover, #0056b3);
 }
 
@@ -257,8 +258,13 @@
 .stat-number {
     font-size: 48px;
     font-weight: bold;
-    color: var(--accent-primary, #0066cc);
+    /* Let the active site/theme determine the color */
+    color: inherit;
 }
+
+/* Removed admin-scoped shim - inputs now rely on theme's .form-control rules.
+    The shim caused unexpected inheritance (transparent backgrounds / lost borders)
+    in some themes, so it's been removed to let themes take full control. */
 
 .recent-maintenance {
     margin-top: 40px;
@@ -346,11 +352,12 @@
     font-size: 18px;
 }
 
-.btn {
+/* Namespace plugin button styles so themes can style .btn/.btn-primary globally */
+
+.maintenance-btn {
     display: inline-block;
     padding: 10px 20px;
-    background: var(--accent-primary, #0066cc);
-    color: white;
+    /* Do not force background/color so site theme .btn/.button can style these links/buttons */
     text-decoration: none;
     border-radius: 4px;
     border: none;
@@ -359,15 +366,17 @@
     transition: background 0.2s;
 }
 
-.btn:hover {
-    background: var(--accent-hover, #0052a3);
+.maintenance-btn:hover {
+    background: inherit;
+    color: inherit;
 }
 
-.btn-primary {
-    background: var(--accent-primary, #0066cc);
+.maintenance-btn-primary {
+    background: inherit;
+    color: inherit;
 }
 
-.btn-sm {
+.maintenance-btn-sm {
     padding: 6px 12px;
     font-size: 12px;
 }
@@ -409,9 +418,11 @@
     color: var(--text-primary, #333);
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
+.form-group input:not(.form-control),
+.form-group textarea:not(.form-control),
+.form-group select:not(.form-control) {
+    /* Only style native inputs when the theme hasn't provided a .form-control class.
+       If inputs have .form-control, let the active theme control appearance. */
     width: 100%;
     padding: 8px;
     border: 1px solid var(--input-border, #ddd);
@@ -565,55 +576,43 @@
 .admin-tabs a {
     padding: 12px 24px;
     text-decoration: none;
-    color: #666 !important;
-    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%) !important;
-    border: 2px solid #ddd !important;
-    border-radius: 8px !important;
-    transition: all 0.3s ease !important;
-    font-weight: 500 !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-    display: inline-block !important;
+    /* Defer colors/background/border to the active theme */
+    color: inherit;
+    background: inherit;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+    font-weight: 500;
+    box-shadow: none;
+    display: inline-block;
 }
 
 /* Dark theme support */
-@media (prefers-color-scheme: dark) {
-    .admin-tabs a {
-        color: #ccc !important;
-        background: linear-gradient(135deg, #3a3a3a 0%, #2d2d2d 100%) !important;
-        border-color: #444 !important;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
-    }
-}
-
 .admin-tabs a:hover {
-    color: #333 !important;
-    background: linear-gradient(135deg, #e8e8e8 0%, #d8d8d8 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
-}
-
-@media (prefers-color-scheme: dark) {
-    .admin-tabs a:hover {
-        color: #fff !important;
-        background: linear-gradient(135deg, #4a4a4a 0%, #3d3d3d 100%) !important;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
-    }
+    /* Allow theme hover styles; keep a subtle transform for motion if theme doesn't provide one */
+    color: inherit;
+    background: inherit;
+    transform: none;
+    box-shadow: none;
 }
 
 .admin-tabs a.active {
-    background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%) !important;
-    color: #fff !important;
-    font-weight: 600 !important;
-    border-color: #0052a3 !important;
-    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3) !important;
-    transform: translateY(-2px) !important;
+    /* Let the theme signal active state; avoid forcing colors here. */
+    background: inherit;
+    color: inherit;
+    font-weight: 600;
+    border-color: inherit;
+    box-shadow: none;
 }
 
 @media (prefers-color-scheme: dark) {
+    /* In dark mode, still defer to theme */
+    .admin-tabs a,
+    .admin-tabs a:hover,
     .admin-tabs a.active {
-        background: linear-gradient(135deg, #0077ee 0%, #0066cc 100%) !important;
-        border-color: #0066cc !important;
-        box-shadow: 0 4px 12px rgba(0, 119, 238, 0.4) !important;
+        color: inherit;
+        background: inherit;
+        border-color: inherit;
     }
 }
 
@@ -676,7 +675,7 @@
     background: var(--bg-secondary, #f9f9f9);
 }
 
-.btn-small {
+.maintenance-btn-small {
     padding: 4px 8px;
     font-size: 12px;
     background: var(--accent-primary, #0066cc);
@@ -687,15 +686,15 @@
     margin: 2px;
 }
 
-.btn-small:hover {
+.maintenance-btn-small:hover {
     background: var(--accent-hover, #0052a3);
 }
 
-.btn-danger {
+.maintenance-btn-danger {
     background: var(--error, #ef4444);
 }
 
-.btn-danger:hover {
+.maintenance-btn-danger:hover {
     background: #dc2626;
 }
 
