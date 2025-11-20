@@ -65,8 +65,108 @@ $columns_to_show = intval($config_data['columns_to_show'] ?? 3);
 $action = isset($_GET['admin_action']) ? scrub_input($_GET['admin_action']) : 'config';
 $message = '';
 
+// ACTION: Maintenance Records (admin)
+if ($action === 'records') {
+    // Handle edit record (with photo upload/removal)
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_record'])) {
+        $id = intval($_POST['record_id']);
+        $type_of_service = scrub_input($_POST['type_of_service']);
+        $performed_at = scrub_input($_POST['performed_at']);
+        $description = scrub_input($_POST['description']);
+
+        // Fetch current photos
+        $sql = sprintf("SELECT photos FROM flintmancms_maintenance_records WHERE id=%d", $id);
+        $result = $db->sql_query($sql);
+        $row = $db->sql_fetchrow($result);
+        $photos = array();
+        if ($row && !empty($row['photos'])) {
+            $photos = json_decode($row['photos'], true) ?: array();
+        }
+
+        // Remove photos if requested
+        $photos_to_remove = array();
+        if (!empty($_POST['edit_record_photos_to_remove'])) {
+            $photos_to_remove = json_decode($_POST['edit_record_photos_to_remove'], true) ?: array();
+        }
+        if ($photos_to_remove) {
+            foreach ($photos_to_remove as $remove_url) {
+                $key = array_search($remove_url, $photos);
+                if ($key !== false) {
+                    // Optionally: delete file from disk if local
+                    if (strpos($remove_url, '/uploads/') !== false) {
+                        $file_path = BASE_PATH . ltrim(parse_url($remove_url, PHP_URL_PATH), '/');
+                        if (file_exists($file_path)) @unlink($file_path);
+                    }
+                    unset($photos[$key]);
+                }
+            }
+            $photos = array_values($photos); // reindex
+        }
+
+        // Handle new photo uploads
+        if (!empty($_FILES['new_photos']) && isset($_FILES['new_photos']['tmp_name'][0]) && $_FILES['new_photos']['tmp_name'][0] != '') {
+            // Get the equipment id for this record (primary or secondary, prefer primary)
+            $equipment_id = null;
+            $sql_unit = sprintf("SELECT pmy_id, secondary_id FROM flintmancms_maintenance_records WHERE id=%d", $id);
+            $result_unit = $db->sql_query($sql_unit);
+            $row_unit = $db->sql_fetchrow($result_unit);
+            if ($row_unit && $row_unit['pmy_id']) {
+                $equipment_id = intval($row_unit['pmy_id']);
+            } elseif ($row_unit && $row_unit['secondary_id']) {
+                $equipment_id = intval($row_unit['secondary_id']);
+            }
+            if (!$equipment_id) $equipment_id = 'unknown';
+            $upload_dir = 'plugins/maintenance/images/' . $equipment_id . '/';
+            $abs_upload_dir = BASE_PATH . ltrim($upload_dir, '/');
+            if (!is_dir($abs_upload_dir)) @mkdir($abs_upload_dir, 0777, true);
+            foreach ($_FILES['new_photos']['tmp_name'] as $idx => $tmp_name) {
+                if (is_uploaded_file($tmp_name)) {
+                    $orig_name = basename($_FILES['new_photos']['name'][$idx]);
+                    $ext = strtolower(pathinfo($orig_name, PATHINFO_EXTENSION));
+                    if (in_array($ext, array('jpg','jpeg','png','gif','webp'))) {
+                        $hash = substr(sha1_file($tmp_name) . uniqid('', true), 0, 16);
+                        $new_name = $hash . '.' . $ext;
+                        $dest = $abs_upload_dir . $new_name;
+                        if (move_uploaded_file($tmp_name, $dest)) {
+                            $photos[] = $upload_dir . $new_name;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Update record
+        $sql = sprintf("UPDATE flintmancms_maintenance_records SET type_of_service=%s, performed_at=%s, description=%s, photos=%s WHERE id=%d",
+            quote_smart($type_of_service), quote_smart($performed_at), quote_smart($description), quote_smart(json_encode(array_values($photos))), $id);
+        $db->sql_query($sql);
+        $message = 'Record updated successfully!';
+    }
+    // Handle delete record
+    elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_record'])) {
+        $id = intval($_POST['record_id']);
+        $sql = sprintf("DELETE FROM flintmancms_maintenance_records WHERE id=%d", $id);
+        $db->sql_query($sql);
+        $message = 'Record deleted.';
+    }
+    // Fetch all records (with unit info)
+    $sql = "SELECT r.*, e1.unit_id AS primary_unit, e2.unit_id AS secondary_unit FROM flintmancms_maintenance_records r
+        LEFT JOIN flintmancms_maintenance_equipment e1 ON r.pmy_id = e1.id
+        LEFT JOIN flintmancms_maintenance_equipment e2 ON r.secondary_id = e2.id
+        ORDER BY r.performed_at DESC, r.id DESC";
+    $result = $db->sql_query($sql);
+    $records = array();
+    while ($row = $db->sql_fetchrow($result)) {
+        // Ensure photos is always a JSON string for the template
+        $row['photos_json'] = !empty($row['photos']) ? $row['photos'] : '[]';
+        $records[] = $row;
+    }
+    $smarty->assign('records', $records);
+    $smarty->assign('primary_label', $primary_label);
+    $smarty->assign('secondary_label', $secondary_label);
+    $smarty->assign('action', $action);
+}
 // ACTION: Update configuration
-if ($action === 'config' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_config'])) {
+elseif ($action === 'config' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_config'])) {
     $new_primary = scrub_input($_POST['primary_unit']);
     $new_secondary = scrub_input($_POST['secondary_unit']);
     $new_columns = intval($_POST['columns_to_show']);

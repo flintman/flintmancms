@@ -11,7 +11,184 @@
         <a href="{$admin_url}&admin_action=units&type=secondary" class="{if $action == 'units' && $smarty.get.type == 'secondary'}active{/if}">Manage {$secondary_label}s</a>
         <a href="{$admin_url}&admin_action=questions&type=primary" class="{if $action == 'questions' && $smarty.get.type == 'primary'}active{/if}">{$primary_label} Questions</a>
         <a href="{$admin_url}&admin_action=questions&type=secondary" class="{if $action == 'questions' && $smarty.get.type == 'secondary'}active{/if}">{$secondary_label} Questions</a>
+        <a href="{$admin_url}&admin_action=records" class="{if $action == 'records'}active{/if}">Maintenance Records</a>
     </div>
+</div>
+
+{if $action == 'records'}
+<div class="records-section">
+    <h2>Maintenance Records</h2>
+    <div id="records-list-admin">
+        <div class="list-controls" style="margin-bottom:12px; display:flex; gap:10px; align-items:center;">
+            <input class="search form-control" placeholder="Search records..." />
+            <div style="margin-left:auto">
+                <small class="search-count"></small>
+            </div>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th class="sort" data-sort="id">ID</th>
+                    <th class="sort" data-sort="performed_at">Date</th>
+                    <th class="sort" data-sort="type_of_service">Service</th>
+                    <th class="sort" data-sort="primary_unit">{$primary_label}</th>
+                    <th class="sort" data-sort="secondary_unit">{$secondary_label}</th>
+                    <th class="sort" data-sort="notes">Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+            {foreach from=$records item=rec}
+            <tr>
+                <td><span class="id">{$rec.id}</span></td>
+                <td><span class="performed_at">{$rec.performed_at|escape}</span></td>
+                <td><span class="type_of_service">{$rec.type_of_service|escape}</span></td>
+                <td><span class="primary_unit">{$rec.primary_unit|escape}</span></td>
+                <td><span class="secondary_unit">{$rec.secondary_unit|escape}</span></td>
+                <td><span class="description">{$rec.description|escape}</span></td>
+                <td>
+                    <button class="btn-small maintenance-btn-small"
+                        data-id="{$rec.id}"
+                        data-performed_at="{$rec.performed_at|escape:'html'}"
+                        data-type_of_service="{$rec.type_of_service|escape:'html'}"
+                        data-description="{$rec.description|escape:'url'}"
+                        data-photos_json="{$rec.photos_json|escape:'html'}"
+                        onclick="openEditRecordModalFromButton(this)">Edit</button>
+                </td>
+
+            </script>
+            <script>
+            // Open modal using data attributes from button
+            function openEditRecordModalFromButton(btn) {
+                var description = btn.getAttribute('data-description');
+                if (description) {
+                    try {
+                        description = decodeURIComponent(description.replace(/\+/g, ' '));
+                    } catch (e) {}
+                }
+                openEditRecordModal(
+                    btn.getAttribute('data-id'),
+                    btn.getAttribute('data-performed_at'),
+                    btn.getAttribute('data-type_of_service'),
+                    description,
+                    btn.getAttribute('data-photos_json')
+                );
+            }
+            </script>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        <div style="margin-top:12px; display:flex; justify-content:flex-end;">
+            <ul class="pagination"></ul>
+        </div>
+    </div>
+
+    <!-- Edit Record Modal -->
+    <div id="editRecordModal" style="display:none;">
+        <div class="add-question-form">
+            <h3>Edit Maintenance Record</h3>
+            <form method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="edit_record_photos_to_remove" id="edit_record_photos_to_remove" value="" />
+                                <input type="hidden" name="edit_record_photos_json" id="edit_record_photos_json" value="" />
+                <input type="hidden" name="record_id" id="edit_record_id" />
+                <div class="form-group">
+                    <label>Date:</label>
+                    <input type="date" name="performed_at" id="edit_record_performed_at" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Service:</label>
+                    <input type="text" name="type_of_service" id="edit_record_type_of_service" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Notes:</label>
+                    <textarea name="description" id="edit_record_description" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Photos:</label>
+                    <div id="edit_record_photos_list">
+                        <!-- Existing photos will be rendered here by JS -->
+                    </div>
+                    <input type="file" name="new_photos[]" id="edit_record_new_photos" class="form-control" accept="image/*" multiple />
+                    <small>You can add new photos or remove existing ones.</small>
+                </div>
+                <button type="submit" name="edit_record" class="btn btn-primary maintenance-btn maintenance-btn-primary">Update Record</button>
+                <button type="button" onclick="closeEditRecordModal()" class="btn maintenance-btn">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        var container = document.getElementById('records-list-admin');
+        if (!container || typeof List === 'undefined') return;
+        var valueNames = ['id','performed_at','type_of_service','primary_unit','secondary_unit','description'];
+        try {
+            var recordsList = new List('records-list-admin', {
+                valueNames: valueNames,
+                page: 10,
+                pagination: true
+            });
+        } catch (e) { console.warn('List.js init failed for records', e); }
+    })();
+    // Helper to parse JSON safely
+    function safeParseJSON(str) {
+        try { return JSON.parse(str); } catch (e) { return []; }
+    }
+    // Render photos in the edit modal
+    function renderEditRecordPhotos(photos) {
+        var container = document.getElementById('edit_record_photos_list');
+        container.innerHTML = '';
+        if (!photos || !photos.length) {
+            container.innerHTML = '<em>No photos.</em>';
+            return;
+        }
+        photos.forEach(function(photo, idx) {
+            var div = document.createElement('div');
+            div.className = 'edit-photo-item';
+            div.style = 'margin-bottom:6px; display:flex; align-items:center; gap:8px;';
+            div.innerHTML = '<img src="'+photo+'" style="max-width:60px; max-height:60px; border:1px solid #ccc;"> ' +
+                '<button type="button" class="btn-small btn-danger maintenance-btn-small maintenance-btn-danger" onclick="removeEditRecordPhoto('+idx+')">Remove</button>';
+            container.appendChild(div);
+        });
+    }
+    // Remove photo from modal (marks for removal)
+    var editRecordPhotos = [];
+    var editRecordPhotosToRemove = [];
+    function removeEditRecordPhoto(idx) {
+        editRecordPhotosToRemove.push(editRecordPhotos[idx]);
+        editRecordPhotos.splice(idx, 1);
+        renderEditRecordPhotos(editRecordPhotos);
+        // Update hidden input
+        document.getElementById('edit_record_photos_to_remove').value = JSON.stringify(editRecordPhotosToRemove);
+        document.getElementById('edit_record_photos_json').value = JSON.stringify(editRecordPhotos);
+    }
+    // Open modal and populate fields
+    function openEditRecordModal(id, performed_at, type_of_service, description, photos_json) {
+        document.getElementById('edit_record_id').value = id;
+        document.getElementById('edit_record_performed_at').value = performed_at;
+        document.getElementById('edit_record_type_of_service').value = type_of_service;
+        // Set description, handling newlines and special chars
+        console.log('[DEBUG] Setting description in modal:', description);
+        if (window.tinyMCE && tinyMCE.get('edit_record_description')) {
+            tinyMCE.get('edit_record_description').setContent(description || '');
+        } else {
+            document.getElementById('edit_record_description').value = description || '';
+        }
+        editRecordPhotos = safeParseJSON(photos_json);
+        editRecordPhotosToRemove = [];
+        renderEditRecordPhotos(editRecordPhotos);
+        document.getElementById('edit_record_photos_to_remove').value = '';
+        document.getElementById('edit_record_photos_json').value = JSON.stringify(editRecordPhotos);
+        document.getElementById('editRecordModal').style.display = 'block';
+        window.scrollTo(0, document.getElementById('editRecordModal').offsetTop);
+    }
+    function closeEditRecordModal() {
+        document.getElementById('editRecordModal').style.display = 'none';
+    }
+    </script>
+</div>
+{/if}
 
     {if $action == 'config'}
     <!-- Configuration Tab -->
