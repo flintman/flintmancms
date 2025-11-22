@@ -34,12 +34,29 @@
 }
 .admin-tabs-bar {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
     margin: 1.5rem 0 1rem 0;
     border-bottom: 2px solid var(--admin-tabs-border);
     background: var(--admin-tabs-bg);
     padding: 0.5rem 0 0 0.5rem;
     border-radius: 0.5rem 0.5rem 0 0;
+}
+
+@media (max-width: 600px) {
+    .admin-tabs-bar {
+        flex-wrap: wrap;
+        row-gap: 0.5rem;
+        padding: 0.5rem;
+        justify-content: flex-start;
+    }
+    .admin-tab {
+        flex: 1 1 45%;
+        min-width: 140px;
+        margin-bottom: 0.25rem;
+        text-align: center;
+    }
+}
 }
 .admin-tab {
     display: inline-block;
