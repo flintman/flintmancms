@@ -40,13 +40,13 @@
             <tbody class="list">
             {foreach from=$records item=rec}
             <tr>
-                <td><span class="id">{$rec.id}</span></td>
-                <td><span class="performed_at">{$rec.performed_at|escape}</span></td>
-                <td><span class="type_of_service">{$rec.type_of_service|escape}</span></td>
-                <td><span class="primary_unit">{$rec.primary_unit|escape}</span></td>
-                <td><span class="secondary_unit">{$rec.secondary_unit|escape}</span></td>
-                <td><span class="description">{$rec.description|escape}</span></td>
-                <td>
+                <td data-label="ID"><span class="id">{$rec.id}</span></td>
+                <td data-label="Date"><span class="performed_at">{$rec.performed_at|escape}</span></td>
+                <td data-label="Service"><span class="type_of_service">{$rec.type_of_service|escape}</span></td>
+                <td data-label="{$primary_label}"><span class="primary_unit">{$rec.primary_unit|escape}</span></td>
+                <td data-label="{$secondary_label}"><span class="secondary_unit">{$rec.secondary_unit|escape}</span></td>
+                <td data-label="Notes"><span class="description">{$rec.description|escape}</span></td>
+                <td data-label="Actions">
                     <button class="btn-small maintenance-btn-small"
                         data-id="{$rec.id}"
                         data-performed_at="{$rec.performed_at|escape:'html'}"
@@ -310,12 +310,12 @@
                     <tbody class="list">
                     {foreach from=$units item=unit}
                     <tr class="{if $unit.archived}archived-row{/if}">
-                        <td><strong><span class="unit_id">{$unit.unit_id}</span></strong></td>
+                        <td data-label="{$unit_label} ID"><strong><span class="unit_id">{$unit.unit_id}</span></strong></td>
                         {foreach from=$questions item=q}
-                        <td><span class="q_{$q.id}">{$unit.answers[$q.id]|default:'-'}</span></td>
+                        <td data-label="{$q.label}"><span class="q_{$q.id}">{$unit.answers[$q.id]|default:'-'}</span></td>
                         {/foreach}
-                        <td><span class="status">{if $unit.archived}Archived{else}Active{/if}</span></td>
-                        <td>
+                        <td data-label="Status"><span class="status">{if $unit.archived}Archived{else}Active{/if}</span></td>
+                        <td data-label="Actions">
                             <button onclick="editUnit(this, {$unit.id}, {$unit.unit_id}, {$unit.archived})" class="btn-small maintenance-btn-small">Edit</button>
                             {if $unit.archived}
                             <form method="post" style="display:inline;">
@@ -487,7 +487,7 @@
                 <tbody>
                 {foreach from=$questions item=q}
                 <tr>
-                    <td>
+                    <td data-label="Position">
                         <form method="post" style="display:inline;">
                             <input type="hidden" name="id" value="{$q.id}" />
                             <button type="submit" name="move_up" class="btn-small maintenance-btn-small">↑</button>
@@ -495,10 +495,10 @@
                         </form>
                         {$q.position}
                     </td>
-                    <td>{$q.label}</td>
-                    <td>{$q.type}</td>
-                    <td>{$q.options|default:'-'}</td>
-                    <td>
+                    <td data-label="Label">{$q.label}</td>
+                    <td data-label="Type">{$q.type}</td>
+                    <td data-label="Options">{$q.options|default:'-'}</td>
+                    <td data-label="Actions">
                         <button onclick="editQuestion({$q.id}, '{$q.label|escape}', '{$q.type}', '{$q.options|escape}', {$q.position})" class="btn-small maintenance-btn-small">Edit</button>
                         <form method="post" style="display:inline;" onsubmit="return confirm('Delete this question? All answers will be lost!');">
                             <input type="hidden" name="id" value="{$q.id}" />
