@@ -70,10 +70,6 @@ $action = isset($_GET['action']) ? scrub_input($_GET['action'], ['type' => 'alph
  * HANDLE ACTIONS
  * ======================================================================== */
 
-/* ========================================================================
- * HANDLE ACTIONS
- * ======================================================================== */
-
 // ACTION: Dashboard - show navigation menu
 if ($action === 'dashboard') {
     // Count active primary units
@@ -208,14 +204,14 @@ elseif ($action === 'units') {
             }
 
             $body .= '<tr>';
-            $body .= '<td class="unit_id">' . htmlspecialchars($row['unit_id']) . '</td>';
+            $body .= '<td class="unit_id" data-label="Unit ID">' . htmlspecialchars($row['unit_id']) . '</td>';
 
             foreach ($display_questions as $q) {
                 $value = $answers[$q['id']] ?? '';
-                $body .= '<td class="answer_' . $q['id'] . '">' . htmlspecialchars($value) . '</td>';
+                $body .= '<td class="answer_' . $q['id'] . '" data-label="' . htmlspecialchars($q['label'] ?? '') . '">' . htmlspecialchars($value) . '</td>';
             }
 
-            $body .= '<td>';
+            $body .= '<td data-label="Actions">';
             $body .= '<a href="index.php?n=plugins&p=maintenance&action=viewunit&unit_id=' . $row['id'] . '&level=' . $equipment_level . '" class="btn btn-small">View Records</a>';
             $body .= '</td>';
             $body .= '</tr>';
@@ -416,12 +412,12 @@ elseif ($action === 'view_unit' || $action === 'viewunit') {
 
                 while ($row = $db->sql_fetchrow($result)) {
                     $body .= '<tr>';
-                    $body .= '<td class="date">' . date('M d, Y', strtotime($row['performed_at'])) . '</td>';
-                    $body .= '<td class="type_of_service">' . htmlspecialchars($row['type_of_service']) . '</td>';
-                    $body .= '<td class="description">' . htmlspecialchars(substr($row['description'], 0, 50)) . '...</td>';
-                    $body .= '<td class="cost">$' . number_format($row['costs_of_parts'], 2) . '</td>';
-                    $body .= '<td class="performed_by">' . htmlspecialchars($row['performed_by']) . '</td>';
-                    $body .= '<td><a href="index.php?n=plugins&p=maintenance&action=viewrecord&record_id=' . $row['id'] . '" class="btn btn-small">View Details</a></td>';
+                    $body .= '<td class="date" data-label="Date">' . date('M d, Y', strtotime($row['performed_at'])) . '</td>';
+                    $body .= '<td class="type_of_service" data-label="Type of Service">' . htmlspecialchars($row['type_of_service']) . '</td>';
+                    $body .= '<td class="description" data-label="Description">' . htmlspecialchars(substr($row['description'], 0, 50)) . '...</td>';
+                    $body .= '<td class="cost" data-label="Cost">$' . number_format($row['costs_of_parts'], 2) . '</td>';
+                    $body .= '<td class="performed_by" data-label="Performed By">' . htmlspecialchars($row['performed_by']) . '</td>';
+                    $body .= '<td data-label="Actions"><a href="index.php?n=plugins&p=maintenance&action=viewrecord&record_id=' . $row['id'] . '" class="btn btn-small">View Details</a></td>';
                     $body .= '</tr>';
                 }
 

@@ -945,3 +945,83 @@
     content: attr(data-label);
   }
 }
+
+/* Responsive units-table for mobile */
+@media (max-width: 700px) {
+    .units-table thead {
+        display: none;
+    }
+    .units-table, .units-table tbody, .units-table tr, .units-table td {
+        display: block;
+        width: 100%;
+    }
+    .units-table tr {
+        margin-bottom: 1.2em;
+        border: 1px solid var(--border-color, #eee);
+        border-radius: 0.5em;
+        background: var(--card-bg, #fff);
+        box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.08));
+        padding: 0.5em 0.7em;
+    }
+    .units-table td {
+        position: relative;
+        padding-left: 45%;
+        min-height: 2.2em;
+        border: none;
+        border-bottom: 1px solid var(--border-color, #eee);
+        text-align: left;
+        background: none;
+    }
+    .units-table td:last-child {
+        border-bottom: none;
+    }
+    .units-table td:before {
+        white-space: nowrap;
+        font-weight: 600;
+        color: var(--text-secondary, #888);
+        font-size: 0.98em;
+        content: attr(data-label) ": ";
+        margin-right: 0.5em;
+    }
+}
+/* Responsive maintenance-table for mobile */
+@media (max-width: 700px) {
+    .maintenance-table thead {
+        display: none;
+    }
+    .maintenance-table, .maintenance-table tbody, .maintenance-table tr, .maintenance-table td {
+        display: block;
+        width: 100%;
+    }
+    .maintenance-table tr {
+        margin-bottom: 1.2em;
+        border: 1px solid var(--border-color, #eee);
+        border-radius: 0.5em;
+        background: var(--card-bg, #fff);
+        box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.08));
+        padding: 0.5em 0.7em;
+    }
+    .maintenance-table td {
+        position: relative;
+        padding-left: 45%;
+        min-height: 2.2em;
+        border: none;
+        border-bottom: 1px solid var(--border-color, #eee);
+        text-align: left;
+        background: none;
+    }
+    .maintenance-table td:last-child {
+        border-bottom: none;
+    }
+    .maintenance-table td:before {
+        position: absolute;
+        left: 0.7em;
+        top: 0;
+        width: 42%;
+        white-space: nowrap;
+        font-weight: 600;
+        color: var(--text-secondary, #888);
+        font-size: 0.98em;
+        content: attr(data-label);
+    }
+}
