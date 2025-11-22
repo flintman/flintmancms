@@ -502,16 +502,42 @@ elseif ($action === 'view_record' || $action === 'viewrecord') {
             $body .= '<div class="detail-row"><strong>Description:</strong><br>' . nl2br(htmlspecialchars($record['description'])) . '</div>';
 
             if (!empty($photos)) {
-                $body .= '<div class="detail-row"><strong>Photos:</strong></div>';
-                $body .= '<div class="photo-gallery">';
-                foreach ($photos as $photo) {
-                    $body .= '<div class="photo-item">';
-                    $body .= '<a href="' . htmlspecialchars($photo) . '" target="_blank">';
-                    $body .= '<img src="' . htmlspecialchars($photo) . '" alt="Maintenance Photo" />';
-                    $body .= '</a>';
-                    $body .= '</div>';
-                }
-                $body .= '</div>';
+                                $body .= '<div class="detail-row"><strong>Photos:</strong> <span style="font-weight:normal;font-size:0.98em;color:#888;">(Click any photo to enlarge)</span></div>';
+                                $body .= '<div class="photo-gallery">';
+                                foreach ($photos as $photo) {
+                                        $src = htmlspecialchars($photo);
+                                        $body .= '<div class="photo-item">';
+                                        $body .= '<img src="' . $src . '" alt="Maintenance Photo" tabindex="0" onclick="openPhotoModal(\'' . $src . '\')" />';
+                                        $body .= '</div>';
+                                }
+                                $body .= '</div>';
+                                // Modal HTML (only one per page)
+                                $body .= '<div id="photoModal" class="photo-modal" onclick="closePhotoModal(event)">';
+                                $body .= '<span class="close-modal" onclick="closePhotoModal(event)">&times;</span>';
+                                $body .= '<img id="modalImg" src="" alt="Large Photo" />';
+                                $body .= '</div>';
+                                // Modal JS
+                                $body .= '<script>
+                                function openPhotoModal(src) {
+                                    var modal = document.getElementById("photoModal");
+                                    var img = document.getElementById("modalImg");
+                                    img.src = src;
+                                    modal.classList.add("active");
+                                }
+                                function closePhotoModal(e) {
+                                    var modal = document.getElementById("photoModal");
+                                    if (e.target === modal || e.target.classList.contains("close-modal")) {
+                                        modal.classList.remove("active");
+                                        document.getElementById("modalImg").src = "";
+                                    }
+                                }
+                                document.addEventListener("keydown", function(e) {
+                                    var modal = document.getElementById("photoModal");
+                                    if (modal.classList.contains("active") && (e.key === "Escape" || e.key === "Esc")) {
+                                        closePhotoModal({target: modal});
+                                    }
+                                });
+                                </script>';
             }
 
             $body .= '</div>';
