@@ -1,5 +1,6 @@
                 </div>
 
+                {if (!isset($disable_sidebar) || !$disable_sidebar)}
                 <aside class="sidebar">
                     {if $allow_login && !$is_logged_in}
                     <div class="sidebar-card login-card">
@@ -30,6 +31,7 @@
                     </div>
                     {/if}
                 </aside>
+                {/if}
             </div>
         </div>
     </main>

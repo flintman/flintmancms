@@ -424,6 +424,8 @@ elseif ($action === 'units') {
 /* ========================================================================
  * OUTPUT
  * ======================================================================== */
+
+$disable_sidebar = true;
 $smarty->assign(
     array(
         'action' => $action,
@@ -431,7 +433,8 @@ $smarty->assign(
         'primary_label' => $primary_label,
         'secondary_label' => $secondary_label,
         'columns_to_show' => $columns_to_show,
-        'admin_url' => 'admin.php?n=plugins&p=maintenance'
+        'admin_url' => 'admin.php?n=plugins&p=maintenance',
+        'disable_sidebar' => $disable_sidebar
     )
 );
 
