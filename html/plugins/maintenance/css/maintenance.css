@@ -1,3 +1,71 @@
+
+/* Admin Tabs - Theme Aware */
+.admin-tabs-bar,
+.admin-tab,
+.admin-tab.active {
+    /* fallback in case variables are missing */
+}
+
+.admin-tabs-bar,
+.admin-tab,
+.admin-tab.active {
+    /* fallback in case variables are missing */
+}
+
+:root[data-theme="light"] {
+    --admin-tabs-bg: #f8f9fa;
+    --admin-tabs-border: #e0e0e0;
+    --admin-tab-color: #444;
+    --admin-tab-hover-bg: #e9ecef;
+    --admin-tab-hover-color: #222;
+    --admin-tab-active-bg: #fff;
+    --admin-tab-active-color: #1976d2;
+    --admin-tab-active-border: #1976d2;
+}
+:root[data-theme="dark"] {
+    --admin-tabs-bg: #23272e;
+    --admin-tabs-border: #444a57;
+    --admin-tab-color: #cfd8dc;
+    --admin-tab-hover-bg: #2d323b;
+    --admin-tab-hover-color: #fff;
+    --admin-tab-active-bg: #181a1b;
+    --admin-tab-active-color: #90caf9;
+    --admin-tab-active-border: #90caf9;
+}
+.admin-tabs-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1.5rem 0 1rem 0;
+    border-bottom: 2px solid var(--admin-tabs-border);
+    background: var(--admin-tabs-bg);
+    padding: 0.5rem 0 0 0.5rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+.admin-tab {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    font-weight: 500;
+    color: var(--admin-tab-color);
+    text-decoration: none;
+    background: none;
+    border: none;
+    border-radius: 0.5rem 0.5rem 0 0;
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+    position: relative;
+    top: 2px;
+}
+.admin-tab:hover {
+    background: var(--admin-tab-hover-bg);
+    color: var(--admin-tab-hover-color);
+}
+.admin-tab.active {
+    background: var(--admin-tab-active-bg);
+    color: var(--admin-tab-active-color);
+    border-bottom: 2px solid var(--admin-tab-active-border);
+    font-weight: 600;
+    z-index: 2;
+}
 /* Maintenance Tracker Plugin Styles */
 
 .maintenance-dashboard,

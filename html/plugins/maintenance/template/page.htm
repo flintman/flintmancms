@@ -5,14 +5,14 @@
     <div class="alert alert-success">{$message}</div>
     {/if}
 
-    <div class="admin-tabs">
-        <a href="{$admin_url}&admin_action=config" class="{if $action == 'config'}active{/if}">Configuration</a>
-        <a href="{$admin_url}&admin_action=units&type=primary" class="{if $action == 'units' && $smarty.get.type == 'primary'}active{/if}">Manage {$primary_label}s</a>
-        <a href="{$admin_url}&admin_action=units&type=secondary" class="{if $action == 'units' && $smarty.get.type == 'secondary'}active{/if}">Manage {$secondary_label}s</a>
-        <a href="{$admin_url}&admin_action=questions&type=primary" class="{if $action == 'questions' && $smarty.get.type == 'primary'}active{/if}">{$primary_label} Questions</a>
-        <a href="{$admin_url}&admin_action=questions&type=secondary" class="{if $action == 'questions' && $smarty.get.type == 'secondary'}active{/if}">{$secondary_label} Questions</a>
-        <a href="{$admin_url}&admin_action=records" class="{if $action == 'records'}active{/if}">Maintenance Records</a>
-    </div>
+    <nav class="admin-tabs-bar">
+        <a href="{$admin_url}&admin_action=config" class="admin-tab{if $action == 'config'} active{/if}">Configuration</a>
+        <a href="{$admin_url}&admin_action=units&type=primary" class="admin-tab{if $action == 'units' && $smarty.get.type == 'primary'} active{/if}">Manage {$primary_label}s</a>
+        <a href="{$admin_url}&admin_action=units&type=secondary" class="admin-tab{if $action == 'units' && $smarty.get.type == 'secondary'} active{/if}">Manage {$secondary_label}s</a>
+        <a href="{$admin_url}&admin_action=questions&type=primary" class="admin-tab{if $action == 'questions' && $smarty.get.type == 'primary'} active{/if}">{$primary_label} Questions</a>
+        <a href="{$admin_url}&admin_action=questions&type=secondary" class="admin-tab{if $action == 'questions' && $smarty.get.type == 'secondary'} active{/if}">{$secondary_label} Questions</a>
+        <a href="{$admin_url}&admin_action=records" class="admin-tab{if $action == 'records'} active{/if}">Maintenance Records</a>
+    </nav>
 </div>
 
 {if $action == 'records'}

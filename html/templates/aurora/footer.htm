@@ -57,6 +57,7 @@
             const currentTheme = getCookie('theme') || 'light';
             htmlElement.setAttribute('data-theme', currentTheme);
 
+
             themeToggle.addEventListener('click', function() {
                 const theme = htmlElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
                 htmlElement.setAttribute('data-theme', theme);
@@ -66,6 +67,7 @@
             // Mobile menu toggle
             const mobileMenuToggle = document.getElementById('mobileMenuToggle');
             const navMenu = document.getElementById('navMenu');
+
 
             mobileMenuToggle.addEventListener('click', function() {
                 navMenu.classList.toggle('active');
