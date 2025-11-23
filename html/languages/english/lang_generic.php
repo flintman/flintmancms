@@ -21,6 +21,7 @@ define('CONFIRM_TEXT',"Confirm");
 define('ACTIVE_TEXT',"Active");
 define('DEACTIVE_TEXT',"Deactive");
 define('LOGIN_TEXT',"Please Log in");
+define('YOUR_IP_TEXT',"Your IP address: ");
 define('LOGOUT_TEXT',"Logout");
 define('REMEMBER_ME_TEXT',"Remember Me!");
 define('WELCOME_TEXT',"Welcome");

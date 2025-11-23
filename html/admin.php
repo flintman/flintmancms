@@ -26,7 +26,7 @@ extract($_GET);
 $p = isset($_GET['p']) ? scrub_input($_GET['p'], ['type' => 'alphanum', 'max_length' => 50]) : '';
 //Checks is logged in
 if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] != 1) {
-    $errorMsg = LOGIN_TEXT;
+    $errorMsg = LOGIN_TEXT . ' '. YOUR_IP_TEXT . $_SERVER['REMOTE_ADDR'];
     include(BASE_PATH . 'header.php');
 } else {
 //If nothing goes to frontpage
