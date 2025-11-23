@@ -357,8 +357,41 @@ function delete_directory($dirname) {
     return true;
 }
 
-function upgradesql(){
-
+function get_installed_plugin_version($db, $plugin_name) {
+    $sql = sprintf("SELECT version FROM flintmancms_plugins WHERE name=%s", quote_smart($plugin_name));
+    $result = $db->sql_query($sql);
+    $row = $db->sql_fetchrow($result);
+    return $row && isset($row['version']) ? $row['version'] : null;
 }
+
+function set_installed_plugin_version($db, $plugin_name, $version) {
+    $sql = sprintf("UPDATE flintmancms_plugins SET version=%s WHERE name=%s", quote_smart($version), quote_smart($plugin_name));
+    $db->sql_query($sql);
+}
+
+function run_plugin_updates($plugin_folder, $from_version, $to_version, $db) {
+    $updates_dir = PLUGINS_PATH . "$plugin_folder/sql/updates/";
+    if (!is_dir($updates_dir)) return [];
+    $files = glob($updates_dir . '*.sql');
+    $updates = [];
+    foreach ($files as $file) {
+        $ver = basename($file, '.sql');
+        $updates[$ver] = $file;
+    }
+    uksort($updates, 'version_compare');
+    $ran = [];
+    foreach ($updates as $ver => $file) {
+        if (version_compare($ver, $from_version, '>') && version_compare($ver, $to_version, '<=') ) {
+            $sqls = file_get_contents($file);
+            foreach (explode(';', $sqls) as $query) {
+                $query = trim($query);
+                if ($query) $db->sql_query($query);
+            }
+            $ran[] = $ver;
+        }
+    }
+    return $ran;
+}
+
 
 ?>

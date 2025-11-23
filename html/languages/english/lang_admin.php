@@ -25,6 +25,7 @@ define('ADMIN_SITE_VER_TEXT', "Site Version:");
 define('ADMIN_DATABASE_VER_TEXT', "Database Version:");
 define('ADMIN_PHP_VER_TEXT', "PHP Version:");
 define('ADMIN_MYSQL_VER_TEXT', "MYSQL Version:");
+define('ADMIN_UPGRADE_TEXT', "Upgrade");
 
 //ADMIN/CONFIG.php
 define('ADMIN_CONFIG_HEADER', "Config");
@@ -91,6 +92,7 @@ define('ADMIN_PLUGINS_ZIP_DONT_TEXT', "Your Server Doesn't Accept Zip files");
 define('ADMIN_PLUGINS_UNINSTALL_OPTIONS_TEXT', "Please select the option for uninstalling the plugin: ");
 define('ADMIN_PLUGINS_DELETE_TABLES_TEXT', "Delete plugin tables");
 define('ADMIN_PLUGINS_TABLE_INFO_TEXT', "If the tables are not removed', the plugin can be reinstalled with no data loss.  The creation of tables during the reinstall will fail. Tables will have to be manually deleted to remove.");
+define('ADMIN_PLUGINS_UPDATE_DATABASE_TEXT', "Click upgrade to update Database");
 
 //ADMIN/user.php
 define('ADMIN_USER_HEADER', "User Admin: ");

@@ -93,37 +93,43 @@ if (isset($_GET['action']) && $_GET['action'] == 'active') {
     // Auto-discover plugins from folders and add to database if not present
     sync_plugins_from_folders();
 
+    // Handle plugin update POST
+    $update_message = '';
+    if (isset($_GET['update']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $plugin = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_GET['update']);
+        $variable_file = PLUGINS_PATH . $plugin . '/variable.php';
+        if (file_exists($variable_file)) {
+            unset($plugin_name, $plugin_description, $plugin_version, $plugin_folder, $plugin_db_tables);
+            include($variable_file);
+            $db_version = get_installed_plugin_version($db, $plugin);
+            if ($db_version && version_compare($plugin_version, $db_version, '>')) {
+                $ran = run_plugin_updates($plugin_folder, $db_version, $plugin_version, $db);
+                set_installed_plugin_version($db, $plugin, $plugin_version);
+                $update_message = '<div style="background:#d4edda;color:#155724;border:1px solid #c3e6cb;padding:10px 20px;margin-bottom:20px;border-radius:4px;font-weight:bold;">✅ Plugin updated to version ' . $plugin_version . '. Ran updates: ' . implode(', ', $ran) . '</div>';
+            } else {
+                $update_message = '<div style="background:#e2e3e5;color:#383d41;border:1px solid #d6d8db;padding:10px 20px;margin-bottom:20px;border-radius:4px;font-weight:bold;">ℹ️ No update needed.</div>';
+            }
+        }
+    }
+
     $sql = "SELECT * FROM flintmancms_plugins WHERE active ='1'";
     $result = $db->sql_query($sql);
     while ($data = $db->sql_fetchrow($result)) {
 
         $variable_file = PLUGINS_PATH . $data['name'] . '/variable.php';
-
-        // Check if the plugin folder and variable.php file exist
-        if (!file_exists($variable_file)) {
-            // Plugin folder doesn't exist or is misconfigured - skip it
-            continue;
-        }
-
-        // Clear any previous plugin variables to avoid conflicts
+        if (!file_exists($variable_file)) continue;
         unset($plugin_name, $plugin_description, $plugin_version, $plugin_folder, $plugin_db_tables);
-
-        // Use include() instead of require_once() to allow reloading the same file
         include($variable_file);
-
-        // Verify required variables are set
-        if (!isset($plugin_name) || !isset($plugin_description) || !isset($plugin_version)) {
-            // Variable file didn't set required variables - skip this plugin
-            continue;
-        }
-
-        $description = "<center>" . $plugin_description . " <br>" .VERSION_TEXT. $plugin_version . "</center>";
+        if (!isset($plugin_name) || !isset($plugin_description) || !isset($plugin_version)) continue;
+        $db_version = get_installed_plugin_version($db, $data['name']);
+        $needs_update = $db_version && version_compare($plugin_version, $db_version, '>');
+        $update_btn = $needs_update ? '<form method="post" action="admin.php?n=plugin&update=' . $data['name'] . '" style="display:inline;"><input type="hidden" name="csrf_token" value="' . generate_csrf_token() . '"><button class="button btn btn-warning" type="submit">'.ADMIN_UPGRADE_TEXT.'</button></form>' : '';
+        $description = "<center>" . $plugin_description . " <br>" .VERSION_TEXT. $plugin_version . ($needs_update ? ' <span style=\'color:red\'>(' .ADMIN_PLUGINS_UPDATE_DATABASE_TEXT. ')</span>' : '') . "</center>";
         array_push($active_plugins, array(
-            'name' => $plugin_name,  // Use the display name from variable.php
+            'name' => $plugin_name,
             'descrption' => $description,
             'deactive' => '<a href="admin.php?n=plugin&action=active&id=' . $data['id'] . '">'.UNINSTALL_TEXT.'</a>',
-            'config' => '<a href="admin.php?n=plugins&p=' . $data['name'] . '">Configure</a>'
-
+            'config' => '<a href="admin.php?n=plugins&p=' . $data['name'] . '">Configure</a>' . $update_btn
         ));
     }
 
@@ -131,7 +137,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'active') {
     $db->sql_freeresult($result);
 
     // Build HTML table for active plugins (List.js)
-    $active_plugins_html = '<div id="active-plugins-list">
+    $active_plugins_html = '';
+    if (!empty($update_message)) {
+        $active_plugins_html .= $update_message;
+    }
+    $active_plugins_html .= '<div id="active-plugins-list">
         <input class="search user-search-bar form-control" placeholder="Search active plugins..." />
         <table id="active-plugins-table" class="listjs-table" style="width:100%;border-collapse:collapse;">
             <thead>

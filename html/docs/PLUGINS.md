@@ -107,38 +107,62 @@ CREATE TABLE IF NOT EXISTS `flintmancms_myplugin_data` (
 ) ENGINE=InnoDB;
 ```
 
-## Important Files
 
-### `variable.php` (Required)
+## Plugin Upgrades (Versioned SQL)
 
-Defines plugin metadata:
+FlintmanCMS supports automatic plugin upgrades using versioned SQL scripts and a one-click update in the admin UI.
 
-```php
-<?php
-if (!defined('IN_CMS')) die("ERROR - Hacking attempt");
+### How It Works
 
-$plugin_db_tables = array("myplugin_data");
-$plugin_name = "My Plugin";  // Display name in admin
-$plugin_description = "Does cool stuff";
-$plugin_version = "1.0.0";
-$plugin_folder = "myplugin";  // Must match folder name
-?>
-```
+1. **Plugin Version Tracking**
+    - Each plugin declares its current version in its `variable.php` file, e.g.:
+      ```php
+      $plugin_version = "1.2.0";
+      ```
+    - The installed version is tracked in the `flintmancms_plugins` table in the database (column: `version`).
 
-**Critical**: `$plugin_folder` must exactly match the directory name!
+2. **Upgrade SQL Scripts**
+    - Place upgrade SQL scripts in the plugin's `sql/updates/` directory.
+    - Name each file after the version it upgrades to, e.g.:
+      - `sql/updates/1.1.0.sql`
+      - `sql/updates/1.2.0.sql`
+    - Each file should contain the SQL statements needed to upgrade from the previous version to the named version. Separate multiple statements with semicolons (`;`).
 
-### `sql/install.sql` (Required if plugin uses database)
+3. **Admin UI**
+    - In the admin plugin list, if the code version (from `variable.php`) is newer than the installed version (in the DB), an **Update** button will appear for that plugin.
+    - Clicking **Update** will:
+      - Run all SQL scripts in `sql/updates/` with a version higher than the installed version, in order.
+      - Update the installed version in the database.
+      - Show a green success message at the top of the plugin list.
 
-Creates plugin tables:
+4. **Version Comparison**
+    - The system uses PHP's `version_compare()` to determine which updates to run and in what order.
+    - Only scripts with a version greater than the installed version and less than or equal to the code version are run.
 
-```sql
-CREATE TABLE IF NOT EXISTS `flintmancms_myplugin_data` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `name` varchar(255) NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-```
+#### Example Upgrade Workflow
+
+1. You release plugin version 1.2.0. Your `variable.php` contains:
+    ```php
+    $plugin_version = "1.2.0";
+    ```
+2. You add a new SQL file: `sql/updates/1.2.0.sql` with the required schema/data changes.
+3. The admin visits the plugin page. If their installed version is less than 1.2.0, they see an **Update** button.
+4. Clicking **Update** runs all needed SQL scripts and updates the version in the DB.
+
+#### Notes
+- Make sure your `flintmancms_plugins` table has a `version` column (`VARCHAR(20)`).
+- Always test your SQL scripts before release.
+- The update system is designed to be idempotent: each script should be safe to run only once and in order.
+- If no update is needed, the button will not appear.
+
+#### Troubleshooting
+- If you see errors about missing `version` column, add it:
+  ```sql
+  ALTER TABLE flintmancms_plugins ADD COLUMN version VARCHAR(20) DEFAULT NULL;
+  ```
+- If an update fails, check your SQL syntax and ensure all previous updates have been applied.
+
+---
 
 ## Security Best Practices
 
