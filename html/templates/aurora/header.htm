@@ -60,7 +60,7 @@
                 {if $allow_login}
                     {if $is_logged_in}
                     <li class="nav-item user-menu">
-                        <a href="#" class="nav-link user-link">{$username}</a>
+                        <a href="#" class="nav-link user-link">👤 {$username} <span style="font-weight:normal;color:#7ecbff;">({WELCOME_TEXT})</span></a>
                         <ul class="submenu">
                             <li class="submenu-item"><a href="index.php?n=profile#scroll" class="submenu-link">{PROFILE_TEXT}</a></li>
                             <li class="submenu-item"><a href="index.php?n=logout" class="submenu-link">{LOGOUT_TEXT}</a></li>
@@ -83,5 +83,9 @@
 
     <main class="site-main">
         <div class="container">
+        {if (!isset($is_logged_in) || !$is_logged_in)}
             <div class="content-wrapper">
+        {else}
+            <div>
+        {/if}
                 <div class="main-content">

@@ -59,7 +59,6 @@ $scripts .= '<script type="text/javascript">
 
 $scripts .= $scriptAdd;
 $tooltips = '<script type="text/javascript" src="includes/js/tooltips.js"></script>';
-
 $login_data = isset($login_data) ? $login_data : '';
 $register_link = isset($register_link) ? $register_link : '';
 $menu = isset($menu) ? $menu : [];
