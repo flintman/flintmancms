@@ -161,10 +161,24 @@ a:hover {
     min-height: calc(100vh - 200px);
 }
 
+
 .content-wrapper {
     display: grid;
     grid-template-columns: 1fr 320px;
     gap: 2rem;
+}
+
+/* When sidebar is not present, make main-content full width */
+.container > div > .main-content:only-child {
+    width: 100%;
+    max-width: 100%;
+    grid-column: 1 / -1;
+    margin-right: 0;
+}
+
+/* Remove grid on .content-wrapper if no sidebar */
+.container > .content-wrapper:only-child {
+    display: block;
 }
 
 .main-content {
