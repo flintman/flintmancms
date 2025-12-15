@@ -57,6 +57,7 @@ $scripts .= '<script type="text/javascript">
 		}
 </script>';
 
+$scriptAdd = isset($scriptAdd) ? $scriptAdd : '';
 $scripts .= $scriptAdd;
 $tooltips = '<script type="text/javascript" src="includes/js/tooltips.js"></script>';
 $login_data = isset($login_data) ? $login_data : '';

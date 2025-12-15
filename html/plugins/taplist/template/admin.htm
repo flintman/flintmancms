@@ -1,0 +1,25 @@
+<div class="taplist-admin">
+  <h2>Taplist Plugin Settings</h2>
+  {if !empty($message)}
+    <div class="success">{$message|escape}</div>
+  {/if}
+  <form method="post">
+    <label>API Key:<br>
+      <input type="text" class="form-control input-lg" name="api_key" value="{$api_key|escape}" required>
+    </label><br><br>
+    <label>Title:<br>
+      <input type="text" class="form-control input-lg" name="title" value="{$title|escape}">
+    </label><br><br>
+    <label>Refresh Interval (seconds):<br>
+      <input type="number" class="form-control input-lg" name="refresh_interval" value="{$refresh_interval|escape}" min="60">
+    </label><br><br>
+    <label>Available Folders:<br>
+      <select name="folders[]" class="form-control input-lg" multiple size="8">
+        {foreach from=$all_folders item=folder}
+          <option value="{$folder|escape}"{if in_array($folder, $selected_folders)} selected{/if}>{$folder|escape}</option>
+        {/foreach}
+      </select>
+    </label><br><br>
+    <button type="submit" class="btn btn-primary">Save Settings</button>
+  </form>
+</div>

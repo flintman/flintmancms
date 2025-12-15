@@ -1,0 +1,50 @@
+<div class="taplist">
+  <h2>{$title|escape}</h2>
+  {if $error}
+    <div class="taplist-error">{$error|escape}</div>
+  {else}
+    <div class="taplist-list">
+      {foreach from=$beers item=beer}
+        <div class="taplist-block">
+          <strong>{$beer.title|escape}</strong><br>
+          Style: {$beer.stylename|escape}<br>
+          ABV: {$beer.abv_alt|string_format:"%.1f"}%<br>
+          IBU: {$beer.ibutinseth|escape}<br>
+          SRM: <span class="taplist-srm" style="background:{foreach from=$srm_colors key=limit item=color}{if $beer.srmmorey <= $limit}{$color}{break}{/if}{/foreach};">{$beer.srmmorey|escape}</span><br>
+          Brewed: {$beer.userdate|escape}<br>
+        </div>
+      {/foreach}
+    </div>
+    <style>
+      .taplist-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: flex-start;
+      }
+      .taplist-block {
+        flex: 1 1 260px;
+        max-width: 320px;
+        min-width: 220px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        margin: 0;
+        padding: 14px 16px;
+        border-radius: 8px;
+        background: var(--plugin-bg, inherit);
+        color: inherit;
+        box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.07));
+        transition: box-shadow 0.2s;
+      }
+      .taplist-block:hover {
+        box-shadow: var(--shadow-md, 0 4px 8px rgba(0,0,0,0.12));
+      }
+      .taplist-srm {
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: #222;
+        font-weight: bold;
+      }
+    </style>
+  {/if}
+</div>
