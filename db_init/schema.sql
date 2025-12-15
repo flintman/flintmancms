@@ -191,4 +191,4 @@ CREATE TABLE IF NOT EXISTS `flintmancms_version` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `flintmancms_version` (`version_number`, `version_desc`) VALUES
-('2.0.1', 'Version 2.0.1');
+('2.1.0', 'Version 2.1.0');
