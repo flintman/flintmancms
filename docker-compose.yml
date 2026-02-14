@@ -15,7 +15,7 @@ services:
       - ./html/:/var/www/html
       - ./migrations/:/var/www/migrations
     ports:
-      - "3000:80"
+      - "${APACHE_PORT:-3000}:80"
     depends_on:
       - db
     restart: always
@@ -45,7 +45,7 @@ services:
      env_file:
        - .env
      ports:
-       - "8081:80"
+       - "${PHPMYADMIN_PORT:-8081}:80"
      depends_on:
        - db
      restart: always
