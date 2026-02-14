@@ -35,19 +35,3 @@ services:
       - ./db_init/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     restart: always
 
-  phpmyadmin:
-     image: phpmyadmin/phpmyadmin
-     container_name: phpmyadmin-flintmancms
-     environment:
-       PMA_HOST: db
-       PMA_USER: root
-       PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-     env_file:
-       - .env
-     ports:
-       - "${PHPMYADMIN_PORT:-8081}:80"
-     depends_on:
-       - db
-     restart: always
-
-
