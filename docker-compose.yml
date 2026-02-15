@@ -33,5 +33,7 @@ services:
     volumes:
       - ./mysql:/var/lib/mysql
       - ./db_init/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
     restart: always
 
