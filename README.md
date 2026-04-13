@@ -32,6 +32,8 @@ docker-compose up --build
 
 - This will build the PHP/Apache and MySQL containers, initialize the database, and start the CMS.
 
+> **First startup note:** MySQL can take **60–120 seconds** to initialize on the very first run while it sets up the data directory and imports the schema. The web container will wait for MySQL to be healthy before starting. Subsequent restarts are much faster. If you see the web container fail on first boot, just run `docker-compose up -d` again once MySQL is ready.
+
 **Note:** You may need to change the permissions of the `html` folder so the web server can write to it:
 ```bash
 sudo chown -R www-data:www-data html

@@ -1,0 +1,1877 @@
+/* ========================================================================
+   FlintmanCMS AtlasCMMS Plugin - Styles
+   ======================================================================== */
+
+/* Dashboard Links */
+.dashboard-links {
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.dashboard-link {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: var(--accent-primary);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.dashboard-link:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+/* Assets Container */
+.assets-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.asset-card {
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 15px;
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.asset-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.asset-card h4 {
+    margin-top: 0;
+    color: var(--text-primary);
+}
+
+.asset-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 3px;
+    margin: 10px 0;
+    max-height: 200px;
+}
+
+.asset-card p {
+    margin: 10px 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* Work Orders Search */
+.workorders-search-wrap {
+    margin-bottom: 14px;
+}
+
+.workorders-search-wrap #wo-search {
+    width: 100%;
+    max-width: 380px;
+    box-sizing: border-box;
+}
+
+/* Work Orders Container */
+.workorders-container {
+    margin: 20px 0;
+}
+
+.workorders-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--card-bg);
+}
+
+.workorders-table th {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.workorders-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.workorders-table tr:hover td {
+    background-color: var(--bg-secondary);
+}
+
+.workorders-table a {
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+
+.workorders-table a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* Filter Form */
+.filter-form {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+}
+
+.filter-form label {
+    display: inline-block;
+    margin-right: 10px;
+    font-weight: bold;
+    color: var(--text-secondary);
+}
+
+.filter-form select {
+    padding: 8px 10px;
+    border: 1px solid var(--input-border);
+    border-radius: 0.375rem;
+    font-size: 14px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+/* Work Order Detail */
+.workorder-detail {
+    margin: 20px 0;
+}
+
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--card-bg);
+}
+
+.detail-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.detail-table td:first-child {
+    width: 150px;
+    font-weight: 600;
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+.detail-table td:last-child {
+    word-break: break-word;
+}
+
+/* Alerts */
+.alert {
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0.5rem;
+    border-left: 4px solid;
+}
+
+.alert-warning {
+    background-color: color-mix(in srgb, var(--warning) 15%, var(--card-bg));
+    border-color: var(--warning);
+    color: var(--text-primary);
+}
+
+.alert-danger {
+    background-color: color-mix(in srgb, var(--error) 15%, var(--card-bg));
+    border-color: var(--error);
+    color: var(--text-primary);
+}
+
+.alert-success {
+    background-color: color-mix(in srgb, var(--success) 15%, var(--card-bg));
+    border-color: var(--success);
+    color: var(--text-primary);
+}
+
+/* Button Styling */
+.button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--accent-primary);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 0.375rem;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.button:hover {
+    background-color: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.button.secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.button.secondary:hover {
+    background-color: var(--border-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .assets-container {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-links {
+        flex-direction: column;
+    }
+
+    .dashboard-link {
+        width: 100%;
+        text-align: center;
+    }
+
+    .workorders-table {
+        font-size: 12px;
+    }
+
+    .workorders-table th,
+    .workorders-table td {
+        padding: 8px;
+    }
+
+    .atlascmms-nav {
+        flex-wrap: wrap;
+    }
+
+    .status-tabs {
+        flex-wrap: wrap;
+    }
+}
+
+/* ========================================================================
+   Login Form
+   ======================================================================== */
+.atlascmms-login-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.atlascmms-login-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-md);
+    padding: 36px 40px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.atlascmms-login-title {
+    margin: 0 0 24px 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.login-tabs {
+    display: flex;
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.login-tab {
+    flex: 1;
+    padding: 10px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.login-tab:hover {
+    color: var(--accent-primary);
+}
+
+.login-tab-active {
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-primary);
+}
+
+.atlascmms-login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.login-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: -8px;
+}
+
+.login-input {
+    padding: 0.75rem;
+    border: 1px solid var(--input-border);
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.login-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.login-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.login-btn {
+    padding: 0.75rem;
+    background-color: var(--accent-primary);
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.login-btn:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Sign Out tab */
+.nav-tab-logout {
+    margin-left: auto;
+    background-color: transparent;
+    color: var(--text-tertiary);
+    border-color: transparent;
+    font-weight: normal;
+    font-size: 13px;
+}
+
+.nav-tab-logout:hover {
+    color: var(--error);
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.atlascmms-nav {
+    display: flex;
+    gap: 0;
+    margin: 0 0 24px 0;
+    border-bottom: 2px solid var(--accent-primary);
+}
+
+.nav-tab {
+    display: inline-block;
+    padding: 10px 24px;
+    background-color: var(--bg-secondary);
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    border-radius: 0.5rem 0.5rem 0 0;
+    margin-right: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-tab:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--accent-hover);
+}
+
+.nav-tab-active {
+    background-color: var(--accent-primary);
+    color: #fff;
+    border-color: var(--accent-primary);
+    cursor: default;
+}
+
+.nav-tab-active:hover {
+    background-color: var(--accent-primary);
+    color: #fff;
+}
+
+/* Pushes back/logout tabs to the right */
+.nav-tab-spacer {
+    flex: 1;
+}
+
+.nav-tab-back {
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+}
+
+.nav-tab-back:hover {
+    color: var(--accent-hover);
+    background-color: var(--bg-tertiary);
+}
+
+/* ========================================================================
+   Status Filter Tabs (Work Orders)
+   ======================================================================== */
+.status-tabs {
+    display: flex;
+    gap: 6px;
+    margin: 0 0 16px 0;
+    flex-wrap: wrap;
+}
+
+.status-tab {
+    display: inline-block;
+    padding: 6px 16px;
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    text-decoration: none;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 13px;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.status-tab:hover {
+    background-color: var(--bg-tertiary);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.status-tab-active {
+    background-color: var(--accent-primary);
+    color: #fff;
+    border-color: var(--accent-primary);
+    cursor: default;
+}
+
+.status-tab-active:hover {
+    background-color: var(--accent-primary);
+    color: #fff;
+}
+
+/* ========================================================================
+   Status Badges
+   ======================================================================== */
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+.status-open        { background-color: color-mix(in srgb, var(--accent-secondary) 20%, var(--card-bg)); color: var(--accent-primary); }
+.status-in-progress { background-color: color-mix(in srgb, var(--warning) 20%, var(--card-bg));          color: var(--warning); }
+.status-on-hold     { background-color: color-mix(in srgb, var(--error) 20%, var(--card-bg));             color: var(--error); }
+.status-completed   { background-color: color-mix(in srgb, var(--success) 20%, var(--card-bg));           color: var(--success); }
+
+/* ========================================================================
+   Assets Table
+   ======================================================================== */
+.assets-table th:last-child,
+.assets-table td:last-child {
+    white-space: nowrap;
+}
+
+.asset-expand-col {
+    width: 32px;
+    padding: 0 4px !important;
+    text-align: center;
+}
+
+.asset-expand-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--accent-primary);
+    font-size: 11px;
+    padding: 2px 4px;
+    line-height: 1;
+    transition: transform 0.15s;
+}
+
+.asset-expand-btn:hover {
+    color: var(--accent-hover, var(--accent-primary));
+}
+
+.asset-child-row td {
+    background: var(--bg-secondary, rgba(0,0,0,0.03));
+}
+
+.asset-child-indent {
+    color: var(--text-tertiary);
+    font-size: 14px;
+}
+
+/* Row link — make the whole asset row feel clickable */
+tr.asset-row-link {
+    cursor: pointer;
+}
+
+tr.asset-row-link:hover td {
+    background: var(--accent-bg, rgba(var(--accent-primary-rgb, 0,120,212), 0.06)) !important;
+}
+
+/* ========================================================================
+   Asset Detail Page
+   ======================================================================== */
+.asset-detail-wrap {
+    max-width: 1100px;
+}
+
+.asset-detail-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.asset-detail-header-left {
+    flex: 1;
+    min-width: 0;
+}
+
+.asset-detail-id {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.asset-detail-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.asset-detail-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* Tabs */
+.asset-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.asset-tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.asset-tab-btn:hover {
+    color: var(--accent-primary);
+}
+
+.asset-tab-active {
+    color: var(--accent-primary) !important;
+    border-bottom-color: var(--accent-primary) !important;
+}
+
+.asset-tab-badge {
+    background: var(--accent-primary);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 1px 6px;
+    min-width: 18px;
+    text-align: center;
+    line-height: 16px;
+}
+
+/* Child asset links inside detail table */
+.asset-child-link {
+    display: inline-block;
+    margin: 2px 4px 2px 0;
+    padding: 2px 8px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.asset-child-link:hover {
+    background: var(--accent-bg, rgba(var(--accent-primary-rgb, 0,120,212), 0.08));
+}
+
+/* Source/WO link below file thumbnails */
+.asset-file-wo-link,
+.asset-file-source {
+    display: block;
+    font-size: 11px;
+    text-align: center;
+    margin-top: 2px;
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+
+.asset-file-wo-link:hover {
+    text-decoration: underline;
+}
+
+.asset-file-source {
+    color: var(--text-tertiary);
+}
+
+/* Inline link button */
+.btn-link {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.btn-link:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* ========================================================================
+   Pagination
+   ======================================================================== */
+.pagination {
+    margin: 16px 0;
+    font-size: 14px;
+}
+
+.pagination a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    padding: 4px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    margin: 0 2px;
+    transition: background-color 0.2s;
+}
+
+.pagination a:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--accent-hover);
+}
+
+/* ========================================================================
+   Work Order Detail — Printable Layout
+   ======================================================================== */
+.wo-print-wrap {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 32px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 24px;
+}
+
+/* Header */
+.wo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+    gap: 16px;
+}
+
+.wo-header-left {
+    flex: 1;
+}
+
+.wo-number {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+}
+
+.wo-title {
+    color: var(--text-primary);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.wo-header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.wo-status-badge {
+    font-size: 0.8rem;
+    padding: 6px 14px;
+}
+
+/* Info grid */
+.wo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.wo-section {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 20px;
+}
+
+.wo-section-full {
+    grid-column: 1 / -1;
+}
+
+.wo-section-title {
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.wo-description {
+    color: var(--text-primary);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    font-size: 0.95rem;
+}
+
+/* Photos */
+.wo-photos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+.wo-photo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+}
+
+.wo-photo {
+    max-width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+.wo-photo:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.wo-task-photo {
+    max-height: 100px;
+    max-width: 120px;
+}
+
+.wo-photo-name {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    word-break: break-all;
+    max-width: 100%;
+}
+
+.wo-photo-dl {
+    font-size: 0.78rem;
+}
+
+/* Files list */
+.wo-files {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wo-file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--bg-tertiary);
+    border-radius: 0.375rem;
+    border: 1px solid var(--border-color);
+}
+
+.wo-file-ext {
+    font-family: monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: var(--accent-primary);
+    color: #fff;
+    padding: 3px 7px;
+    border-radius: 0.25rem;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.wo-file-name {
+    flex: 1;
+    color: var(--accent-primary);
+    text-decoration: none;
+    word-break: break-all;
+    font-size: 0.9rem;
+}
+
+.wo-file-name:hover {
+    text-decoration: underline;
+    color: var(--accent-hover);
+}
+
+/* Signature */
+.wo-signature {
+    max-width: 320px;
+    max-height: 120px;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    padding: 8px;
+    background: #fff;
+    display: block;
+}
+
+/* Tasks — inspection report style */
+.wo-task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.wo-task-item {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.wo-task-item:last-child {
+    border-bottom: none;
+}
+
+.wo-task-item:nth-child(odd) {
+    background: var(--bg-secondary);
+}
+
+.wo-task-item:nth-child(even) {
+    background: var(--bg-tertiary);
+}
+
+.wo-task-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 14px;
+    min-height: 36px;
+}
+
+.wo-task-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 0.2rem;
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    background: var(--input-bg);
+}
+
+.wo-task-check.checked {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
+}
+
+.wo-task-label {
+    flex: 1;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    min-width: 0;
+}
+
+.wo-task-value {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.wo-task-value.val-pass       { color: var(--success); }
+.wo-task-value.val-fail       { color: var(--error); }
+.wo-task-value.val-na         { color: var(--text-tertiary); }
+.wo-task-value.val-other      { color: var(--accent-primary); }
+.wo-task-value.val-open       { color: var(--text-tertiary); }
+.wo-task-value.val-inprogress { color: var(--warning, #e6900a); }
+.wo-task-value.val-onhold     { color: var(--accent-secondary, #8b5cf6); }
+
+.wo-task-notes {
+    padding: 2px 14px 8px 42px;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.wo-task-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 4px 14px 10px 42px;
+}
+
+/* Responsive: collapse grid to 1 col on small screens */
+@media (max-width: 640px) {
+    .wo-grid {
+        grid-template-columns: 1fr;
+    }
+    .wo-photos {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    .wo-header {
+        flex-direction: column;
+    }
+    .wo-header-right {
+        align-items: flex-start;
+    }
+}
+
+/* ========================================================================
+   Parts Used Table
+   ======================================================================== */
+.wo-parts-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.wo-parts-table thead th {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--border-color);
+    text-align: left;
+}
+
+.wo-parts-table thead th.num,
+.wo-parts-table tbody td.num,
+.wo-parts-table tfoot td.num {
+    text-align: right;
+}
+
+.wo-parts-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.15s;
+}
+
+.wo-parts-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.wo-parts-table tbody tr:hover {
+    background: var(--bg-tertiary);
+}
+
+.wo-parts-table tbody td {
+    padding: 10px 12px;
+    color: var(--text-primary);
+    vertical-align: top;
+}
+
+.wo-part-name {
+    font-weight: 600;
+}
+
+.wo-part-desc {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.wo-parts-table tfoot tr {
+    border-top: 2px solid var(--border-color);
+}
+
+.wo-parts-total-label {
+    padding: 10px 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: right;
+}
+
+.wo-parts-total {
+    padding: 10px 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+/* ========================================================================
+   Billing / Invoice Modal
+   ======================================================================== */
+
+.billing-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    padding: 20px 16px 60px;
+}
+
+body.billing-modal-open {
+    overflow: hidden;
+}
+
+.billing-modal {
+    width: 100%;
+    max-width: 880px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Toolbar */
+.billing-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem 0.5rem 0 0;
+    padding: 12px 16px;
+    gap: 12px;
+    position: sticky;
+    top: -20px;
+    z-index: 10;
+}
+
+.billing-toolbar-title {
+    flex: 1;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.billing-toolbar-btn {
+    padding: 8px 18px;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+
+.billing-toolbar-btn:hover {
+    background: var(--bg-primary);
+}
+
+.billing-toolbar-print {
+    background: var(--accent-primary);
+    color: #fff;
+    border-color: var(--accent-primary);
+}
+
+.billing-toolbar-print:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+/* Invoice paper */
+.billing-invoice {
+    background: var(--card-bg, var(--bg-secondary));
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 0.5rem 0.5rem;
+    padding: 16px 22px;
+}
+
+/* Header: from info + invoice meta */
+.billing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.billing-from {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.billing-meta-block {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.billing-invoice-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--accent-primary);
+    margin-bottom: 6px;
+}
+
+.billing-meta-table {
+    border-collapse: collapse;
+    font-size: 0.775rem;
+    margin-left: auto;
+}
+
+.billing-meta-table td {
+    padding: 2px 4px;
+    color: var(--text-primary);
+}
+
+.billing-meta-table td:first-child {
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* Bill To + WO Reference: 2-col grid row */
+.billing-addr-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Bill To block */
+.billing-bill-to {
+    padding: 7px 10px;
+    background: var(--bg-tertiary);
+    border-radius: 0.375rem;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* WO Reference block */
+.billing-wo-ref {
+    padding: 7px 10px;
+    background: var(--bg-tertiary);
+    border-radius: 0.375rem;
+    border: 1px solid var(--border-color);
+}
+
+.billing-ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.billing-ref-table td {
+    padding: 2px 4px;
+    color: var(--text-primary);
+    vertical-align: top;
+}
+
+.billing-ref-table td:first-child {
+    font-weight: 600;
+    color: var(--text-secondary);
+    width: 80px;
+    white-space: nowrap;
+}
+
+/* Description row */
+.billing-desc-row {
+    margin-bottom: 8px;
+}
+
+.bill-textarea-sm {
+    min-height: 44px;
+    font-size: 0.825rem;
+}
+
+.bill-input-sm {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Services & Parts table label */
+.billing-items-label {
+    margin-bottom: 4px;
+}
+
+/* Group header rows within the line items table */
+.billing-group-row td {
+    padding: 3px 10px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-secondary);
+    background: var(--bg-tertiary);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.billing-group-row:first-child td {
+    border-top: none;
+}
+
+/* Subtotal rows in tfoot */
+.billing-subtotal-row td {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Add row buttons container */
+.billing-add-btns {
+    display: flex;
+    gap: 8px;
+    margin: 4px 0 12px;
+}
+
+.billing-add-btns .billing-add-row {
+    margin-top: 0;
+}
+
+/* Bottom row: Notes left | Totals right */
+.billing-bottom-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: start;
+    padding-top: 10px;
+    border-top: 2px solid var(--border-color);
+}
+
+.billing-notes {
+    min-width: 0;
+}
+
+.billing-notes .bill-textarea {
+    min-height: 60px;
+}
+
+.billing-totals-block {
+    flex-shrink: 0;
+}
+
+.billing-section-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 3px;
+    margin-bottom: 6px;
+}
+
+/* Tables inside invoice */
+.billing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.775rem;
+}
+
+.billing-table thead th {
+    text-align: left;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    padding: 4px 8px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.billing-table thead th.bill-num,
+.billing-table tbody td.bill-num,
+.billing-table tfoot td.bill-num {
+    text-align: right;
+}
+
+.billing-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.billing-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.billing-table tbody td {
+    padding: 4px 8px;
+    vertical-align: middle;
+    color: var(--text-primary);
+}
+
+.billing-table tfoot td {
+    padding: 4px 8px;
+    border-top: 1px solid var(--border-color);
+}
+
+.bill-subtotal-label {
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Editable inputs */
+.bill-input {
+    border: none;
+    border-bottom: 1px dashed var(--border-color);
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 0.775rem;
+    padding: 1px 3px;
+    width: 100%;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s;
+}
+
+.bill-input:focus {
+    border-bottom-color: var(--accent-primary);
+    background: color-mix(in srgb, var(--accent-primary) 5%, transparent);
+}
+
+.bill-input.bill-num {
+    text-align: right;
+}
+
+.bill-input-company {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.bill-textarea {
+    width: 100%;
+    border: 1px dashed var(--border-color);
+    border-radius: 0.25rem;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    padding: 8px 10px;
+    min-height: 80px;
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+    line-height: 1.5;
+    box-sizing: border-box;
+    transition: border-color 0.15s;
+}
+
+.bill-textarea:focus {
+    border-color: var(--accent-primary);
+}
+
+/* Add / remove labor row controls */
+.billing-add-row {
+    margin-top: 8px;
+    padding: 4px 14px;
+    font-size: 0.8rem;
+    border: 1px dashed var(--border-color);
+    border-radius: 0.25rem;
+    background: transparent;
+    color: var(--accent-primary);
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
+}
+
+.billing-add-row:hover {
+    background: var(--bg-tertiary);
+}
+
+.billing-labor-remove {
+    padding: 2px 7px;
+    font-size: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.2rem;
+    background: transparent;
+    color: var(--error);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s;
+}
+
+.billing-labor-remove:hover {
+    background: var(--error);
+    color: #fff;
+}
+
+/* Totals block */
+.billing-totals {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+    padding-top: 20px;
+    border-top: 2px solid var(--border-color);
+}
+
+.billing-totals-table {
+    border-collapse: collapse;
+    min-width: 220px;
+}
+
+.billing-totals-table td {
+    padding: 3px 8px;
+    font-size: 0.825rem;
+    color: var(--text-primary);
+}
+
+.billing-totals-table td.bill-num {
+    text-align: right;
+    font-weight: 600;
+    min-width: 110px;
+}
+
+.billing-tax-row td {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.billing-grand-row td {
+    font-size: 1rem;
+    font-weight: 800;
+    border-top: 2px solid var(--border-color);
+    color: var(--text-primary);
+    padding-top: 6px;
+}
+
+/* The Billable button */
+.wo-billable-btn {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
+}
+
+.wo-billable-btn:hover {
+    opacity: 0.85;
+}
+
+/* Photos page (separate print page) */
+.billing-photos-page {
+    display: none;
+}
+
+.billing-photos-page.photos-enabled {
+    display: block;
+    margin-top: 12px;
+    padding: 16px 22px;
+    background: var(--card-bg, var(--bg-secondary));
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+}
+
+.billing-photos-page-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+}
+
+.billing-photos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.billing-photo-item img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 0.25rem;
+    border: 1px solid var(--border-color);
+    display: block;
+}
+
+.billing-photo-caption {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.billing-photos-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.billing-photos-label input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* ========================================================================
+   Print styles
+   ======================================================================== */
+@media print {
+    /* Hide all UI chrome */
+    .no-print,
+    .atlascmms-nav,
+    .nav-tab,
+    header,
+    footer,
+    nav,
+    aside,
+    .sidebar,
+    #header,
+    #footer,
+    #sidebar,
+    #navigation,
+    .navigation,
+    .menu {
+        display: none !important;
+    }
+
+    body {
+        background: #fff !important;
+        color: #000 !important;
+        font-size: 11pt;
+        margin: 0;
+    }
+
+    .wo-print-wrap {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        background: #fff !important;
+    }
+
+    .wo-header {
+        border-bottom: 2px solid #000 !important;
+    }
+
+    .wo-number {
+        color: #555 !important;
+    }
+
+    .wo-title {
+        color: #000 !important;
+    }
+
+    .wo-section {
+        background: #f9f9f9 !important;
+        border: 1px solid #ccc !important;
+        break-inside: avoid;
+    }
+
+    .wo-section-title {
+        color: #333 !important;
+        border-bottom-color: #ccc !important;
+    }
+
+    .wo-description,
+    .wo-task-label {
+        color: #000 !important;
+    }
+
+    .wo-task-value {
+        color: #333 !important;
+    }
+
+    .wo-task-value.val-pass       { color: #2a8a4a !important; }
+    .wo-task-value.val-fail       { color: #c0392b !important; }
+    .wo-task-value.val-open       { color: #888 !important; }
+    .wo-task-value.val-inprogress { color: #b36b00 !important; }
+    .wo-task-value.val-onhold     { color: #6d3fbd !important; }
+
+    .wo-task-notes {
+        color: #555 !important;
+    }
+
+    .wo-task-list {
+        border-color: #ccc !important;
+    }
+
+    .wo-task-item {
+        border-bottom-color: #ccc !important;
+    }
+
+    .wo-task-item:nth-child(odd) {
+        background: #fff !important;
+    }
+
+    .wo-task-item:nth-child(even) {
+        background: #f5f5f5 !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .wo-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .wo-photos {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+
+    .wo-photo {
+        max-height: 160px;
+        border: 1px solid #ccc !important;
+    }
+
+    .wo-status-badge {
+        border: 1px solid #999 !important;
+        color: #000 !important;
+        background: #eee !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .wo-file-ext {
+        background: #555 !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .wo-task-check.checked {
+        background: #2a8a4a !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .wo-signature {
+        border: 1px solid #999 !important;
+    }
+
+    .wo-parts-table thead th {
+        background: #eee !important;
+        color: #333 !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .wo-parts-table tbody tr {
+        border-bottom: 1px solid #ccc !important;
+    }
+
+    .wo-parts-total {
+        color: #000 !important;
+    }
+
+    /* ── Billing invoice print mode ── */
+    @page { margin: 0.5in; }
+
+    body.billing-print-mode > *:not(#billing-modal-overlay) {
+        display: none !important;
+    }
+
+    body.billing-print-mode #billing-modal-overlay {
+        position: static !important;
+        background: none !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    body.billing-print-mode .billing-modal {
+        max-width: 100% !important;
+        box-shadow: none !important;
+    }
+
+    body.billing-print-mode .billing-toolbar,
+    body.billing-print-mode .no-print-billing {
+        display: none !important;
+    }
+
+    body.billing-print-mode .billing-invoice {
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    body.billing-print-mode .billing-invoice-title {
+        color: #000 !important;
+    }
+
+    body.billing-print-mode .bill-input,
+    body.billing-print-mode .bill-textarea {
+        border: none !important;
+        background: transparent !important;
+        color: #000 !important;
+        resize: none !important;
+        padding: 0 !important;
+    }
+
+    body.billing-print-mode .billing-table th,
+    body.billing-print-mode .billing-table td,
+    body.billing-print-mode .billing-ref-table td,
+    body.billing-print-mode .billing-totals-table td {
+        color: #000 !important;
+        border-color: #ccc !important;
+    }
+
+    body.billing-print-mode .billing-grand-row td {
+        color: #000 !important;
+    }
+
+    body.billing-print-mode .billing-bill-to,
+    body.billing-print-mode .billing-wo-ref {
+        background: #f5f5f5 !important;
+        border-color: #ccc !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    body.billing-print-mode .billing-group-row td {
+        background: #ebebeb !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    body.billing-print-mode .billing-addr-row {
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    body.billing-print-mode .billing-bottom-row {
+        grid-template-columns: 1fr auto !important;
+    }
+
+    body.billing-print-mode .billing-photos-page {
+        display: none !important;
+    }
+
+    body.billing-print-mode .billing-photos-page.photos-enabled {
+        display: block !important;
+        break-before: page;
+        page-break-before: always;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        background: #fff !important;
+    }
+
+    body.billing-print-mode .billing-photos-page.photos-enabled .billing-photos-page-title {
+        color: #000 !important;
+        border-bottom-color: #ccc !important;
+    }
+
+    body.billing-print-mode .billing-photos-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    body.billing-print-mode .billing-photo-item img {
+        height: auto;
+        max-height: 220px;
+        object-fit: contain;
+        border-color: #ccc !important;
+    }
+
+    body.billing-print-mode .billing-photo-caption {
+        color: #555 !important;
+    }
+
+    a[href]::after {
+        content: none !important;
+    }
+}

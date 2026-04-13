@@ -1,0 +1,34 @@
+{* FlintmanCMS AtlasCMMS Plugin - Admin Template *}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$title|escape}</title>
+    <meta charset="utf-8">
+    {$scriptAdd}
+</head>
+<body>
+<div class="container">
+    <div class="admin-header">
+        <h1>AtlasCMMS Integration</h1>
+    </div>
+
+    {if isset($errorMsg) && $errorMsg}
+        <div class="alert alert-danger">
+            {$errorMsg|escape}
+        </div>
+    {/if}
+
+    {if isset($message) && $message}
+        <div class="alert alert-info">
+            {$message|escape}
+        </div>
+    {/if}
+
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{$csrf_token|escape}">
+        {$content}
+    </form>
+</div>
+</body>
+</html>
