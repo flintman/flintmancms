@@ -83,6 +83,7 @@ function login() {
         session_regenerate_id(true);
 
         // set user variables
+        $_SESSION['initiated'] = true;
         $_SESSION['username'] = $data['username'];
         $_SESSION['user_logged_in'] = 1;
         $_SESSION['profile_id'] = $data['id'];

@@ -163,9 +163,10 @@ function validate_session() {
     $_SESSION['last_activity'] = time();
 
     // Regenerate session ID periodically to prevent session fixation
+    // Use false to keep old session briefly valid, avoiding race conditions on rapid page loads
     if (!isset($_SESSION['last_refresh']) ||
         (time() - $_SESSION['last_refresh']) > $refresh_interval) {
-        session_regenerate_id(true);
+        session_regenerate_id(false);
         $_SESSION['last_refresh'] = time();
     }
 }
