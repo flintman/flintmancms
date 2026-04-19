@@ -1,0 +1,61 @@
+<form action="{$form_action}" method="post" >
+<input type="hidden" name="csrf_token" value="{$csrf_token}">
+    {if $content eq ''}
+        <table>
+            <tr>
+                <td>{ADMIN_EMAIL_ERRORS_TEXT}</td>
+                <td><input type="checkbox" name="email_mode" value="1"{if $email_mode_checked} checked{/if}></td>
+            </tr>
+            <tr>
+                <td>{ADMIN_EMAIL_TEXT}</td>
+                <td><input name="admin_email" type="text" value="{$admin_email_value|escape}" class="form-control"></td>
+            </tr>
+            <tr>
+                <td><hr /></td>
+                <td><hr /></td>
+            </tr>
+            <tr>
+                <td>{ADMIN_USE_SMTP_TEXT}</td>
+                <td><input type="checkbox" name="email_type" value="1"{if $email_send_type_checked} checked{/if}></td>
+            </tr>
+            <tr>
+                <td>{ADMIN_SMTP_HOST_TEXT}</td>
+                <td><input type="text" name="email_host" value="{$email_host_value|escape}" class="form-control"></td>
+            </tr>
+            <tr>
+                <td>{ADMIN_SMTP_PORT_TEXT}</td>
+                <td><input type="text" name="email_port" value="{$email_port_value|escape}" class="form-control"></td>
+            </tr>
+            <tr>
+                <td>{ADMIN_SMTP_USER_TEXT}</td>
+                <td><input type="text" name="email_user" value="{$email_user_value|escape}" class="form-control"></td>
+            </tr>
+            <tr>
+                <td>{ADMIN_SMTP_PASS_TEXT}</td>
+                <td><input type="password" name="email_pass" value="{$email_pass_value|escape}" class="form-control"></td>
+            </tr>
+            <tr>
+                <td>{$email_encryption_text}</td>
+                <td>
+                    <select name="email_encryption" class="form-control">
+                        <option value="none"{if $current_encryption == 'none'} selected{/if}>None</option>
+                        <option value="ssl"{if $current_encryption == 'ssl'} selected{/if}>SSL</option>
+                        <option value="tls"{if $current_encryption == 'tls'} selected{/if}>TLS/STARTTLS</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <br><br>
+
+        <center><input type="submit" value="{SAVE_TEXT|escape}" name="save" class="btn btn-primary"></center><br><br>
+
+        {ADMIN_TYPE_MESSAGE_TEXT}<br><br>
+        <textarea name="message" cols="40" rows="3" class="form-control"></textarea><br><br>
+
+        <a href="admin.php" class="button">{BACK_TEXT}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="submit" value="{SEND_TEXT|escape}" name="submit" class="btn btn-primary">
+    {else}
+        <div style="margin:2em auto;max-width:500px;text-align:center;font-size:1.2em">{$content}<br><br><a href="admin.php?n=email" class="button">{$page_back}</a></div>
+    {/if}
+</form>
+

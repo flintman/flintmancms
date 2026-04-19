@@ -1,0 +1,33 @@
+<div class='padder'>
+    <form action="{$form_action}" name="{$form_name}" method="POST" {$on_submit}>
+        <input type="hidden" name="csrf_token" value="{$csrf_token}">
+        <table width="100%">
+            <tr>
+                <td>{ADMIN_USER_USERNAME_TEXT}</td>
+                <td>{$user_username}<b id="user"></b></td>
+            </tr>
+            <tr>
+                <td>{ADMIN_USER_EMAIL_TEXT}</td>
+                <td>{$email}<b id="email"></b></td>
+            </tr>
+            <tr>
+                <td>{ADMIN_USER_GROUPS_TEXT}</td>
+                <td>{$groups}</td>
+            </tr>
+            {if $smarty.get.action != 'add'}
+                <tr>
+                    <td colspan="2"><b>{ADMIN_USER_ONLY_CHANGE_TEXT}</b></td>
+                </tr>
+            {/if}
+            <tr>
+                <td>{ADMIN_USER_PASSWORD_TEXT}</td>
+                <td>{$password}</td>
+            </tr>
+            <tr>
+                <td>{ADMIN_USER_PASSWORD_TWO_TEXT}</td>
+                <td>{$password2}<b id="pass"></b></td>
+            </tr>
+        </table>
+        {$send}
+    </form>
+</div><br />

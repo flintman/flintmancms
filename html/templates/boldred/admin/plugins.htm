@@ -1,0 +1,20 @@
+<div>
+    <p><strong>To add a new plugin:</strong> Copy the plugin folder to <code>html/plugins/</code> and refresh this page. The plugin will automatically appear in the inactive list below.</p>
+
+    <center><b>{ADMIN_PLUGINS_ACTIVE_TEXT}</b></center>
+    <p>
+        {$active_plugins}
+    </p>
+    <center><b>{ADMIN_PLUGINS_INACTIVE_TEXT}</b></center>
+    <p>
+        {$inactive_plugins}
+    </p>
+    {if $form_action}
+    <form action="{$form_action}" method="POST">
+    {/if}
+    {$content}<br><br>
+    {if $form_action}
+    </form>
+    {/if}
+    {$plugins_back}
+</div><br />
