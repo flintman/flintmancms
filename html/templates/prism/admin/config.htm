@@ -1,0 +1,104 @@
+<form action="admin.php?n=config" method="post">
+  <input type="hidden" name="csrf_token" value="{$csrf_token}">
+  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><div id ="admin_title">{ADMIN_CONFIG_HEADER}</div></td>
+  </tr>
+  <tr>
+    <td valign="top" >
+      <table width="100%" border="0" cellspacing="1" cellpadding="3" >
+        <tr>
+          <td width="200" ><strong><span >{ADMIN_TITLE_TEXT}</span></strong></td>
+          <td ><input name="title" type="text" value="{$title}" maxlength="255" class="form-control"></td>
+        </tr>
+        <tr>
+          <td width="200" ><strong><span >{ADMIN_ADD_LINK_TEXT}</span></strong></td>
+          <td><input name="add_to_link" type="text" value="{$add_to_link_value|escape}" maxlength="255" class="form-control"></td>
+        </tr>
+        <tr>
+          <td ><strong><span >{ADMIN_TEMPLATE_TEXT}</span></strong></td>
+          <td ><select name="template" class="form-control">
+              {foreach from=$template_options item=option}
+                <option value="{$option}"{if $option == $selected_template} selected{/if}>{$option}</option>
+              {/foreach}
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td ><strong><span >{ADMIN_LANGUAGE_TEXT}</span></strong></td>
+          <td ><select name="language" class="form-control">
+              {foreach from=$language_options item=option}
+                <option value="{$option}"{if $option == $selected_language} selected{/if}>{$option}</option>
+              {/foreach}
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td ><strong><span >{ADMIN_DEBUG_TEXT}</span></strong></td>
+          <td><input type="checkbox" name="debug" value="1"{if $debug_checked} checked{/if}></td>
+        </tr>
+        <tr>
+          <td ><strong><span>{ADMIN_MAINTANCE_TEXT}</span></strong></td>
+          <td><input type="checkbox" name="maintain" value="1"{if $maintain_checked} checked{/if}></td>
+        </tr>
+        <tr>
+          <td ><strong><span>{ADMIN_ALLOW_LOG_TEXT}</span></strong></td>
+          <td><input type="checkbox" name="allow_login" value="1"{if $allow_login_checked} checked{/if}></td>
+        </tr>
+        <tr>
+          <td ><strong><span >{ADMIN_DEFAULT_TEXT}</span></strong></td>
+          <td >
+            <select name="groups" class="form-control">
+              {foreach from=$groups_options item=option}
+                <option value="{$option.id}"{if $option.id == $selected_group} selected{/if}>{$option.name}</option>
+              {/foreach}
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td ><strong><span >{ADMIN_FRT_PAGE_TEXT}</span></strong></td>
+          <td >
+            <select name="frt_page" class="form-control">
+              {foreach from=$frt_page_options item=option}
+                <option value="{$option.value}"{if $option.value == $selected_frt_page} selected{/if}>{$option.label}</option>
+              {/foreach}
+            </select>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+</table>
+<br>
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="top" >
+      <table width="100%" border="0" cellspacing="1" cellpadding="3" >
+        <tr>
+          <td><strong>{ADMIN_DISCLAIMER_TEXT}</strong></td>
+        </tr>
+        <tr>
+          <td><textarea name="disclaimer" cols="30" rows="2" class="form-control">{$disclaimer_value|escape}</textarea></td>
+        </tr>
+        <tr>
+          <td><strong>{ADMIN_META_TEXT}</strong></td>
+        </tr>
+        <tr>
+          <td><textarea name="meta" cols="30" rows="2" class="form-control">{$meta_tags_value|escape}</textarea></td>
+        </tr>
+        <tr>
+          <td><strong>{ADMIN_MAIN_MESSAGE_TEXT}</strong></td>
+        </tr>
+        <tr>
+          <td><textarea name="maintain_message" cols="30" rows="2" class="form-control">{$maintain_message_value|escape}</textarea></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+<div align="center"><br>
+  <input type="submit" name="submit" value="{$submit_text|escape}" class="btn btn-primary">
+  <input type="reset" value="{$reset_text|escape}" class="button">
+</div>
+</form><br>
+
